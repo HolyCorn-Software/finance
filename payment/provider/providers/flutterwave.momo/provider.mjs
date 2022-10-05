@@ -101,7 +101,7 @@ export default class FlutterwaveMoMo extends PaymentProviderModel {
         record.amount = await FlutterwaveMoMo.convertToWalletCurrency(record.amount);
 
 
-        const safeDomain = faculty.server_domains.secure.contains(':') ? `finance.holycornsoftware.io` : `user.id.${faculty.server_domains.secure}`
+        const safeDomain = faculty.server_domains.secure.indexOf(':') !== -1 ? `finance.holycornsoftware.io` : `user.id.${faculty.server_domains.secure}`
 
         let data = await this.client.MobileMoney.franco_phone({
             phone_number: client_phone,
