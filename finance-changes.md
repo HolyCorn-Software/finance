@@ -1,1 +1,2 @@
-Changed the way user emails are generated for flutterwave payments
+
+Improved description to help future developers
