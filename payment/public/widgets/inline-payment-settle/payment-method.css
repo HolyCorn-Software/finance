@@ -1,0 +1,54 @@
+/* 
+    Copyright 2022 HolyCorn Software
+    The HCTS Project
+    This widget (payment-method) allows the user to select a payment method during the payment process
+ */
+
+.hc-hcts-payment-inline-debit-payment-method {
+    padding-bottom: 1em;
+}
+
+.hc-hcts-payment-inline-debit-payment-method>.container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75em;
+    align-items: center;
+    min-width:4em;
+    max-height:4em;
+
+    padding:0.125em;
+    border: 1px solid #1E8CF2;
+    border-radius: 10px;
+    align-items: center;
+    cursor: pointer;
+}
+
+.hc-hcts-payment-inline-debit-payment-method>.container .img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hc-hcts-payment-inline-debit-payment-method>.container img {
+    max-width: 7em;
+    max-height: 4em;
+}
+
+.hc-hcts-payment-inline-debit-payment-method>.container>.highlighter {
+    border-radius:0.25em;
+    width: 40%;
+    aspect-ratio: 92/8;
+    position: absolute;
+    top: calc(100% + 0.5em);
+    background-color: #3c96eb;
+
+    opacity:0;
+    transition:0.5s margin-top, 0.5s opacity;
+    margin-top:0.35em;
+}
+
+.hc-hcts-payment-inline-debit-payment-method:hover>.container>.highlighter {
+    opacity:1;
+    margin-top: 0px;
+    transition-delay:0.125s;
+}

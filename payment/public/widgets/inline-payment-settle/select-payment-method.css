@@ -1,0 +1,42 @@
+/* 
+    Copyright 2022 HolyCorn Software
+    The HCTS Project
+    This widget (select-payment-method) provides a minimalistic UI allowing the user to select a preferred payment method
+ */
+
+
+.hc-hcts-payment-inline-debit-select-payment-method >.container{
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    gap:1em;
+    font-family: bariolBold;
+    min-width:250px;
+    max-width:100%;
+    align-items: center;
+}
+
+.hc-hcts-payment-inline-debit-select-payment-method >.container >.methods{
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:1.5em;
+    overflow-x:auto;
+    width:clamp(70px, 100%, 100%);
+}
+
+.hc-hcts-payment-inline-debit-select-payment-method >.container >.methods::-webkit-scrollbar{
+    border-radius:0px;
+    /* border-top:6px solid red; */
+    /* color:green; */
+    background-color:transparent;
+}
+
+
+
+.hc-hcts-payment-inline-debit-select-payment-method >.container >.methods::-webkit-scrollbar-thumb{
+    border-radius:0px;
+    border-top:3px solid rgb(173, 8, 85);
+}
+

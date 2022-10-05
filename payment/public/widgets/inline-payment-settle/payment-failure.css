@@ -1,0 +1,20 @@
+/* 
+    Copyright 2022 HolyCorn Software
+    The HCTS Project
+    Check description of this widget (payment-failure) at ./payment-failure.mjs
+ */
+
+.hc-hcts-inline-debit-payment-failure>.container>.text {
+    color: rgb(206, 4, 75);
+}
+
+.hc-hcts-inline-debit-payment-failure>.container>.actions .hc-action-button>.container {
+    border-radius: 16px;
+}
+
+
+.hc-hcts-inline-debit-payment-failure>.container>.actions .hc-action-button.retry>.container {
+    background-color: #1EF2CC;
+    color: black;
+    font-family: bariolBold;
+}

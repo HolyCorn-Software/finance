@@ -1,0 +1,42 @@
+/* 
+    Copyright 2022 HolyCorn Software
+    The HCTS Project
+
+    Check the description of this widget (waiting) at ./waiting.mjs
+ */
+
+.hc-hcts-inline-debit-waiting>.container {
+    font-family: bariolBold;
+    min-width:150px;
+}
+
+.hc-hcts-inline-debit-waiting>.container {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    align-items: center;
+}
+.hc-hcts-inline-debit-waiting>.container >.text{
+    text-align:right;
+}
+
+.hc-hcts-inline-debit-waiting>.container>.spinner img {
+    max-width: 2em;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.hc-hcts-inline-debit-waiting>.container>.actions {
+    display: flex;
+    width: 100%;
+}
+
+.hc-hcts-inline-debit-waiting>.container>.actions>* {
+    flex-grow: 1;
+}
+
+.hc-hcts-inline-debit-waiting>.container .hc-action-button >.container{
+    border-radius:0.85em;
+    font-size:0.75em;
+}

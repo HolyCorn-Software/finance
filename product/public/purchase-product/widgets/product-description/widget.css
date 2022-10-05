@@ -1,0 +1,33 @@
+/* 
+    Copyright 2022 HolyCorn Software
+    The CAYOFED People System
+    The Faculty of Payment
+    This stylesheet defines the looks of the product-description widget.
+    The product-description widget let's the user know what he's paying for and how much it'll cost
+*/
+
+
+.hc-cayofedpeople-payment-product-description >.container {
+    display:flex;
+    flex-direction: column;
+    gap:0.5em;
+}
+
+.hc-cayofedpeople-payment-product-description >.container >.price{
+    display:flex;
+    gap:0.25em;
+    justify-content: flex-start;
+}
+
+.hc-cayofedpeople-payment-product-description >.container >.title{
+    display:flex;
+    gap:0.25em;
+}
+
+.hc-cayofedpeople-payment-product-description >.container >.title >.product-label{
+    color:rgb(0, 153, 255);
+    cursor:pointer;
+
+}
+
+/* .hc-cayofedpeople-payment-product-description >.container >.title */

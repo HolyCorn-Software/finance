@@ -1,0 +1,17 @@
+/*
+Copyright 2022 HolyCorn Software
+The BGI Swap Project
+This widget allows the developer to display a custom error in case a frame fails to load
+*/
+
+
+.hc-bgis-exchange-provided-frame-error-ui >.container {
+    display:flex;
+    flex-direction:column;
+    gap:2em;
+}
+
+.hc-bgis-exchange-provided-frame-error-ui >.container >.actions{
+    display:flex;
+    gap:1.5em;
+}

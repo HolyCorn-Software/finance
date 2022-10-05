@@ -1,0 +1,55 @@
+/*
+Copyright 2022 HolyCorn Software
+The BGI Swap Project
+This widget allows other providers to create UI's where users can input their payment details
+*/
+
+.hc-bgis-simple-payment-form >.container {
+    display:flex;
+    flex-direction:column;
+    gap:2.5em;
+    padding-bottom:0em;
+}
+
+
+.hc-bgis-simple-payment-form >.container >.top{
+    display:grid;
+    place-items:center;
+    grid-column-gap:0.75em;
+}
+
+
+.hc-bgis-simple-payment-form >.container >.top >.logo >img{
+    max-height:4em;
+}
+.hc-bgis-simple-payment-form >.container >.details {
+    display:flex;
+    flex-direction:column;
+    gap:2em;
+}
+
+.hc-bgis-simple-payment-form >.container >.details .details-main{
+    display:flex;
+    flex-direction:column;
+    gap:1.75em;
+}
+
+
+.hc-bgis-simple-payment-form >.container >.details >.caption{
+    color:#8386a1;
+
+}
+
+
+
+.hc-bgis-simple-payment-form >.container >.details >.details-main >.actions >.hc-action-button >.container {
+    width:calc(100% - 2em);
+    border-radius:8px;
+    background-color:#253B80;
+    color:white;
+}
+
+
+.hc-bgis-simple-payment-form >.container >.details >.details-main >.form {
+    width:calc(100% - 1.25em);
+}

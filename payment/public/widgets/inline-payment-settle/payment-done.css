@@ -1,0 +1,32 @@
+/* 
+    Copyright 2022 HolyCorn Software
+    The HCTS Project
+    The payment-done-widget
+    Check description at payment.done.mjs
+ */
+
+.hc-hcts-inline-payment-payment-done{
+
+    font-family: bariolBold;
+}
+
+.hc-hcts-inline-payment-payment-done >.container img{
+    max-width:clamp(2em, 6em, 100%);
+}
+.hc-hcts-inline-payment-payment-done >.container{
+    display:flex;
+    flex-direction:column;
+    gap:1em;
+    min-width:200px;
+    align-items:center;
+}
+
+.hc-hcts-inline-payment-payment-done >.container >.actions{
+    display:flex;
+    justify-content:space-between;
+    gap:0.5em;
+}
+
+.hc-hcts-inline-payment-payment-done >.container >.actions >*{
+    flex-grow:1;
+}

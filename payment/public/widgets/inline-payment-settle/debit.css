@@ -1,0 +1,12 @@
+/*  
+    Copyright 2022 HolyCorn Software
+    The CAYOFED People System
+    The Faculty of Finance
+    This stylesheet determines the looks of the inline-payment-settle widget
+*/
+
+
+.hc-cayofedpeople-payment-settle >.container{
+    display:inline-flex;
+    min-width:250px;
+}

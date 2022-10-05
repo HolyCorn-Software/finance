@@ -1,0 +1,61 @@
+/* 
+    Copyright 2022 HolyCorn Software
+    The Donor Forms Project
+    This widget represents a single entry within the payment listings widget
+*/
+
+
+
+/** Everything determines how the status section will show **/
+.hc-donorforms-admin-payment-listing >.field.status{
+    display: flex;
+    align-items: center;
+}
+.hc-donorforms-admin-payment-listing >.field.status:before{
+    content:'';
+    aspect-ratio: 1;
+    width:0.75em;
+    height:0.75em;
+    background-color:orange;
+    left:0px;
+    border-radius:100%;
+}
+
+.hc-donorforms-admin-payment-listing >.field.status:after{
+    margin-left:1em;
+}
+
+
+
+/** This section defines the looks when a transaction is pending, completed or failed */
+.hc-donorforms-admin-payment-listing >.field.status[status-value='pending']:before{
+    background-color:orange;
+}
+.hc-donorforms-admin-payment-listing >.field.status[status-value='pending']:after{
+    content:'Pending';
+}
+
+.hc-donorforms-admin-payment-listing >.field.status[status-value='complete']:before{
+    background-color:rgb(17, 119, 17);
+}
+
+.hc-donorforms-admin-payment-listing .field.status[status-value='complete']:after{
+    content:'Completed';
+}
+
+.hc-donorforms-admin-payment-listing .field.status[status-value='failed']:before{
+    background-color:rgb(218, 61, 87);
+}
+
+.hc-donorforms-admin-payment-listing >.field.status[status-value='failed']:after{
+    content:'Failed';
+}
+
+.hc-donorforms-admin-payment-listing .field.status[status-value='canceled']:before{
+    background-color:rgb(181, 7, 45)
+}
+
+.hc-donorforms-admin-payment-listing >.field.status[status-value='canceled']:after{
+    content:'Canceled';
+}
+/** End section **/

@@ -1,0 +1,19 @@
+/* 
+    Copyright 2022 HolyCorn Software
+    The HCTS Project
+    This widget (enter-payment-details) allows the user to input details for a payment
+ */
+
+
+.hc-hcts-inline-debit-enter-payment-details>.container input, .hc-hcts-inline-debit-enter-payment-details>.container textarea, .hc-hcts-inline-debit-enter-payment-details>.container .hc-action-button>.container {
+    border-radius: 15px;
+    max-width: calc(100% - 4px);
+}
+
+.hc-hcts-inline-debit-enter-payment-details>.container>.actions {
+    display: flex;
+}
+
+.hc-hcts-inline-debit-enter-payment-details>.container>.actions>* {
+    flex-grow: 1;
+}

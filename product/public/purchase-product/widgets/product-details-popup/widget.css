@@ -1,0 +1,19 @@
+/*  
+    Copyright 2022 HolyCorn Software
+    The CAYOFED People System
+    This stylesheet determines the looks of product-details-popup widget, which shows the user the details of what he's purchasing
+
+*/
+
+.hc-cayofedpeople-payment-product-details-popup-content {
+    display:flex;
+    flex-direction:column;
+    gap:2em;
+    font-family:k2d;
+    max-width:250px;
+}
+
+.hc-cayofedpeople-payment-product-details-popup-content >.label{
+    font-size:1.5em;
+    font-family:k2dExtraBold;
+}

@@ -1,0 +1,11 @@
+/*  
+    Copyright 2022 HolyCorn Software
+    The Donor Forms Project
+    This stylesheet offers minimum styling for the compliant payment provided ui's
+*/
+
+.hc-bgis-payment-provided-ui >.container >.content{
+    position:relative;
+    width:calc(100% - 4px);
+    margin-left:1px;
+}

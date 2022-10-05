@@ -1,0 +1,33 @@
+/* 
+    Copyright 2022 HolyCorn Software
+    The CAYOFED People System
+    The Faculty of Payment
+    This stylesheet determines the overvall looks of a payment page
+*/
+
+.hc-cayofedpeople-payment-page >.container{
+    display:flex;
+    gap:2em;
+    flex-direction:column;
+}
+
+.hc-cayofedpeople-payment-page >.container >.content{
+    min-height:78vh;
+    display:flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items:center;
+    gap:3em;
+}
+
+.hc-cayofedpeople-payment-page >.container >.navbar{
+    position:sticky;
+    top:-12px;
+    z-index:5;
+}
+
+body{
+    margin:0px;
+    position:relative;
+    font-family:k2d;
+}

@@ -1,0 +1,5 @@
+{
+    "label":"Faculty of Finance",
+    "name":"finance",
+    "init": "./startup.mjs"
+}

@@ -1,0 +1,55 @@
+/* 
+    Copyright 2022 HolyCorn Software
+    The Donor Forms Project
+    This page allows clients to settle payments
+*/
+
+body {
+    width: 100%;
+    height: 100vh;
+    margin: 0px;
+    position: relative;
+    background-color: rgb(255, 255, 249);
+
+}
+
+body>.body-content {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:calc(100vh - 130px);
+    padding-bottom:2em;
+    padding-top:2em;
+}
+
+
+body>.body-content>.payment-box{
+    display: inline-flex;
+    flex-direction:column;
+    align-items: center;
+    justify-content: center;
+    gap:2em;
+    box-shadow: 0px 0px 20px rgb(181, 189, 205);
+    width: clamp(250px, 95vw, 400px);
+    min-height:250px;
+    background-color:white;
+    border-radius:10px;
+    padding:1em;
+}
+
+body>.body-content>.payment-box >.title{
+    font-size:1.75em;
+    font-family:k2dExtraBold;
+    text-align:left;
+}
+
+body>.body-content>.payment-box >.main{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    max-width:100%;
+}
+
+body>.body-content>.payment-box >.main >*{
+    max-width:100%;
+}

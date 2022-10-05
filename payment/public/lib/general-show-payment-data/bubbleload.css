@@ -1,0 +1,37 @@
+/*
+Copyright 2021 HolyCorn Software
+The BGI Swap Project
+This produces a simple loading ui with 4 bouncing balls
+*/
+
+.hc-bgis-genpayui-loader > .container >.bubbles{
+    display:flex;
+    justify-content: center;
+    gap:0.25em;
+}
+
+
+
+.hc-bgis-genpayui-loader >.container >.bubbles >.bubble{
+    border-radius:50%;
+    width:0px;
+    height:0px;
+    padding:0.35em;
+    /*! color:attr(color); */
+    border:1px solid currentColor;
+}
+
+@keyframes hc-bgis-genpayui-loader-bounce{
+    0%{
+        transform:translate(0px, 0px);
+    }
+
+    50%{
+        transform:translate(0.125em, -0.85em)
+    }
+
+    100%{
+        transform:translate(0.125em, 0em)
+    }
+    
+}

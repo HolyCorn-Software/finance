@@ -1,0 +1,66 @@
+/* 
+    Copyright 2022 HolyCorn Software
+    The Donor Forms Project
+    This widget allows the admin manage all payments
+
+    Peice of advice, when using this widget, set a max-height so that scrolling and headers work correctly
+*/
+
+.hc-donorforms-payment-manager {
+    overflow-y:auto;
+    /* max-height:var(--dashboard-content-available-height); */
+    position:relative;
+
+    
+}
+
+
+.hc-donorforms-payment-manager::-webkit-scrollbar{
+    
+    /* background-color:red; */
+    background-color:transparent;
+    max-width:8px;
+}
+
+.hc-donorforms-payment-manager::-webkit-scrollbar-thumb{
+    /* border:8px solid rgb(114, 133, 148); */
+    background-color:rgb(57, 156, 17);
+    border-radius:6px;
+}
+
+.hc-donorforms-payment-manager >.container{
+    display:flex;
+    flex-direction:column;
+    gap:2em;
+}
+
+.hc-donorforms-payment-manager >.container >.top-section {
+    display:flex;
+    flex-direction:column;
+    position:sticky;
+    top:-1em;
+    z-index:1;
+    transition:0.5s;
+    background-color:rgba(255, 255, 255, 0.932);
+    padding:0.5em;
+    padding-top:1em;
+    padding-left:2%;
+}
+.hc-donorforms-payment-manager >.container >.top-section >.title{
+    font-size:1.5em;
+    font-family:robotoBold;
+}
+
+.hc-donorforms-payment-manager >.container >.top-section >.actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:2em;
+    padding-right:1em;
+}
+
+.hc-donorforms-payment-manager >.container >.top-section >.actions .hc-action-button >.container{
+    background-color:rgb(229, 242, 250);
+    border-radius:0.85em;
+    color:rgb(30, 29, 34);
+    font-family: robotoLight;
+}
