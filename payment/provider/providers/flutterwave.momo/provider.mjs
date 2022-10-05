@@ -13,7 +13,9 @@ import Flutterwave from 'flutterwave-node-v3'
 import libUrl from 'node:url'
 import fs from 'node:fs'
 import { Exception } from "../../../../../../system/errors/backend/exception.js";
+import { FacultyPlatform } from "../../../../../../system/lib/libFaculty/platform.mjs";
 
+const faculty = FacultyPlatform.get()
 
 
 
@@ -99,11 +101,13 @@ export default class FlutterwaveMoMo extends PaymentProviderModel {
         record.amount = await FlutterwaveMoMo.convertToWalletCurrency(record.amount);
 
 
+        const safeDomain = faculty.server_domains.secure.contains(':') ? `finance.holycornsoftware.io` : `user.id.${faculty.server_domains.secure}`
+
         let data = await this.client.MobileMoney.franco_phone({
             phone_number: client_phone,
             amount: record.amount.value,
             currency: record.amount.currency,
-            email: `${record.owners[0] || 'system'}@userid.people.cayofed.cm`,
+            email: `${record.owners[0] || 'system'}@${safeDomain}`,
             tx_ref: record.id
         });
         record.creationTime = Date.now();

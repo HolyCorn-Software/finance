@@ -1,1 +1,1 @@
-Initialized finance
+Changed the way user emails are generated for flutterwave payments
