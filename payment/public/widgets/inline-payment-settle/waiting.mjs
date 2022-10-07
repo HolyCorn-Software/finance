@@ -14,7 +14,7 @@ export class WaitingUI extends Widget {
         super();
 
         super.html = hc.spawn({
-            classes: ['hc-hcts-inline-debit-waiting'],
+            classes: ['hcts-inline-payment-settle-waiting', 'hcts-inline-payment-settle-screen'],
             innerHTML: `
                 <div class='container'>
 

@@ -25,7 +25,7 @@ export class PaymentFailureUI extends PaymentDone {
         });
         /** @type {function(('retry'), function(CustomEvent), AddEventListenerOptions)} */ this.addEventListener
         
-        this.html.classList.add('hc-hcts-inline-debit-payment-failure')
+        this.html.classList.add('hcts-inline-payment-settle-payment-failure')
         retry.html.classList.add('retry')
         this.actions.push(
             retry.html

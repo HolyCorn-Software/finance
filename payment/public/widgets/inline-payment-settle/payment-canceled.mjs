@@ -18,7 +18,7 @@ export class PaymentCanceledUI extends PaymentDone {
         this.text = `Payment canceled!`
 
 
-        this.html.classList.add('hc-hcts-inline-debit-payment-canceled')
+        this.html.classList.add('hcts-inline-payment-settle-payment-canceled')
         this.actions = []
 
         /** @type {import('/$/system/static/lib/hc/lib/util/alarm-types').AlarmObject<import("./types.js").StateStorage>} */ this.state_data = state_data

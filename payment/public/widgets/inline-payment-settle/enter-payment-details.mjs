@@ -19,7 +19,7 @@ export class EnterPaymentDetails extends Widget {
         super();
 
         super.html = hc.spawn({
-            classes: ['hc-hcts-inline-debit-enter-payment-details'],
+            classes: ['hcts-inline-payment-settle-enter-payment-details', 'hcts-inline-payment-settle-screen'],
             innerHTML: `
                 <div class='container'>
                     <div class='multi-flex-form'></div>

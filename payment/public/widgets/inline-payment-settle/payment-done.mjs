@@ -13,7 +13,7 @@ export class PaymentDone extends Widget {
         super();
 
         super.html = hc.spawn({
-            classes: ['hc-hcts-inline-payment-payment-done'],
+            classes: ['hc-hcts-inline-payment-payment-done', 'hcts-inline-payment-settle-screen'],
             innerHTML: `
                 <div class='container'>
                     <div class='image'>

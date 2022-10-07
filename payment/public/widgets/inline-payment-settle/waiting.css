@@ -5,38 +5,38 @@
     Check the description of this widget (waiting) at ./waiting.mjs
  */
 
-.hc-hcts-inline-debit-waiting>.container {
+.hcts-inline-payment-settle-waiting>.container {
     font-family: bariolBold;
-    min-width:150px;
+    min-width:250px;
 }
 
-.hc-hcts-inline-debit-waiting>.container {
+.hcts-inline-payment-settle-waiting>.container {
     display: flex;
     flex-direction: column;
     gap: 1em;
     align-items: center;
 }
-.hc-hcts-inline-debit-waiting>.container >.text{
+.hcts-inline-payment-settle-waiting>.container >.text{
     text-align:right;
 }
 
-.hc-hcts-inline-debit-waiting>.container>.spinner img {
+.hcts-inline-payment-settle-waiting>.container>.spinner img {
     max-width: 2em;
     display: flex;
     justify-content: center;
     pointer-events: none;
 }
 
-.hc-hcts-inline-debit-waiting>.container>.actions {
+.hcts-inline-payment-settle-waiting>.container>.actions {
     display: flex;
     width: 100%;
 }
 
-.hc-hcts-inline-debit-waiting>.container>.actions>* {
+.hcts-inline-payment-settle-waiting>.container>.actions>* {
     flex-grow: 1;
 }
 
-.hc-hcts-inline-debit-waiting>.container .hc-action-button >.container{
+.hcts-inline-payment-settle-waiting>.container .hc-action-button >.container{
     border-radius:0.85em;
     font-size:0.75em;
 }

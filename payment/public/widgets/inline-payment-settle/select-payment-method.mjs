@@ -19,7 +19,7 @@ export class ChoosePaymentMethod extends Widget {
         super();
 
         super.html = hc.spawn({
-            classes: ['hc-hcts-payment-inline-debit-select-payment-method'],
+            classes: ['hc-hcts-payment-inline-debit-select-payment-method', 'hcts-inline-payment-settle-screen'],
             innerHTML: `
                 <div class='container'>
                     <div class='title'>Choose your payment Method</div>

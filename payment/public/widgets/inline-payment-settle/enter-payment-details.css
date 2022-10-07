@@ -5,15 +5,21 @@
  */
 
 
-.hc-hcts-inline-debit-enter-payment-details>.container input, .hc-hcts-inline-debit-enter-payment-details>.container textarea, .hc-hcts-inline-debit-enter-payment-details>.container .hc-action-button>.container {
+.hcts-inline-payment-settle-enter-payment-details>.container {
+    min-width: 255px;
+}
+
+.hcts-inline-payment-settle-enter-payment-details>.container input,
+.hcts-inline-payment-settle-enter-payment-details>.container textarea,
+.hcts-inline-payment-settle-enter-payment-details>.container .hc-action-button>.container {
     border-radius: 15px;
     max-width: calc(100% - 4px);
 }
 
-.hc-hcts-inline-debit-enter-payment-details>.container>.actions {
+.hcts-inline-payment-settle-enter-payment-details>.container>.actions {
     display: flex;
 }
 
-.hc-hcts-inline-debit-enter-payment-details>.container>.actions>* {
+.hcts-inline-payment-settle-enter-payment-details>.container>.actions>* {
     flex-grow: 1;
 }

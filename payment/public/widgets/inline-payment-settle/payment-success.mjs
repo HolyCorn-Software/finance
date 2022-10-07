@@ -5,8 +5,6 @@
  */
 
 import { PaymentDone } from "./payment-done.mjs";
-import { hc } from "/$/system/static/lib/hc/lib/index.js";
-import { Widget } from "/$/system/static/lib/hc/lib/widget.js";
 
 export class PaymentSuccessUI extends PaymentDone{
 

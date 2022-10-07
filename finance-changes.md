@@ -1,2 +1,2 @@
 
-    Corrected minor bug with flutterwave.momo payment provider
+    Improved design of inline-payment-settle widget

@@ -4,16 +4,16 @@
     Check description of this widget (payment-failure) at ./payment-failure.mjs
  */
 
-.hc-hcts-inline-debit-payment-canceled>.container>.text {
+.hcts-inline-payment-settle-payment-canceled>.container>.text {
     color: rgb(206, 4, 75);
 }
 
-.hc-hcts-inline-debit-payment-canceled>.container>.actions .hc-action-button>.container {
+.hcts-inline-payment-settle-payment-canceled>.container>.actions .hc-action-button>.container {
     border-radius: 16px;
 }
 
 
-.hc-hcts-inline-debit-payment-canceled>.container>.actions .hc-action-button.retry>.container {
+.hcts-inline-payment-settle-payment-canceled>.container>.actions .hc-action-button.retry>.container {
     background-color: #1EF2CC;
     color: black;
     font-family: bariolBold;
