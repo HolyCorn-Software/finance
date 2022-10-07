@@ -5,15 +5,15 @@
  */
 
 import PaymentField from "./field.mjs";
-import { ActionButton } from "/$/system/static/lib/hc/action-button/button.js";
-import { hc } from "/$/system/static/lib/hc/lib/index.js";
-import { GrowRetry } from "/$/system/static/lib/hc/lib/util/retry.js";
-import { Widget } from "/$/system/static/lib/hc/lib/widget.js";
+import ActionButton from "/$/system/static/html-hc/widgets/action-button/button.mjs"
+import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
+import { Widget } from "/$/system/static/html-hc/lib/widget/index.mjs";
+import GrowRetry from "/$/system/static/html-hc/lib/retry/retry.mjs";
 
 
 export class PaymentDetails extends Widget {
 
-    constructor({descriptors, values}={}) {
+    constructor({ descriptors, values } = {}) {
         super();
 
         super.html = hc.spawn({

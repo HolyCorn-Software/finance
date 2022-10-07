@@ -6,7 +6,7 @@
 
 import { createNewPayment } from "./logic.mjs";
 import { handle } from "/$/system/static/errors/error.mjs";
-import { PopupForm } from "/$/system/static/lib/hc/popup-form/form.js";
+import PopupForm from "/$/system/static/html-hc/widgets/popup-form/form.mjs";
 
 
 export class NewPaymentPopup extends PopupForm {

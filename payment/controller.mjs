@@ -352,7 +352,7 @@ export default class PaymentController {
         //Now, check that the payment is mature (It has sufficient data that will permit the provider to execute it)
         for (let field of ['amount', 'method', 'type']) {
             if (!record[field]) {
-                throw new Exception(`The payment lacks the ${field} field. It cannot yet be executed`)
+                throw new Exception(`The payment lacks the '${field}' field. It cannot yet be executed`)
             }
         }
 

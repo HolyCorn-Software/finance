@@ -5,8 +5,8 @@
  * This is a phase of the payment process where by the user selects the preferred payment method
  */
 
-import { hc } from "/$/system/static/lib/hc/lib/index.js";
-import { Widget } from "/$/system/static/lib/hc/lib/widget.js";
+import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
+import { Widget } from "/$/system/static/html-hc/lib/widget/index.mjs";
 import { PaymentMethod } from './payment-method.mjs'
 
 export class ChoosePaymentMethod extends Widget {

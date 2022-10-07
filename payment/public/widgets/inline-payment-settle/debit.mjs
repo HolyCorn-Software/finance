@@ -6,10 +6,10 @@
  */
 
 import { ChoosePaymentMethod } from "./select-payment-method.mjs";
-import { hc } from "/$/system/static/lib/hc/lib/index.js";
-import { AlarmObject } from "/$/system/static/lib/hc/lib/util/alarm.js";
-import { Widget } from "/$/system/static/lib/hc/lib/widget.js";
-import { SlideContainer } from "/$/system/static/lib/hc/slide-container/container.mjs";
+import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
+import AlarmObject from "/$/system/static/html-hc/lib/alarm/alarm.mjs"
+import { Widget } from "/$/system/static/html-hc/lib/widget/index.mjs";
+import { SlideContainer } from "/$/system/static/html-hc/widgets/slide-container/container.mjs";
 import { EnterPaymentDetails } from './enter-payment-details.mjs'
 import { PaymentSuccessUI } from './payment-success.mjs'
 import { PaymentFailureUI } from "./payment-failure.mjs";

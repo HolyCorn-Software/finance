@@ -10,7 +10,7 @@ import InlinePaymentSettle from '/$/finance/payment/static/widgets/inline-paymen
 import PaymentPage from '/$/finance/payment/static/widgets/payment-page/widget.mjs'
 import finRpc from '/$/finance/static/lib/rpc/rpc.mjs'
 import { handle, report_error_direct } from '/$/system/static/errors/error.mjs'
-import { hc } from '/$/system/static/lib/hc/lib/index.js'
+import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
 
 
 const page = new PaymentPage()

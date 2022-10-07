@@ -7,7 +7,7 @@
  */
 
 import { PaymentProvidedUI } from "/$/finance/payment/static/lib/index.mjs";
-import { hc } from "/$/system/static/lib/hc/lib/index.js";
+import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
 
 
 export default class FlutterwaveStatusWidget extends PaymentProvidedUI {

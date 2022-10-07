@@ -6,7 +6,7 @@
 */
 
 import { PaymentDetails } from "./content.mjs";
-import { HCTSBrandedPopup } from "/$/system/static/lib/hc/branded-popup/popup.js";
+import HCTSBrandedPopup from "/$/system/static/html-hc/widgets/branded-popup/popup.mjs";
 
 
 export default class PaymentDetailsPopup extends HCTSBrandedPopup {

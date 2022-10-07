@@ -4,8 +4,8 @@
  * This widget (payment-success) reflects the state of the inline-debit widget when payment has been successfully made
  */
 
-import { hc } from "/$/system/static/lib/hc/lib/index.js";
-import { Widget } from "/$/system/static/lib/hc/lib/widget.js";
+import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
+import { Widget } from "/$/system/static/html-hc/lib/widget/index.mjs";
 
 export class PaymentDone extends Widget {
 

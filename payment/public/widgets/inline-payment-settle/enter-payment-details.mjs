@@ -4,10 +4,10 @@
  * This widget (enter-payment-details) allows for the possibility of collecting user input to be used debit the user
  */
 
-import { ActionButton } from "/$/system/static/lib/hc/action-button/button.js";
-import { hc } from "/$/system/static/lib/hc/lib/index.js";
-import { Widget } from "/$/system/static/lib/hc/lib/widget.js";
-import { MultiFlexForm } from "/$/system/static/lib/hc/multi-flex-form/flex.js";
+import ActionButton from "/$/system/static/html-hc/widgets/action-button/button.mjs"
+import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
+import { Widget } from "/$/system/static/html-hc/lib/widget/index.mjs";
+import { MultiFlexForm } from "/$/system/static/html-hc/widgets/multi-flex-form/index.mjs";
 
 export class EnterPaymentDetails extends Widget {
 

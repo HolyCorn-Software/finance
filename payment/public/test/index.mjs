@@ -5,7 +5,7 @@
  */
 
 import InlinePaymentSettle from "../widgets/inline-payment-settle/debit.mjs";
-import { hc } from "/$/system/static/lib/hc/lib/index.js";
+import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
 
 
 let payment_settle = new InlinePaymentSettle()

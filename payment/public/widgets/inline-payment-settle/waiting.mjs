@@ -4,9 +4,9 @@
  * This widget (waiting) shows spinning balls and a message, while the user completes the payment
  */
 
-import { ActionButton } from "/$/system/static/lib/hc/action-button/button.js";
-import { hc } from "/$/system/static/lib/hc/lib/index.js";
-import { Widget } from "/$/system/static/lib/hc/lib/widget.js";
+import ActionButton from "/$/system/static/html-hc/widgets/action-button/button.mjs"
+import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
+import { Widget } from "/$/system/static/html-hc/lib/widget/index.mjs";
 
 export class WaitingUI extends Widget {
 

@@ -6,7 +6,7 @@ This widget focuses on UIs provided by the SwapD faculty.
 */
 
 import { CalculatedError } from "/$/system/static/errors/error.mjs";
-import { Widget } from "/$/system/static/lib/hc/lib/widget.js";
+import { Widget } from "/$/system/static/html-hc/lib/widget/index.mjs";
 import { PaymentProvidedUI } from "./model.js";
 
 /** @type {typeof import('system/public/lib/hc/lib/util/path.js')} */

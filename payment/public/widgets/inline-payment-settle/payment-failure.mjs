@@ -5,8 +5,8 @@
  */
 
 import { PaymentDone } from "./payment-done.mjs";
-import { ActionButton } from "/$/system/static/lib/hc/action-button/button.js";
-import { hc } from "/$/system/static/lib/hc/lib/index.js";
+import ActionButton from "/$/system/static/html-hc/widgets/action-button/button.mjs"
+import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
 
 
 export class PaymentFailureUI extends PaymentDone {

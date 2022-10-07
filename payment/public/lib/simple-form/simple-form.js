@@ -8,10 +8,10 @@ This widget allows other providers to create a simple payment UI
 
 import { PaymentProvidedUI } from "../provided-ui/model.js";
 import { handle } from "/$/system/static/errors/error.mjs";
-import { ActionButton } from "/$/system/static/lib/hc/action-button/button.js";
-import { AlarmObject } from "/$/system/static/lib/hc/lib/util/alarm.js";
-import { MultiFlexForm } from "/$/system/static/lib/hc/multi-flex-form/flex.js";
+import ActionButton from "/$/system/static/html-hc/widgets/action-button/button.mjs"
+import AlarmObject from "/$/system/static/html-hc/lib/alarm/alarm.mjs"
 import finRpc from "/$/finance/static/lib/rpc/rpc.mjs";
+import MultiFlexForm  from "/$/system/static/html-hc/widgets/multi-flex-form/flex.mjs";
 
 
 const paymentMethods = await finRpc.finance.payment.getPaymentMethods()

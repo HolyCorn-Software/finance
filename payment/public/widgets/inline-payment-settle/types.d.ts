@@ -5,7 +5,7 @@
  */
 
 import { ClientPaymentMethodInfo, PaymentRecord } from "faculty/finance/payment/types"
-import { AlarmObject } from "/$/system/static/lib/hc/lib/util/alarm-types.js"
+import {AlarmObject} from "/$/system/static/html-hc/lib/alarm/alarm-types";
 
 
 

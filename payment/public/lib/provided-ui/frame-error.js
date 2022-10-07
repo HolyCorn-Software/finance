@@ -5,8 +5,8 @@ This is part of the widget that allows remote views to be loaded
 This widget (ProvidedFrameErrorUI) allows the developer to display a neat error page with an option to reload
 */
 
-import { ActionButton } from "/$/system/static/lib/hc/action-button/button.js";
-import { Widget } from "/$/system/static/lib/hc/lib/widget.js";
+import ActionButton from "/$/system/static/html-hc/widgets/action-button/button.mjs"
+import { Widget } from "/$/system/static/html-hc/lib/widget/index.mjs";
 
 export class ProvidedFrameErrorUI extends Widget {
 

@@ -4,8 +4,8 @@ The BGI Swap Project
 This widget is loading menu of 4 bouncing balls
 */
 
-import { hc } from "/$/system/static/lib/hc/lib/index.js";
-import { Widget } from "/$/system/static/lib/hc/lib/widget.js";
+import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
+import { Widget } from "/$/system/static/html-hc/lib/widget/index.mjs";
 
 hc.importModuleCSS(import.meta.url)
 

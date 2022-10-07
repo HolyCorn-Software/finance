@@ -5,8 +5,8 @@
  * This widget shows the details of a product being purchased
  */
 
-import { HCTSBrandedPopup } from "/$/system/static/lib/hc/branded-popup/popup.js";
-import { hc } from "/$/system/static/lib/hc/lib/index.js";
+import HCTSBrandedPopup from "/$/system/static/html-hc/widgets/branded-popup/popup.mjs";
+import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
 
 
 export default class PaymentProductDetailsPopup extends HCTSBrandedPopup {

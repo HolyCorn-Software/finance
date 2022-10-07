@@ -6,8 +6,8 @@
  * This widget shows a simple comprehensive description of the product being purchased
  */
 
-import { hc } from "/$/system/static/lib/hc/lib/index.js";
-import { Widget } from "/$/system/static/lib/hc/lib/widget.js";
+import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
+import { Widget } from "/$/system/static/html-hc/lib/widget/index.mjs";
 
 import PaymentProductDetailsPopup from '../product-details-popup/widget.mjs'
 

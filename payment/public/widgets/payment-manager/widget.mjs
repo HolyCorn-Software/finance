@@ -8,9 +8,9 @@ import PaymentDetailsPopup from "./widgets/details/widget.mjs";
 import { convertToFrontendFormat } from "./widgets/listings/logic.mjs";
 import PaymentListings from "./widgets/listings/widget.mjs";
 import { NewPaymentPopup } from "./widgets/new/widget.mjs";
-import { ActionButton } from "/$/system/static/lib/hc/action-button/button.js";
-import { hc } from "/$/system/static/lib/hc/lib/index.js";
-import { Widget } from "/$/system/static/lib/hc/lib/widget.js";
+import ActionButton from "/$/system/static/html-hc/widgets/action-button/button.mjs"
+import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
+import { Widget } from "/$/system/static/html-hc/lib/widget/index.mjs";
 
 
 export default class PaymentManager extends Widget {

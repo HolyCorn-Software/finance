@@ -10,7 +10,7 @@ import InlinePaymentSettle from "../debit.mjs";
 import { WaitingUI } from "../waiting.mjs";
 import finRpc from "/$/finance/static/lib/rpc/rpc.mjs";
 import { handle } from "/$/system/static/errors/error.mjs";
-import BrandedBinaryPopup from "/$/system/static/lib/hc/branded-binary-popup/widget.mjs";
+import BrandedBinaryPopup from "/$/system/static/html-hc/widgets/branded-binary-popup/widget.mjs";
 
 
 

@@ -8,7 +8,7 @@ It is intended that payment providers extend this class in order to quickly prov
 
 import { PaymentProvidedUI } from '../provided-ui/model.js'
 import { CalculatedError } from '/$/system/static/errors/error.mjs'
-import { hc } from '/$/system/static/lib/hc/lib/index.js'
+import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
 
 hc.importModuleCSS(import.meta.url)
 

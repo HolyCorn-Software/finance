@@ -5,7 +5,7 @@
  */
 
 import { PaymentDone } from "./payment-done.mjs";
-import { hc } from "/$/system/static/lib/hc/lib/index.js";
+import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
 
 
 export class PaymentCanceledUI extends PaymentDone {
