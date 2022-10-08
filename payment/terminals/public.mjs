@@ -9,10 +9,12 @@
 import muser_common from "muser_common"
 import { checkArgs } from "../../../../system/util/util.js"
 import PaymentController from "../controller.mjs"
+import PaymentRefresher from "../refresher/refresher.mjs"
 
 
 
 const controller_symbol = Symbol()
+const refresher_symbol = Symbol()
 
 
 export default class PaymentPublicMethods {
@@ -20,10 +22,12 @@ export default class PaymentPublicMethods {
     /**
      * 
      * @param {PaymentController} controller 
+     * @param {PaymentRefresher} refresher
      */
-    constructor(controller) {
+    constructor(controller, refresher) {
 
         this[controller_symbol] = controller
+        this[refresher_symbol] = refresher
     }
 
     /**
@@ -58,6 +62,9 @@ export default class PaymentPublicMethods {
     async publicUpdate({ id, data }) {
         id = arguments[1]?.id
         data = arguments[1]?.data
+        while (this[refresher_symbol].recordIsLocked(id)) {
+            await new Promise(x => setTimeout(x, 200))
+        }
         await this[controller_symbol].publicUpdate({ userid: (await muser_common.getUser(arguments[0])).id, id, data })
     }
 

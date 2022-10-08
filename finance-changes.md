@@ -1,2 +1,2 @@
 
-    Corrected minor updation bug, by making the system to wait for updates to complete.
+    Corrected minor bug that caused data loss when refresher makes an update just after another module does so

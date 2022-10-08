@@ -22,7 +22,7 @@ export default class FinancePublicMethods extends FacultyPublicMethods {
         super()
 
 
-        this.payment = new PaymentPublicMethods(controller.payment)
+        this.payment = new PaymentPublicMethods(controller.payment, controller.refresher)
         this.product = new ProductPublicMethods(controller.product.data, controller.product.purchase)
 
     }

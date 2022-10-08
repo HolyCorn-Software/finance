@@ -108,6 +108,15 @@ export default class PaymentRefresher {
     }
 
     /**
+     * This method is used to check if a record is currently being used by the refresher
+     * @param {string} id 
+     * @returns {boolean}
+     */
+    recordIsLocked(id) {
+        return this.refreshers.some(x => x.recordLocks[id] ?? false)
+    }
+
+    /**
      * This method starts the infinite loop
      */
     async start_loop() {
