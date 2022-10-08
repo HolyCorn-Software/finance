@@ -208,12 +208,15 @@ export default class PaymentController {
      * @returns {Promise<void>}
      */
     async updateRecord({ search, update }) {
+        const promises = []
         for (let collection in this[collections_symbol]) {
             if (collection === 'credentials') {
                 continue;
             }
-            this[collections_symbol][collection].updateOne({ ...search }, { $set: update })
+            promises.push(this[collections_symbol][collection].updateOne({ ...search }, { $set: update }))
         }
+
+        await Promise.all(promises)
     }
 
 

@@ -1,2 +1,2 @@
 
-Made changes to adapt to the new placement of the html-hc library in the soul system
+    Corrected minor updation bug, by making the system to wait for updates to complete.
