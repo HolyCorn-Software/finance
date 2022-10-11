@@ -21,7 +21,7 @@ export class PaymentCanceledUI extends PaymentDone {
         this.html.classList.add('hcts-inline-payment-settle-payment-canceled')
         this.actions = []
 
-        /** @type {import('/$/system/static/lib/hc/lib/util/alarm-types').AlarmObject<import("./types.js").StateStorage>} */ this.state_data = state_data
+        /** @type {import('/$/system/static/html-hc/lib/alarm/alarm-types').AlarmObject<import("./types.js").StateStorage>} */ this.state_data = state_data
 
         this.state_data.$0.addEventListener('payment_data.failed.reason-change', () => {
             this.update_text()

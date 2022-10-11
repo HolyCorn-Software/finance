@@ -10,7 +10,7 @@ import { Widget } from "/$/system/static/html-hc/lib/widget/index.mjs";
 import { PaymentProvidedUI } from "./model.js";
 
 /** @type {typeof import('system/public/lib/hc/lib/util/path.js')} */
-const pathUtils = (await import('/$/system/static/lib/hc/lib/util/path.js'))
+const pathUtils = (await import('/$/system/static/html-hc/lib/path/path.mjs'))
 
 
 /**

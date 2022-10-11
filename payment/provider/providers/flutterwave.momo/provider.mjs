@@ -214,7 +214,7 @@ export default class FlutterwaveMoMo extends PaymentProviderModel {
      * @param {('invoice'|'payout')} param0.intent
      * @param {string} param0.method
      * @override
-     * @returns {Promise<import('/$/system/static/lib/hc/multi-flex-form/types.js').MultiFlexFormDefinitionData>}
+     * @returns {Promise<import('/$/system/static/html-hc/widgets/multi-flex-form/types.js').MultiFlexFormDefinitionData>}
      */
     async getInlineFormDataStructure({ intent, method } = {}) {
         //Pretty easy, just phone number

@@ -29,7 +29,7 @@ export default class InlinePaymentSettle extends Widget {
     constructor() {
         super();
 
-        /** @type {import('/$/system/static/lib/hc/lib/util/alarm-types').AlarmObject<import("./types.js").StateStorage>} */
+        /** @type {import('/$/system/static/html-hc/lib/alarm/alarm-types').AlarmObject<import("./types.js").StateStorage>} */
         this.state_data = new AlarmObject()
 
         this.state_data.payment_data = {}

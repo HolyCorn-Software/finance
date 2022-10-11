@@ -1,0 +1,12 @@
+{
+    "compilerOpions": {
+        "paths": {
+            "/$/finance/static/*": [
+                "faculty/finance/public/*"
+            ],
+            "/$/finance/payment/static/*": [
+                "faculty/finance/payment/public/*"
+            ]
+        }
+    }
+}

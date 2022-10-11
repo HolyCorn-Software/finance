@@ -112,7 +112,7 @@ export default class PaymentProviderModel extends BaseModel {
      * @param {object} param0
      * @param {('invoice'|'payout')} param0.intent
      * @param {string} param0.method
-     * @returns {Promise<import("/$/system/static/lib/hc/multi-flex-form/types.js").MultiFlexFormDefinitionData}
+     * @returns {Promise<import("/$/system/static/html-hc/widgets/multi-flex-form/types.js").MultiFlexFormDefinitionData}
      */
     async getInlineFormDataStructure({ intent, method }) {
 

@@ -51,7 +51,7 @@ export class PaymentProvidedUI extends Widget {
         
         /**
          * This contains data about the payment
-         * @type {import("/$/system/static/lib/hc/lib/util/alarm-types.js").AlarmObject<import("faculty/finance/payment/types.js").PaymentRecord & {payment_method_info: import("faculty/finance/payment/types.js").ClientPaymentMethodInfo}>}
+         * @type {import("/$/system/static/html-hc/lib/alarm/alarm-types.js").AlarmObject<import("faculty/finance/payment/types.js").PaymentRecord & {payment_method_info: import("faculty/finance/payment/types.js").ClientPaymentMethodInfo}>}
          */
         this.data = new AlarmObject();
 
