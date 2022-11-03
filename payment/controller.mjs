@@ -22,6 +22,8 @@ const providers_symbol = Symbol()
 
 const faculty = FacultyPlatform.get()
 
+const executeLock = Symbol()
+
 
 export default class PaymentController {
 
@@ -35,6 +37,8 @@ export default class PaymentController {
 
         /** @type {[PaymentProviderModel]} */
         this[providers_symbol] = []
+
+        this[executeLock] = new ExecuteLockManager()
 
     }
 
@@ -350,28 +354,42 @@ export default class PaymentController {
      * @returns {Promise<void>}
      */
     async execute({ id, userid }) {
-        const record = await this.findAndCheckOwnership({ search: { id }, userid })
 
-        //Now, check that the payment is mature (It has sufficient data that will permit the provider to execute it)
-        for (let field of ['amount', 'method', 'type']) {
-            if (!record[field]) {
-                throw new Exception(`The payment lacks the '${field}' field. It cannot yet be executed`)
+        if (!this[executeLock].lock(id)) {
+            return; //It's already being executed, or it wasn't executed too long from now
+        }
+
+        try {
+
+
+            const record = await this.findAndCheckOwnership({ search: { id }, userid })
+
+            //Now, check that the payment is mature (It has sufficient data that will permit the provider to execute it)
+            for (let field of ['amount', 'method', 'type']) {
+                if (!record[field]) {
+                    throw new Exception(`The payment lacks the '${field}' field. It cannot yet be executed`)
+                }
             }
+
+            //Now, find the provider and execute it
+            const provider = await this.getProvider({ method: record.method })
+
+            //How do we execute the payment ?
+            if (record.type === 'invoice') {
+                await provider.charge(record)
+            } else {
+                await provider.payout(record)
+            }
+
+            record.executed = Date.now()
+
+            await this.updateRecord({ search: { id: record.id }, update: record })
+        } catch (e) {
+            this[executeLock].unlock(id)
+            throw e
         }
 
-        //Now, find the provider and execute it
-        const provider = await this.getProvider({ method: record.method })
-
-        //How do we execute the payment ?
-        if (record.type === 'invoice') {
-            await provider.charge(record)
-        } else {
-            await provider.payout(record)
-        }
-
-        record.executed = Date.now()
-
-        this.updateRecord({ search: { id: record.id }, update: record })
+        this[executeLock].unlock(id)
 
     }
 
@@ -383,13 +401,23 @@ export default class PaymentController {
      */
     async refreshRecord(record, actor = 'client') {
 
-        if (record.method && record.amount?.value && record.amount?.currency && record.provider_data && Reflect.ownKeys(record.provider_data).length > 0) {
-
-            const provider = await this.getProvider({ method: record.method })
-            await provider.refresh(record);
-            record.lastRefresh ||= { client: 0, system: 0 }
-            record.lastRefresh[actor === 'client' ? 'client' : 'system'] = Date.now()
+        while (!this[executeLock].canUpdate(record)) {
+            await Promise(x => setTimeout(x, 200))
         }
+
+        try {
+
+            if (record.executed && record.method && record.amount?.value && record.amount?.currency && record.provider_data && Reflect.ownKeys(record.provider_data).length > 0) {
+                const provider = await this.getProvider({ method: record.method })
+                await provider.refresh(record);
+                record.lastRefresh ||= { client: 0, system: 0 }
+                record.lastRefresh[actor === 'client' ? 'client' : 'system'] = Date.now()
+            }
+
+        } catch (e) {
+            throw e
+        }
+
         return record;
     }
 
@@ -483,11 +511,7 @@ export const ownership_check = async ({ userid, record, bypass_permissions }) =>
 
 const init = async () => {
 
-    console.log('in init function')
-
     const modernuser = await muser_common.getConnection()
-
-    console.log(`done with init function`)
 
     let permissions = [
 
@@ -508,3 +532,43 @@ const init = async () => {
 }
 
 setTimeout(() => init(), 500)
+
+
+const locks = Symbol()
+
+/**
+ * This class makes sure, only a single call to the execute() method for a record is made at a time
+ */
+class ExecuteLockManager {
+
+    constructor() {
+        /** @type {{[record: string]: {time:number, locked:boolean}}} */
+        this[locks] = {}
+    }
+    lock(id) {
+        if ((Date.now() - this[locks][id]?.time) > ExecuteLockManager.lockTime) {
+            return false
+        }
+        this[locks][id] = { time: Date.now(), locked: true }
+        return true
+    }
+    unlock(id) {
+        this[locks][id].locked = false
+    }
+
+    /**
+     * This method let's us know if the record can be updated.
+     * 
+     * Even it's not executable.
+     * @param {string} id The id of the record
+     * @returns {boolean}
+     */
+    canUpdate(id) {
+        return !this[locks][id].locked
+    }
+
+    static get lockTime() {
+        return 2 * 60 * 1000 //2 mins before a record can be executed again
+    }
+
+}
