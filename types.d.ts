@@ -7,7 +7,7 @@
 
 import { PaymentCollections } from "./payment/types";
 import { ProductCollections } from "./product/types";
-import FinancePublicMethods from "./terminals/public.mjs";
+import FinanceInternalMethods from "./terminals/internal.mjs";
 
 
 export declare interface FinanceCollections {
@@ -15,4 +15,7 @@ export declare interface FinanceCollections {
     product: ProductCollections
 }
 
-export type FinancePublicMethods = FinancePublicMethods
+
+declare global {
+    export type FinanceFacultyInternalMethods = FinanceInternalMethods
+}

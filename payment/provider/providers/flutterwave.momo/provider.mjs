@@ -123,7 +123,8 @@ export default class FlutterwaveMoMo extends PaymentProviderModel {
         record.client_data.output ||= {}
         record.client_data.output.message ??= {};
 
-        record.client_data.output.message.text = record.client_data.output.message.html = `Please dial *126# and confirm the transaction.\nTransactions are slow these days and can take up to 3 minutes`
+        const ussdCode = /mtn/.test(record.method) ? '*126#' : '#150#'
+        record.client_data.output.message.text = record.client_data.output.message.html = `Please dial ${ussdCode} and confirm the transaction.\nTransactions are slow these days and can take up to 3 minutes`
 
         console.log(`Flutterwave said `, data)
 

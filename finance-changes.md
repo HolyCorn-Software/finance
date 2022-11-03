@@ -1,2 +1,2 @@
 
-    Updated paths that use html-hc
+    Made the instructions for flutterwave.momo clearer to the client
