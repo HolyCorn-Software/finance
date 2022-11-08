@@ -564,7 +564,7 @@ class ExecuteLockManager {
      * @returns {boolean}
      */
     canUpdate(id) {
-        return !this[locks][id].locked
+        return !this[locks][id]?.locked
     }
 
     static get lockTime() {
