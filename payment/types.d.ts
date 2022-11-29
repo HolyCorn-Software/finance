@@ -46,6 +46,16 @@ export declare interface PaymentRecord {
 
     refresher_time: number
 
+    /** Additional data that might be useful to some payment methods; especially in describing what is being paid for */
+    meta: {
+        product: {
+            name: string
+            description: string
+            category: ("electronics" | "content" | "homeTools" | "fashion" | "child" | "automotive" | "credit" | "entertainment" | "jewelry" | "homeService" | "beauty" | "sports" | "foodAndDrugs" | "pet" | "science" | "other")
+            type: "physical" | "virtual"
+        }
+    }
+
 }
 
 
@@ -66,6 +76,7 @@ export declare type PaymentRecordInit = Pick<PaymentRecord,
     | "type"
     | "method"
     | "owners"
+    | "meta"
 >
 
 

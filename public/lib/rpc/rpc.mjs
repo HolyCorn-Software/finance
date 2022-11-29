@@ -8,7 +8,7 @@
 import hcRpc from "/$/system/static/comm/rpc/aggregate-rpc.js";
 
 /**
- * @type {{finance:import("faculty/finance/types.js").FinancePublicMethods}}
+ * @type {{finance:import("faculty/finance/terminals/public.mjs").default}}
  */
 const finRpc = hcRpc
 

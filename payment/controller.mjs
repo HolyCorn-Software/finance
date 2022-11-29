@@ -40,6 +40,29 @@ export default class PaymentController {
 
         this[executeLock] = new ExecuteLockManager()
 
+        setTimeout(async () => {
+            // if (1) return;
+            console.log(
+                await this.createRecord(
+                    {
+                        amount: {
+                            currency: 'XAF',
+                            value: 10
+                        },
+                        meta: {
+                            product: {
+                                category: 'electronics',
+                                description: `eSIM for your mobile phone, by Orange Cameroon SA`,
+                                name: `Orange eSIM`,
+                                type: 'virtual'
+                            },
+                        },
+                        type: 'invoice',
+                    }
+                )
+            )
+        }, 5000)
+
     }
 
     /**
@@ -136,6 +159,14 @@ export default class PaymentController {
         data.settled_amount = {
             value: 0,
             currency: input.amount?.currency
+        }
+        data.meta = input.meta || {
+            product: {
+                description: `Payment of ${new Date().toString()}`,
+                name: `Payment of ${new Date().toString()}`,
+                category: 'other',
+                type: 'virtual'
+            }
         }
 
 
@@ -330,9 +361,11 @@ export default class PaymentController {
         await Promise.allSettled([
             this[providers_symbol].map(provider => {
                 return new Promise((resolve, reject) => {
-                    provider.matchProvider(method).then(() => {
+                    provider.matchProvider(method).then((status) => {
                         resolve()
-                        the_provider = provider
+                        if (status) {
+                            the_provider = provider
+                        }
                     })
 
                 })

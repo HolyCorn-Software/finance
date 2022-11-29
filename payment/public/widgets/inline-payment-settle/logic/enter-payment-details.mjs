@@ -35,7 +35,8 @@ export async function enterPaymentDetailsLogic(widget, enter_details_widget) {
                     method: widget.state_data.payment_data.method
                 });
 
-                if (form_structure === null) {
+                console.log(`form_structure: `, form_structure)
+                if (form_structure === null || !form_structure) {
 
 
                     //Now if the provider doesn't require any input to charge the client, then just go ahead
@@ -102,7 +103,7 @@ export async function enterPaymentDetailsLogic(widget, enter_details_widget) {
  * @param {EnterPaymentDetails} enter_details_widget 
  */
 async function sendUserInput(widget, enter_details_widget) {
-    
+
     return await finRpc.finance.payment.publicUpdate(
         {
             id: widget.state_data.payment_data.id,

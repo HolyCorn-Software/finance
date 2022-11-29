@@ -14,6 +14,7 @@ import libUrl from 'node:url'
 import fs from 'node:fs'
 import { Exception } from "../../../../../../system/errors/backend/exception.js";
 import { FacultyPlatform } from "../../../../../../system/lib/libFaculty/platform.mjs";
+import { CurrencyController } from "../../../../currency/controller.mjs";
 
 const faculty = FacultyPlatform.get()
 
@@ -242,10 +243,9 @@ export default class FlutterwaveMoMo extends PaymentProviderModel {
         if (amount.currency === this.wallet_currency) {
             return amount;
         }
-        const Currencies = (await import('../../logic/currency.js')).Currencies //TODO: Implement real currency conversion
 
         return {
-            value: await Currencies.convert(amount.value, amount.currency, this.wallet_currency),
+            value: await CurrencyController.convert(amount.value, amount.currency, this.wallet_currency),
             currency: this.wallet_currency
         }
     }

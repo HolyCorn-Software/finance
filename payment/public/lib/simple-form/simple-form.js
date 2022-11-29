@@ -15,6 +15,7 @@ import MultiFlexForm  from "/$/system/static/html-hc/widgets/multi-flex-form/fle
 
 
 const paymentMethods = await finRpc.finance.payment.getPaymentMethods()
+console.log(`paymentMethods `, paymentMethods)
 
 
 /**

@@ -5,7 +5,6 @@
  */
 
 
-import PerformanceSearch from "/$/competition/static/widgets/performance-search/widget.mjs";
 import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
 import { Widget } from "/$/system/static/html-hc/lib/widget/index.mjs";
 
@@ -27,24 +26,11 @@ export default class Navbar extends Widget {
                         </div>
                         <div class='center'>
                             <div class='links'></div>
-                            <div class='search'></div>
                         </div>
                     </div>
                 </div>
             `
         });
-
-        /** @type {PerformanceSearch} */ this.search
-        this.widgetProperty(
-            {
-                selector: ['', ...PerformanceSearch.classList].join('.'),
-                parentSelector: '.container >.main >.center >.search',
-                property: 'search',
-                childType: 'widget'
-            }
-        );
-
-        this.search = new PerformanceSearch()
 
 
         /** @type {[{label:string, href:string}]} */ this.links

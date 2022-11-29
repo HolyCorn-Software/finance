@@ -1,0 +1,33 @@
+/*  
+    Copyright 2022 HolyCorn Software
+    The Matazm Project
+    Adapted from The CAYOFED People System
+    This stylesheet makes the waiting screen of the BinancePay payment method look good
+*/
+
+
+.hc-cayofedpeople-binancepay-status >.container{
+    display:inline-flex;
+    max-width:250px;
+    flex-direction: column;
+    background-color:rgb(198, 232, 243);
+    border-radius:10px;
+    padding:0.5em;
+}
+
+.hc-cayofedpeople-binancepay-status >.container >.main{
+    display:flex;
+    gap:1em;
+}
+
+.hc-cayofedpeople-binancepay-status >.container >.main >.wait-text{
+    font-size:0.9em;
+    font-family:k2dThin;
+    text-align: left;
+}
+
+.hc-cayofedpeople-binancepay-status >.container >.main >img{
+    max-width:4.25em;
+    max-height:4.25em;
+    pointer-events:none;
+}
