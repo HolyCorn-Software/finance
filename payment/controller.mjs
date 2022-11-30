@@ -40,29 +40,6 @@ export default class PaymentController {
 
         this[executeLock] = new ExecuteLockManager()
 
-        setTimeout(async () => {
-            // if (1) return;
-            console.log(
-                await this.createRecord(
-                    {
-                        amount: {
-                            currency: 'XAF',
-                            value: 10
-                        },
-                        meta: {
-                            product: {
-                                category: 'electronics',
-                                description: `eSIM for your mobile phone, by Orange Cameroon SA`,
-                                name: `Orange eSIM`,
-                                type: 'virtual'
-                            },
-                        },
-                        type: 'invoice',
-                    }
-                )
-            )
-        }, 5000)
-
     }
 
     /**
