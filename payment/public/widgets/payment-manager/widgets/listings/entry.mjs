@@ -47,11 +47,11 @@ export class PaymentListing extends Widget {
             }
         })
 
-        /** @type {import("faculty/payment/types.js").Amount} */ this.amount
+        /** @type {finance['Amount']} */ this.amount
         Reflect.defineProperty(this, 'amount', {
             /**
              * 
-             * @param {import("faculty/payment/types.js").Amount} value 
+             * @param {finance['Amount']} value 
              */
             set: (value) => {
                 this.__amount__ = `${value.value} ${value.currency}`

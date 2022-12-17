@@ -58,21 +58,29 @@ export async function waitingUILogic(widget, waiting_ui) {
 
             const checker_interval = setInterval(async () => {
 
-                let status = await finRpc.finance.payment.getPublicData({
+
+                let record = await finRpc.finance.payment.getPublicData({
                     id: widget.state_data.payment_data.id
                 })
-                if (status.settled_amount.value >= status.amount.value) {
+                if (record.settled_amount.value >= record.amount.value) {
                     //Then payment is complete
                     widget.state_data.stage = 'success'
                     clearInterval(checker_interval)
                     listening = false;
                 }
-                if (status.failed && status.failed.reason) {
+                if (record.failed && record.failed.reason) {
                     widget.state_data.stage = 'canceled';
                     clearInterval(checker_interval)
                     listening = false;
                 }
-                Object.assign(widget.state_data.payment_data, status)
+
+
+                if (listening && (record.archived)) {
+                    await finRpc.finance.payment.forceRefresh({ id: record.id })
+                }
+
+                Object.assign(widget.state_data.payment_data, record)
+
             }, 4500);
 
             listening = true;
@@ -94,19 +102,23 @@ export async function waitingUILogic(widget, waiting_ui) {
 
         // First things first, has the payment been executed ?
         if (!widget.state_data.payment_data.executed) {
-            await finRpc.finance.payment.execute({ id: widget.state_data.payment_data.id });
-            //Now, since the payment data has changed due to execution, we now fetch it
-            widget.state_data.payment_data = await finRpc.finance.payment.getPublicData({ id: widget.state_data.payment_data.id })
+            try {
+                await finRpc.finance.payment.execute({ id: widget.state_data.payment_data.id });
+                //Now, since the payment data has changed due to execution, we now fetch it
+                widget.state_data.payment_data = await finRpc.finance.payment.getPublicData({ id: widget.state_data.payment_data.id })
+            } catch (e) {
+                widget.state_data.stage = 'failure'
+                handle(e)
+            }
         }
 
 
         //Load the provider's UI
         let frame = new PaymentProvidedUIFrame()
 
-        console.log(`widget.statedata.data.paymentMethods `, widget.state_data.data.paymentMethods)
-        const provider = widget.state_data.data.paymentMethods.find(x => x.code == widget.state_data.payment_data.method).provider
+        const provider = widget.state_data.data.paymentMethods.find(x => x.code == widget.state_data.payment_data.method).plugin
 
-        frame.path = `/${provider}/static/status-widget.mjs`
+        frame.path = `./${provider}/@public/status-widget.mjs`
         waiting_ui.paymentUI = frame.html
         frame.load().then(x => {
             const frame_data = frame.__content_html__?.widgetObject.data;
@@ -115,6 +127,9 @@ export async function waitingUILogic(widget, waiting_ui) {
 
             frame_data.payment_method_info = widget.state_data.data.paymentMethods.find(x => x.code === widget.state_data.payment_data.method)
 
+        }).catch(e => {
+            handle(e)
+            widget.state_data.stage = 'failure'
         });
 
         //From now on, wait for payment to complete, then move to the completion UI

@@ -1,5 +1,27 @@
 {
-    "label":"Faculty of Finance",
-    "name":"finance",
-    "init": "./startup.mjs"
+    "label": "Faculty of Finance",
+    "name": "finance",
+    "init": "./startup.mjs",
+    "plugin": {
+        "plugins": {
+            "payment": {
+                "model": "PaymentPlugin",
+                "test": {
+                    "files": [
+                        "@public/icon.png",
+                        "@public/status-widget.mjs"
+                    ],
+                    "module": {
+                        "matchPlugin": "function",
+                        "validateUserInput": "function",
+                        "charge": "function",
+                        "payout": "function",
+                        "refresh": "function",
+                        "getPaymentMethodsInfo": "function",
+                        "getPaymentForm": "function"
+                    }
+                }
+            }
+        }
+    }
 }

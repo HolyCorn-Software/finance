@@ -14,10 +14,9 @@
     gap: 0.75em;
     align-items: center;
     min-width:4em;
-    max-height:4em;
+    max-height:12em;
 
     padding:0.125em;
-    border: 1px solid #1E8CF2;
     border-radius: 10px;
     align-items: center;
     cursor: pointer;
@@ -30,8 +29,9 @@
 }
 
 .hc-hcts-payment-inline-debit-payment-method>.container img {
-    max-width: 7em;
+    max-width: 8em;
     max-height: 4em;
+    border-radius:16px;
 }
 
 .hc-hcts-payment-inline-debit-payment-method>.container>.highlighter {

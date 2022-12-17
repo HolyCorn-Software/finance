@@ -28,7 +28,7 @@ export default class PaymentInternalMethods {
     /**
      * 
      * This method is used to create a payment
-     * @param {import("../types.js").PaymentRecordInit} data 
+     * @param {finance["PaymentRecord"]Init} data 
      */
     async create(data) {
         return await this[controller_symbol].createRecord(arguments[1])
@@ -39,20 +39,11 @@ export default class PaymentInternalMethods {
      * This method is used to retrieve info of a payment
      * @param {object} param0 
      * @param {string} param0.id
-     * @returns {Promise<import("../types.js").PaymentRecord>}
+     * @returns {Promise<finance["PaymentRecord"]>}
      */
     async getPayment({ id }) {
         return await this[controller_symbol].findRecord({ ...arguments[1] })
     }
-
-    /**
-     * This method returns information about all the payment methods
-     * @returns {Promise<import("../types.js").ProviderPaymentMethodsInfo>}
-     */
-    async getPaymentMethods() {
-        return await this[controller_symbol].getPaymentMethods()
-    }
-
 
 
 
@@ -76,7 +67,7 @@ export default class PaymentInternalMethods {
 
     /**
      * This returns the list of all payment methods
-     * @returns {Promise<[import("../types.js").ClientPaymentMethodInfo]>}
+     * @returns {Promise<[finance['ClientPaymentMethodInfo']]>}
      */
     async getPaymentMethods() {
 

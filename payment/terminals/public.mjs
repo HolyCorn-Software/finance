@@ -53,6 +53,17 @@ export default class PaymentPublicMethods {
     }
 
     /**
+     * This method is used to force refresh a record, that's probably too long
+     * @param {object} param0 
+     * @param {string} param0.id
+     * @returns {Promise<void>}
+     */
+    async forceRefresh({ id }) {
+
+        await this[controller_symbol].forceRefresh({ id: arguments[1]?.id, userid: (await muser_common.getUser(arguments[0])).id })
+    }
+
+    /**
      * This method is used by a client to update a record
      * @param {object} param0 
      * @param {string} param0.id
@@ -71,7 +82,7 @@ export default class PaymentPublicMethods {
 
     /**
      * This returns the list of all payment methods
-     * @returns {Promise<[import("../types.js").ClientPaymentMethodInfo]>}
+     * @returns {Promise<[finance['ClientPaymentMethodInfo']]>}
      */
     async getPaymentMethods() {
 
@@ -80,6 +91,7 @@ export default class PaymentPublicMethods {
         //Simply convert the buffers into data urls
         return methods.map(method => {
             method.image.mimeType ||= 'image/png'
+            /** @type {method} */
             let new_method = { ...method, image: { mimeType: method.image.mimeType } }
             new_method.image.data = `data:${method.image.mimeType};base64,${method.image.data.toString('base64')}`
             return new_method

@@ -6,6 +6,7 @@
  */
 
 import { Collection } from "mongodb"
+import { PaymentType } from "./public/widgets/payment-manager/widgets/listings/types"
 
 
 export declare interface PaymentRecord {
@@ -55,6 +56,8 @@ export declare interface PaymentRecord {
             type: "physical" | "virtual"
         }
     }
+
+    archived: boolean
 
 }
 
@@ -128,25 +131,50 @@ export declare interface PaymentUserInputValidationResult {
     message: string
 }
 
+export declare interface PaymentUserInputValidationData {
+    data: object
+    intent: PaymentType
+}
 
 
-export declare interface PaymentMethodInfo<Type> {
+
+export declare interface PaymentMethodInfo {
     image: {
-        data: Type,
+        data: Buffer,
         mimeType: string
     },
     code: string,
     label: string,
     /** This is filled by the system automatically */
-    provider: string
+    plugin: string
 }
 
 
 
-export declare type ProviderPaymentMethodInfo = PaymentMethodInfo<Buffer>
+
+export declare type PaymentMethodsInfo = [PaymentMethodInfo]
 
 
-export declare type ProviderPaymentMethodsInfo = [ProviderPaymentMethodInfo]
+export declare type ClientPaymentMethodInfo = PaymentMethodInfo
 
 
-export declare type ClientPaymentMethodInfo = PaymentMethodInfo<string> & { provider: string }
+interface _PaymentRecord extends PaymentRecord { }
+
+declare global {
+
+
+    type finance = {
+
+        PaymentRecord: PaymentRecord
+        PaymentRecordMinimal: PaymentRecordMinimal
+        PaymentRecordInit: PaymentRecordInit
+        PaymentUserInputValidationResult: PaymentUserInputValidationResult
+        PaymentMethodsInfo: PaymentMethodsInfo
+        PaymentUserInputValidationData: PaymentUserInputValidationData
+        PaymentRecordType: PaymentRecordType
+        Amount: Amount,
+        ClientPaymentMethodInfo: ClientPaymentMethodInfo
+    }
+
+
+}

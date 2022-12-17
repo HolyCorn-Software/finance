@@ -21,11 +21,17 @@ export class CurrencyController {
      * @param {string} base The reference currency. By default, the base_currency is used
      * @returns {Object<string, number>}
      */
-    static async rates(base) {
+    async rates(base) {
 
         base ||= 'XAF'
 
-        return (await (await fetch(`https://api.coinbase.com/v2/exchange-rates?currency=${base}`)).json()).data
+        const data = (await (await fetch(`https://api.coinbase.com/v2/exchange-rates?currency=${base}`)).json()).data?.rates
+        if (data) {
+            for (let key in data) {
+                data[key] = new Number(data[key]).valueOf()
+            }
+        }
+        return data;
 
     }
 
@@ -37,8 +43,13 @@ export class CurrencyController {
      * @param {string} to 
      * @returns {Promise<number>}
      */
-    static async convert(value, from, to) {
-        let rates = (await CurrencyController.rates()).rates; //rates are in the base currency
+    async convert(value, from, to) {
+        let rates = (await this.rates()); //rates are in the base currency
+        for(const property of [from, to]){
+            if(!rates[property]){
+                throw new Exception(`The currency '${property}' was not found`)
+            }
+        }
         let from_to_rate = rates[from] / rates[to];
         return new Number(value).valueOf() / from_to_rate;
 

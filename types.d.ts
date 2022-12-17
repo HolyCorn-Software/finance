@@ -5,6 +5,8 @@
  * This module contains general type definitions for the faculty
  */
 
+import { PluginNamespaceMap } from "system/lib/libFaculty/plugins/types";
+import PaymentPlugin from "./payment/plugin/model.mjs";
 import { PaymentCollections } from "./payment/types";
 import { ProductCollections } from "./product/types";
 import FinanceInternalMethods from "./terminals/internal.mjs";
@@ -18,4 +20,8 @@ export declare interface FinanceCollections {
 
 declare global {
     export type FinanceFacultyInternalMethods = FinanceInternalMethods
+}
+
+type FinancePluginNamespaceMap = {
+    payment: PaymentPlugin[]
 }

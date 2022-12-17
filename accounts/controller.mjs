@@ -117,7 +117,7 @@ export default class FinanceAccountController {
      * 
      * @param {object} param0
      * @param {string} param0.account
-     * @param {import("../payment/types.js").PaymentRecordMinimal} param0.transaction 
+     * @param {finance['PaymentRecordMinimal']} param0.transaction 
      * @returns {Promise<void>}
      * 
      */

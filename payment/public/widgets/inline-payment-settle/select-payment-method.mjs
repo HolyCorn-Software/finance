@@ -28,7 +28,7 @@ export class ChoosePaymentMethod extends Widget {
             `
         });
 
-        /** @type {[import("faculty/finance/payment/types.js").ClientPaymentMethodInfo]} */ this.paymentMethods
+        /** @type {[finance['ClientPaymentMethodInfo']]} */ this.paymentMethods
         this.pluralWidgetProperty({
             selector: '*',
             parentSelector: '.container >.methods',
@@ -41,13 +41,13 @@ export class ChoosePaymentMethod extends Widget {
 
                 /**
                  * 
-                 * @param {import("faculty/finance/payment/types.js").ClientPaymentMethodInfo} data 
+                 * @param {finance['ClientPaymentMethodInfo']} data 
                  * @returns 
                  */
                 set: (data) => {
-                    let widget = new PaymentMethod()
+                    let widget = new PaymentMethod(data)
                     widget.code = data.code
-                    widget.image_url = data.image.data
+                    
                     widget.addEventListener('click', () => {
                         this.value = widget.code
                     })

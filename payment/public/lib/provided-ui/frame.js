@@ -73,13 +73,10 @@ export class PaymentProvidedUIFrame extends Widget {
                 throw new Error(`Cannot load the UI because the UI path is missing`);
             }
 
-            // TODO: Reload UI
-
-
             //Now fetch the UI module
             /** @type  {typeof PaymentProvidedUI}*/
             let cleanedPath = pathUtils.removeLastSlash(pathUtils.makeAbsolute(pathUtils.cleanPath(this.path)))
-            const Module = (await import(`/$/finance/payment/providers${cleanedPath}`)).default
+            const Module = (await import(`/$/finance/$plugins${cleanedPath}`)).default
 
 
             //Now check if the module follows the structure

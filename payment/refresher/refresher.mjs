@@ -91,6 +91,9 @@ export default class PaymentRefresher {
                 const record = await collections_ranked[rank].findOne({ id })
                 await collections_ranked[rank + 1].updateOne({ id }, { $set: record }, { upsert: true })
                 await collections_ranked[rank].deleteOne({ id })
+                if (rank === 1) {
+                    record.archived = true
+                }
 
             }
 

@@ -7,7 +7,7 @@
  */
 
 import { Collection } from "mongodb";
-import { Amount, PaymentRecordMinimal } from "../payment/types";
+import { Amount } from "../payment/types";
 
 
 export declare interface AccountEntry {
@@ -37,7 +37,7 @@ export declare namespace AccountTransactionData {
 
         type: ("create" | "destroy"),
 
-        transaction: PaymentRecordMinimal,
+        transaction: finance['PaymentRecordMinimal'],
 
     }
 

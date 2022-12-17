@@ -89,7 +89,7 @@ export default class CollectionRefresher {
 
     /**
      * This method refreshes a single record
-     * @param {import("../types.js").PaymentRecord} record 
+     * @param {finance["PaymentRecord"] record 
      * @returns {Promise<void>}
      */
     async refresh(record) {

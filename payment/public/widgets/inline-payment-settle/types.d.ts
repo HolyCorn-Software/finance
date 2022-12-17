@@ -4,23 +4,15 @@
  * This script contains type definitions for the inline-debit widget
  */
 
-import { ClientPaymentMethodInfo, PaymentRecord } from "faculty/finance/payment/types"
+finance['ClientPaymentMethodInfo'] } from "faculty/finance/payment/types"
 import {AlarmObject} from "/$/system/static/html-hc/lib/alarm/alarm-types";
+import { MultiFlexFormDefinitionData } from "/$/system/static/html-hc/widgets/multi-flex-form/types";
 
 
 
 
 /** The various possible input types */
 export type InputTypes = ('text' | 'number' | 'date' | 'password' | 'textarea' | 'choose')
-
-export interface MultiFlexFormFieldData {
-    label: string,
-    value: string | number | boolean,
-    type: InputTypes
-}
-export type MultiFlexFormDefinitionData = [
-    [MultiFlexFormFieldData]
-]
 
 
 
@@ -33,17 +25,7 @@ export interface StateStorage {
         form: MultiFlexFormDefinitionData
     },
 
-    payment_data: PaymentRecord /*{
-        id: string,
-        client_data: {
-            input: object,
-            output: object
-        },
-        method: string,
-        userCanceled: boolean,
-        executed: number
-
-    }*/
+    payment_data: finance['PaymentRecord']
 }
 
 export type StateStorageObject = AlarmObject<StateStorage>

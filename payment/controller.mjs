@@ -9,16 +9,15 @@ import shortUUID from "short-uuid"
 import { HTTPServer } from "../../../system/http/server.js"
 import { Exception } from "../../../system/errors/backend/exception.js"
 import { StrictFileServer } from "../../../system/http/strict-file-server.js"
-import { ProviderLoader } from "../../../system/lib/libFaculty/provider-driver.js"
-import PaymentProviderModel from "./provider/model.mjs"
 import exclusiveUpdate from "../../../system/util/exclusive-update.mjs"
 import { FacultyPlatform } from "../../../system/lib/libFaculty/platform.mjs"
 import muser_common from "muser_common"
+import financePlugins from "../helper.mjs"
+import PaymentPlugin from "./plugin/model.mjs"
 
 
 
 const collections_symbol = Symbol()
-const providers_symbol = Symbol()
 
 const faculty = FacultyPlatform.get()
 
@@ -35,8 +34,7 @@ export default class PaymentController {
 
         this[collections_symbol] = collections
 
-        /** @type {[PaymentProviderModel]} */
-        this[providers_symbol] = []
+        
 
         this[executeLock] = new ExecuteLockManager()
 
@@ -49,6 +47,8 @@ export default class PaymentController {
      */
     async init(http) {
 
+        import('./plugin/model.mjs'); //Make the model globally accessible
+
         // Setup HTTP routing for static files
         new StrictFileServer(
             {
@@ -58,46 +58,12 @@ export default class PaymentController {
             }
         ).add('./public')
 
-
-        //Now Load the providers
-        /** @type {ProviderLoader<PaymentProviderModel>} */
-        const loader = new ProviderLoader(
-            {
-                providers: './provider/providers/',
-                model: './provider/model.mjs',
-                credentials_collection: this[collections_symbol].credentials,
-                fileStructure: ['./provider.mjs', './public/status-widget.mjs'],
-                relModulePath: './provider.mjs'
-            },
-            import.meta.url
-        );
-
-        let results = await loader.load()
-
-        if (results.errors.length > 0) {
-            console.error(`Some Payment providers failed to load \n`, results.errors.join('\n----------------------------------\n'))
-        }
-
-        this[providers_symbol] = results.providers
-
-        for (let provider of results.providers) {
-            const public_path = `${provider.$data.path}/public/`
-            new StrictFileServer(
-                {
-                    http,
-                    urlPath: `/payment/providers/${provider.$data.name}/static/`,
-                    refFolder: public_path
-                }
-            ).add(public_path)
-        }
-
-
     }
 
 
     /**
      * This creates a blank record
-     * @param {import("./types.js").PaymentRecordInit} input 
+     * @param {finance["PaymentRecordInit"]} input 
      * @returns {Promise<string>}
      */
     async createRecord(input) {
@@ -160,7 +126,7 @@ export default class PaymentController {
      * This method gets the publicly accessible data of a payment record.
      * 
      * It simply takes away what is not necessary
-     * @param {import("./types.js").PaymentRecord} record
+     * @param {finance["PaymentRecord"] record
      * @returns {PaymentPublicData}
      */
     getPublicData(record) {
@@ -215,8 +181,8 @@ export default class PaymentController {
     /**
      * Determines the collection that contains a record and updates it
      * @param {object} param0 
-     * @param {import("./types.js").PaymentRecord} param0.search
-     * @param {import("./types.js").PaymentRecord} param0.update
+     * @param {finance["PaymentRecord"] param0.search
+     * @param {finance["PaymentRecord"] param0.update
      * @returns {Promise<void>}
      */
     async updateRecord({ search, update }) {
@@ -235,10 +201,10 @@ export default class PaymentController {
 
     /**
      * This method searches for a record thoroughly, irrespective of the actual collection it resides
-     * @param {import("./types.js").PaymentRecord} param0 
+     * @param {finance["PaymentRecord"] param0 
      * @param {object} param1
      * @param {boolean} param1.throwError
-     * @returns {Promise<import("./types.js").PaymentRecord>}
+     * @returns {Promise<finance["PaymentRecord"]}
      */
     async findRecord({ ...data }, { throwError } = {}) {
 
@@ -266,10 +232,10 @@ export default class PaymentController {
     /**
      * This method searchs for a record and does ownership check immediately before returning the record
      * @param {object} param0 
-     * @param {PaymentRecord} param0.search
+     * @param {finance['PaymentRecord']} param0.search
      * @param {string} param0.userid If specified ownership checks will be made to see if the user owns this
      * @param {[string]} param0.permissions When specified, it will define the permissions to check for. By default this is an array containing permissions.finance.payment.modify_any_payment
-     * @returns {Promise<import("./types.js").PaymentRecord>}
+     * @returns {Promise<finance["PaymentRecord"]}
      */
     async findAndCheckOwnership({ search, userid, permissions = ['permissions.finance.payment.modify_any_payment'] }) {
         const record = await this.findRecord({ ...search }, { throwError: true })
@@ -284,32 +250,32 @@ export default class PaymentController {
 
 
     /**
+     * This method is used to force refresh a record, that's probably too long
+     * @param {object} param0 
+     * @param {string} param0.id
+     * @param {string} param0.userid
+     * @returns {Promise<void>}
+     */
+    async forceRefresh({ id, userid }) {
+        const record = await this.findAndCheckOwnership({ search: { id }, userid })
+        if (!record.archived) {
+            console.log(`NOT Doing a forced refresh of `.red, id)
+            return; //Let's prevent people from overwhelming our systems
+        }
+        console.log(`Doing a forced refresh of `, id)
+        await this.refreshRecord(record, 'client')
+    }
+
+
+    /**
      * This returns the list of all payment methods
-     * @returns {Promise<import("./types.js").ProviderPaymentMethodsInfo>}
+     * @returns {Promise<finance["PaymentMethodsInfo"]>}
      */
     async getPaymentMethods() {
 
-        let promises = this[providers_symbol].map(provider => {
-            //If there's already payment methods info, return them. If not fetch and store them
-            return provider[payment_method_symbol] ? Promise.resolve(provider[payment_method_symbol]) : new Promise((resolve, reject) => {
-                provider.getPaymentMethodsInfo().then(methods => {
-                    resolve(methods)
-                    provider[payment_method_symbol] = methods
-                    for (let method of methods) {
-                        method.provider = provider.$data.name
-                    }
-                })
-            })
-        })
-
-        return (await Promise.allSettled(promises)).filter(promi => {
-            if (promi.status === 'rejected') {
-                console.warn(`Failed to load a payment method because `, promi.reason)
-                return false
-            }
-            return true
-        }).map(x => x.value).flat()
-
+        return (await financePlugins.list.namespaces.payment.callback.getPaymentMethodsInfo()).success.map(val => {
+            return val.value.map(method => ({ ...method, plugin: val.plugin.descriptor.name }))
+        }).flat()
     }
 
 
@@ -322,37 +288,23 @@ export default class PaymentController {
      */
     async getInlineForm({ intent, method }) {
         let provider = await this.getProvider({ method })
-        return await provider.getInlineFormDataStructure({ intent, method })
+        return await provider.getPaymentForm({ intent, method })
     }
 
     /**
-     * This method returns the provider that can handle the given method
+     * This method returns the plugin that can handle the given method
      * @param {object} param0 
      * @param {string} param0.method
-     * @returns {Promise<PaymentProviderModel>}
+     * @returns {Promise<PaymentPlugin>}
      */
     async getProvider({ method }) {
 
-        let the_provider;
-
-        await Promise.allSettled([
-            this[providers_symbol].map(provider => {
-                return new Promise((resolve, reject) => {
-                    provider.matchProvider(method).then((status) => {
-                        resolve()
-                        if (status) {
-                            the_provider = provider
-                        }
-                    })
-
-                })
-            })
-        ])
+        let the_provider = (await financePlugins.list.namespaces.payment.callback.matchPlugin(method)).success.find(x => x.value)
 
         if (!the_provider) {
             throw new Exception(`No provider for ${method}`)
         }
-        return the_provider
+        return the_provider.plugin
     }
 
 
@@ -405,9 +357,9 @@ export default class PaymentController {
 
     /**
      * This method refreshes a record
-     * @param {import("./types.js").PaymentRecord} record 
+     * @param {finance["PaymentRecord"] record 
      * @param {('system'|'client')} actor
-     * @returns {Promise<import("./types.js").PaymentRecord>}
+     * @returns {Promise<finance["PaymentRecord"]}
      */
     async refreshRecord(record, actor = 'client') {
 
@@ -422,6 +374,8 @@ export default class PaymentController {
                 await provider.refresh(record);
                 record.lastRefresh ||= { client: 0, system: 0 }
                 record.lastRefresh[actor === 'client' ? 'client' : 'system'] = Date.now()
+                record.archived = false
+                this.updateRecord({ search: { id: record.id }, update: record })
             }
 
         } catch (e) {
@@ -485,7 +439,7 @@ const payment_method_symbol = Symbol()
  * This uses a userid to check if the user has ownership of a payment record or to ignore the results of the ownership check if the user has the given permissions
  * @param {object} param0 
  * @param {string} param0.userid
- * @param {import("./types.js").PaymentRecord} param0.record
+ * @param {finance["PaymentRecord"] param0.record
  * @param {[string]} param0.bypass_permissions
  * @returns {Promise<void>}
  */
@@ -531,7 +485,7 @@ const init = async () => {
         },
 
         {
-            name: 'permissions.finance.payment.view_any_payment', //TODO: Zone this permission
+            name: 'permissions.finance.payment.view_any_payment',
             label: `View data about any payment`
         }
     ]

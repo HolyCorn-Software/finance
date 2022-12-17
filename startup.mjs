@@ -106,11 +106,11 @@ export async function init() {
 
     setTimeout(async () => {
 
-        if (1) return;
+        // if (1) return;
 
         let id = await overall_controller.payment.createRecord(
             {
-                method: 'flutterwave.momo.mtn_momo',
+                // method: 'flutterwave.momo.mtn_momo',
                 amount: {
                     value: 1,
                     currency: 'XAF'
@@ -119,7 +119,7 @@ export async function init() {
             }
         );
 
-        console.log(`New payment created with id `, id)
+        console.log(`New payment created with id `, id, `\nGo to https://${faculty.server_domains.secure}/$/finance/payment/static/settle-payment/?id=${id}`)
 
 
     }, 2000)

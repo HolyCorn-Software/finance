@@ -49,12 +49,12 @@ export default class ProductDescription extends Widget {
             this.htmlProperty(`.container >.price >.${prop}`, `price_${prop}`, 'innerHTML')
         }
 
-        /** @type {import("faculty/payment/types.js").Amount} */ this.price
+        /** @type {finance['Amount']} */ this.price
 
         Reflect.defineProperty(this, 'price', {
             /**
              * 
-             * @param {import("faculty/payment/types.js").Amount} price 
+             * @param {finance['Amount']} price 
              */
             set: (price) => {
                 this.price_currency = price.currency

@@ -11,7 +11,11 @@ import { Widget } from "/$/system/static/html-hc/lib/widget/index.mjs";
 
 export class PaymentMethod extends Widget {
 
-    constructor() {
+    /**
+     * 
+     * @param {finance['ClientPaymentMethodInfo']} data 
+     */
+    constructor(data) {
         super();
 
         super.html = hc.spawn({
@@ -38,6 +42,11 @@ export class PaymentMethod extends Widget {
         this.html.addEventListener('click', () => {
             this.dispatchEvent(new CustomEvent('click'))
         })
+
+        this.image_url = data?.image.data
+
+
+        Object.assign(this, data)
 
 
     }
