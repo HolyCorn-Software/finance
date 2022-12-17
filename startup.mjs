@@ -106,7 +106,7 @@ export async function init() {
 
     setTimeout(async () => {
 
-        // if (1) return;
+        if (1) return;
 
         let id = await overall_controller.payment.createRecord(
             {
