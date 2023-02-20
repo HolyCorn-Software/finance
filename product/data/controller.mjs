@@ -8,8 +8,6 @@
 
 import muser_common from "muser_common"
 import shortUUID from "short-uuid"
-import { Exception } from "../../../../system/errors/backend/exception.js"
-import { FacultyPlatform } from "../../../../system/lib/libFaculty/platform.mjs"
 
 const faculty = FacultyPlatform.get()
 

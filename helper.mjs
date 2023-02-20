@@ -4,12 +4,9 @@
  * This module (helper) allows plugins to be retrieved with typing information
  */
 
-import PluginList from "../../system/lib/libFaculty/plugins/list.mjs"
 
 
-
-
-/** @type {{list: PluginList<import("faculty/finance/types.js").FinancePluginNamespaceMap>}} */ 
+/** @type {{list: import("system/lib/libFaculty/plugin/list.mjs").default<import("faculty/finance/types.js").FinancePluginNamespaceMap>}} */ 
 const financePlugins = {}
 
 Reflect.defineProperty(financePlugins, 'list', {

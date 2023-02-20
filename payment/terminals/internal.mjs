@@ -5,7 +5,7 @@
  * 
  */
 
-import { checkArgs } from "../../../../system/util/util.js";
+
 import PaymentController from "../controller.mjs";
 
 
@@ -104,7 +104,7 @@ export default class PaymentInternalMethods {
      */
     async execute({ id }) {
 
-        checkArgs(arguments[1], { id: 'string' }, 'input')
+        soulUtils.checkArgs(arguments[1], { id: 'string' }, 'input')
 
         await this[controller_symbol].execute({ id: arguments[1]?.id })
     }

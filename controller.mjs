@@ -5,7 +5,6 @@
  * The decision to create this controller is more based on the need to organize things
  */
 
-import { HTTPServer } from "../../system/http/server.js";
 import PaymentController from "./payment/controller.mjs";
 import PaymentRefresher from "./payment/refresher/refresher.mjs";
 import ProductController from "./product/controller.mjs";
@@ -37,8 +36,8 @@ export default class FinanceController {
      * @param {HTTPServer} http
      */
     async init(http) {
-        await this.payment.init(http)
-        await this.product.init(http);
+        await this.payment.init()
+        await this.product.init();
         this.refresher.start_loop()
     }
 

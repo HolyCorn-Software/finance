@@ -5,9 +5,7 @@
  * 
  */
 
-import { StrictFileServer } from "../../system/http/strict-file-server.js"
-import { HTTPServer } from "../../system/http/server.js"
-import { FacultyPlatform } from "../../system/lib/libFaculty/platform.mjs"
+
 import collections from "./collections.mjs"
 import FinancePublicMethods from "./terminals/public.mjs"
 import FinanceController from "./controller.mjs"
@@ -17,7 +15,7 @@ import FinanceInternalMethods from "./terminals/internal.mjs"
 
 const faculty = FacultyPlatform.get()
 
-export async function init() {
+export default async function init() {
 
 
 
@@ -84,19 +82,6 @@ export async function init() {
 
     //Then, let's provide some privileges for other faculties
     faculty.remote.internal = new FinanceInternalMethods(overall_controller)
-
-
-    //Now provide public files
-
-    new StrictFileServer(
-        {
-            http,
-            urlPath: '/static/',
-            refFolder: './public/'
-        }
-    ).add('./public')
-
-
 
 
 

@@ -6,12 +6,9 @@
  * The product module is involved with the dynamics of the creation and purchase of products
  */
 
-import { StrictFileServer } from "../../../system/http/strict-file-server.js";
-import { HTTPServer } from "../../../system/http/server.js";
 import ProductDataController, { product_data_permissions } from "./data/controller.mjs";
 import ProductPurchaseController from "./purchase/controller.mjs";
 import PaymentController from "../payment/controller.mjs";
-import { FacultyPlatform } from "../../../system/lib/libFaculty/platform.mjs";
 
 const faculty = FacultyPlatform.get()
 
@@ -38,22 +35,8 @@ export default class ProductController {
 
     }
 
-    /**
-     * 
-     * @param {HTTPServer} http 
-     */
-    async init(http){
+    async init(){
 
-        //Just setup routing for static files
-        
-        new StrictFileServer(
-            {
-                http,
-                urlPath: '/product/static/',
-                refFolder: './public/'
-            },
-            import.meta.url
-        ).add('./public/')
 
 
         /** @type {import("faculty/modernuser/terminals/internal.mjs").default} */

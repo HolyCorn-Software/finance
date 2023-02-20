@@ -18,7 +18,6 @@ import PaymentController from "../controller.mjs";
 import CollectionRefresher from "./collection-refresher.mjs";
 
 import EventEmitter from 'node:events'
-import { FacultyPlatform } from "../../../../system/lib/libFaculty/platform.mjs";
 
 
 const faculty = FacultyPlatform.get()

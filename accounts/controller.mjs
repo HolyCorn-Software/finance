@@ -5,10 +5,7 @@
  * This module is the central starting point of the accounts module
  */
 
-import { Collection } from "mongodb"
 import shortUUID from "short-uuid"
-import { FacultyPlatform } from "../../../system/lib/libFaculty/platform.mjs"
-import { Exception } from "../../../system/errors/backend/exception.js"
 import BlockChainLogic from "./blockchain/logic.mjs"
 import account_utils from "./utils.mjs"
 import PaymentController from "../payment/controller.mjs"

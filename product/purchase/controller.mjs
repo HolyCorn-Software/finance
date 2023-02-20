@@ -7,9 +7,6 @@
  * 
  */
 
-import { FacultyPlatform } from "../../../../system/lib/libFaculty/platform.mjs";
-import { Exception } from "../../../../system/errors/backend/exception.js";
-import { checkArgs } from "../../../../system/util/util.js";
 import PaymentController from "../../payment/controller.mjs";
 import ProductDataController from "../data/controller.mjs";
 
@@ -74,7 +71,7 @@ export default class ProductPurchaseController {
      */
     async purchase({ userid, product, quantity }) {
 
-        checkArgs(arguments[0], {
+        soulUtils.checkArgs(arguments[0], {
             'quantity': 'number',
             'product': 'string'
         })

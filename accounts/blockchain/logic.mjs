@@ -8,7 +8,6 @@
 
 import crypto from 'node:crypto'
 import shortUUID from 'short-uuid';
-import { Exception } from '../../../../system/errors/backend/exception.js';
 import account_utils from '../utils.mjs';
 
 

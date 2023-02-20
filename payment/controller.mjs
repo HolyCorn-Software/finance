@@ -6,11 +6,7 @@
  */
 
 import shortUUID from "short-uuid"
-import { HTTPServer } from "../../../system/http/server.js"
-import { Exception } from "../../../system/errors/backend/exception.js"
-import { StrictFileServer } from "../../../system/http/strict-file-server.js"
 import exclusiveUpdate from "../../../system/util/exclusive-update.mjs"
-import { FacultyPlatform } from "../../../system/lib/libFaculty/platform.mjs"
 import muser_common from "muser_common"
 import financePlugins from "../helper.mjs"
 import PaymentPlugin from "./plugin/model.mjs"
@@ -34,7 +30,7 @@ export default class PaymentController {
 
         this[collections_symbol] = collections
 
-        
+
 
         this[executeLock] = new ExecuteLockManager()
 
@@ -43,21 +39,10 @@ export default class PaymentController {
     /**
      * This method is called by the system.
      * When the system calls it, the PaymentController sets up the necessary stuff
-     * @param {HTTPServer} http
      */
-    async init(http) {
+    async init() {
 
-        import('./plugin/model.mjs'); //Make the model globally accessible
-
-        // Setup HTTP routing for static files
-        new StrictFileServer(
-            {
-                http,
-                urlPath: '/payment/static/',
-                refFolder: './public/'
-            }
-        ).add('./public')
-
+        await import('./plugin/model.mjs'); //Make the model globally accessible
     }
 
 

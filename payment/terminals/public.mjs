@@ -7,7 +7,6 @@
  */
 
 import muser_common from "muser_common"
-import { checkArgs } from "../../../../system/util/util.js"
 import PaymentController from "../controller.mjs"
 import PaymentRefresher from "../refresher/refresher.mjs"
 
@@ -120,7 +119,7 @@ export default class PaymentPublicMethods {
      */
     async execute({ id }) {
 
-        checkArgs(arguments[1], { id: 'string' }, 'input')
+        soulUtils.checkArgs(arguments[1], { id: 'string' }, 'input')
 
         await this[controller_symbol].execute({ id: arguments[1]?.id, client: arguments[0] })
     }
