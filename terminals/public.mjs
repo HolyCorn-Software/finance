@@ -5,7 +5,6 @@
  * This module provides publicly available methods from the Faculty of Finance
  */
 
-import { FacultyPublicMethods } from "../../../system/comm/rpc/faculty-public-methods.mjs";
 import FinanceController from "../controller.mjs";
 import PaymentPublicMethods from "../payment/terminals/public.mjs";
 import ProductPublicMethods from "../product/terminals/public.mjs";

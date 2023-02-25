@@ -28,7 +28,7 @@ export default class PaymentInternalMethods {
     /**
      * 
      * This method is used to create a payment
-     * @param {finance["PaymentRecord"]Init} data 
+     * @param {finance["PaymentRecordInit"]} data 
      */
     async create(data) {
         return await this[controller_symbol].createRecord(arguments[1])

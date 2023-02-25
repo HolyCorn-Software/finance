@@ -9,27 +9,26 @@
 
 
 
-import { FacultyPublicMethods } from "../../../system/comm/rpc/faculty-public-methods.mjs";
- import FinanceController from "../controller.mjs";
+import FinanceController from "../controller.mjs";
 import PaymentInternalMethods from "../payment/terminals/internal.mjs";
 import ProductInternalMethods from "../product/terminals/internal.mjs";
- 
- 
- 
- export default class FinanceInternalMethods extends FacultyPublicMethods {
- 
-     /**
-      * 
-      * @param {FinanceController} controller
-      */
-     constructor(controller) {
-         super()
- 
- 
-         this.payment = new PaymentInternalMethods(controller.payment)
-         this.product = new ProductInternalMethods(controller.product.data, controller.product.purchase)
- 
-     }
- 
- 
- }
+
+
+
+export default class FinanceInternalMethods extends FacultyPublicMethods {
+
+    /**
+     * 
+     * @param {FinanceController} controller
+     */
+    constructor(controller) {
+        super()
+
+
+        this.payment = new PaymentInternalMethods(controller.payment)
+        this.product = new ProductInternalMethods(controller.product.data, controller.product.purchase)
+
+    }
+
+
+}

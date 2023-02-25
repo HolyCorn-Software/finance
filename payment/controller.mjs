@@ -6,7 +6,6 @@
  */
 
 import shortUUID from "short-uuid"
-import exclusiveUpdate from "../../../system/util/exclusive-update.mjs"
 import muser_common from "muser_common"
 import financePlugins from "../helper.mjs"
 import PaymentPlugin from "./plugin/model.mjs"
@@ -148,7 +147,7 @@ export default class PaymentController {
 
         const final_data = {}
 
-        exclusiveUpdate(
+        soulUtils.exclusiveUpdate(
             {
                 method: 'string',
                 'client_data.input': 'object'

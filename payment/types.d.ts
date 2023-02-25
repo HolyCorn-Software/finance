@@ -6,6 +6,7 @@
  */
 
 import { Collection } from "mongodb"
+import FinanceInternalMethods from "../terminals/internal.mjs"
 import { PaymentType } from "./public/widgets/payment-manager/widgets/listings/types"
 
 
@@ -172,8 +173,11 @@ declare global {
         PaymentMethodsInfo: PaymentMethodsInfo
         PaymentUserInputValidationData: PaymentUserInputValidationData
         PaymentRecordType: PaymentRecordType
-        Amount: Amount,
+        Amount: Amount
         ClientPaymentMethodInfo: ClientPaymentMethodInfo
+        remote: {
+            internal: FinanceInternalMethods
+        }
     }
 
 

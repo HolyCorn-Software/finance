@@ -9,7 +9,6 @@
 import collections from "./collections.mjs"
 import FinancePublicMethods from "./terminals/public.mjs"
 import FinanceController from "./controller.mjs"
-import { FacultyPublicJSONRPC, FacultyPublicRPCServer } from "../../system/comm/rpc/faculty-public-rpc.mjs"
 import FinanceInternalMethods from "./terminals/internal.mjs"
 
 
