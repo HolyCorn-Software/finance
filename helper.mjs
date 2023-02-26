@@ -10,7 +10,7 @@
 const financePlugins = {}
 
 Reflect.defineProperty(financePlugins, 'list', {
-    get: () => FacultyPlatform.get().pluginManager.plugins,
+    get: () => FacultyPlatform.get().pluginManager.loaded,
     configurable: true,
     enumerable: true
 })
