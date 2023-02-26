@@ -23,26 +23,6 @@ export default async function init() {
 
     const http = await HTTPServer.new()
 
-    faculty.base.shortcutMethods.http.claim(
-        {
-            remotePath: faculty.standard.httpPath,
-            http,
-            localPath: '/'
-        }
-    );
-
-    faculty.base.shortcutMethods.http.websocket.claim(
-        {
-            http,
-            base: {
-                point: faculty.standard.publicRPCPoint
-            },
-            local: {
-                path: '/'
-            }
-        }
-    );
-
 
 
     //Initialize the controller
@@ -70,14 +50,6 @@ export default async function init() {
 
     //Then setup public rpc
     faculty.remote.public = new FinancePublicMethods(overall_controller)
-
-    new FacultyPublicRPCServer(faculty.remote.public, http, {
-        path: '/',
-        remotePoint: faculty.standard.publicRPCPoint,
-        callback: (msg, client) => {
-            new FacultyPublicJSONRPC(client)
-        }
-    })
 
     //Then, let's provide some privileges for other faculties
     faculty.remote.internal = new FinanceInternalMethods(overall_controller)

@@ -1,5 +1,3 @@
 .
 
-Added method to compare amounts of different currencies
-
-Made currency methods available to the public, and to other faculties
+Fixed issue coming from ommissions made during the recent switch to faculty-managed remote methods
