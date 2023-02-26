@@ -1,5 +1,5 @@
 .
 
-Removed unnecessary imports to take advantage of new platform globals
+Added method to compare amounts of different currencies
 
-Improved code completion for components that depend on this faculty
+Made currency methods available to the public, and to other faculties

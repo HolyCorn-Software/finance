@@ -37,7 +37,7 @@ export default class InlinePaymentSettle extends Widget {
 
 
         super.html = hc.spawn({
-            classes: ['hc-cayofedpeople-payment-settle'],
+            classes: InlinePaymentSettle.classList,
             innerHTML: `
                 <div class='container'>
                     <div class='hold-slider'></div>
@@ -138,6 +138,10 @@ export default class InlinePaymentSettle extends Widget {
             clearTimeout(init_timeout)
             setTimeout(() => init(), 500)
         })
+    }
+
+    static get classList() {
+        return ['hc-cayofedpeople-payment-settle']
     }
 
 }

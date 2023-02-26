@@ -2,6 +2,12 @@
     "label": "Faculty of Finance",
     "name": "finance",
     "init": "./startup.mjs",
+    "http": {
+        "staticPaths": {
+            "${fPath}/payment/static": "./payment/public",
+            "${fPath}/static": "./public"
+        }
+    },
     "plugin": {
         "plugins": {
             "payment": {

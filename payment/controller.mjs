@@ -414,9 +414,6 @@ export default class PaymentController {
 }
 
 
-const payment_method_symbol = Symbol()
-
-
 
 
 /**

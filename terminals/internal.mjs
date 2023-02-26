@@ -10,6 +10,7 @@
 
 
 import FinanceController from "../controller.mjs";
+import { CurrencyController } from "../currency/controller.mjs";
 import PaymentInternalMethods from "../payment/terminals/internal.mjs";
 import ProductInternalMethods from "../product/terminals/internal.mjs";
 
@@ -27,6 +28,8 @@ export default class FinanceInternalMethods extends FacultyPublicMethods {
 
         this.payment = new PaymentInternalMethods(controller.payment)
         this.product = new ProductInternalMethods(controller.product.data, controller.product.purchase)
+        /** @type  {CurrencyController} */
+        this.currency = new FunctionProxy.SkipArgOne(new CurrencyController())
 
     }
 
