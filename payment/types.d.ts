@@ -25,11 +25,16 @@ export declare interface PaymentRecord {
     }
 
 
-    provider_data: object,
+    provider_data: object
 
     client_data: {
-        input: object,
-        output: object
+        input: object
+        output: {
+            message: {
+                html: string
+                text: string
+            }
+        }
     },
 
     created: number,

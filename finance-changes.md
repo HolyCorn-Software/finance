@@ -1,3 +1,3 @@
 .
 
-Improved typing for plugins
+Improved typing for plugins that operate payment records
