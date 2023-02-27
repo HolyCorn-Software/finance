@@ -1,3 +1,3 @@
 .
 
-Switched to modern plugin management apis
+Improved typing for plugins

@@ -9,6 +9,10 @@ import PaymentPluginSystemInterface from "./system.mjs"
 
 const system = Symbol()
 
+/**
+ * @template CredentialsType
+ * @extends PluginModelModel<CredentialsType>
+ */
 export default class PaymentPlugin extends PluginModelModel {
 
 
