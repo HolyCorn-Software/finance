@@ -20,14 +20,12 @@ export default function configureFailureUI(payment_widget, failure_widget) {
 
         const hasInput = Array.isArray(payment_widget.state_data.data.form)
         const paymentMethodLabel = payment_widget.state_data.data.paymentMethods.find(x => x.code === payment_widget.state_data.payment_data.method).label
-        console.log(`payment_widget.state_data.$0data`, payment_widget.state_data.$0data)
-        console.log(`hasInput: `, hasInput)
-
+        
         const popup = new ListPopup(
             {
                 hideOnOutsideClick: false,
                 selectionSize: { min: 1, max: 1 },
-                title: `Retry payment`,
+                title: `Retry Payment`,
                 caption: `How do you want to retry the payment?`,
                 options: [
                     {

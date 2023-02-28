@@ -33,6 +33,9 @@
     max-height: 4em;
     border-radius:16px;
 }
+.hc-hcts-payment-inline-debit-payment-method>.container >.label{
+    font-size:0.9em;
+}
 
 .hc-hcts-payment-inline-debit-payment-method>.container>.highlighter {
     border-radius:0.25em;
