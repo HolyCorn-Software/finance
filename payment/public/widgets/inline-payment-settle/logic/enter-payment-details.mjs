@@ -35,7 +35,6 @@ export async function enterPaymentDetailsLogic(widget, enter_details_widget) {
                     method: widget.state_data.payment_data.method
                 });
 
-                console.log(`form_structure: `, form_structure)
                 if (form_structure === null || !form_structure) {
 
 
@@ -58,7 +57,7 @@ export async function enterPaymentDetailsLogic(widget, enter_details_widget) {
                 }
 
 
-                enter_details_widget.formWidget.quickStructure = form_structure
+                widget.state_data.data.form = form_structure
                 enter_details_widget.formWidget.values = widget.state_data.payment_data.client_data.input
 
                 enter_details_widget.actions[0].addEventListener('click', async () => {
@@ -72,20 +71,18 @@ export async function enterPaymentDetailsLogic(widget, enter_details_widget) {
                         await enter_details_widget.loadBlock()
 
                         await sendUserInput(widget, enter_details_widget)
+                        widget.state_data.stage = 'waiting'
                     } catch (e) {
                         handle(e)
                     }
 
                     enter_details_widget.loadUnblock()
 
-                    widget.state_data.stage = 'waiting'
                 })
 
             } catch (e) {
                 handle(e)
             }
-        } else {
-            console.log(`Not going to program logic for enter-payment-details`)
         }
     }
 

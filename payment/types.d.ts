@@ -46,9 +46,10 @@ export declare interface PaymentRecord {
     executed: number,
 
     failed: {
-        time: number,
-        reason: string,
+        time: number
+        reason: string
         reason_code: string
+        fatal: boolean
     },
 
     refresher_time: number
@@ -145,10 +146,8 @@ export declare interface PaymentUserInputValidationData {
 
 
 export declare interface PaymentMethodInfo {
-    image: {
-        data: Buffer,
-        mimeType: string
-    },
+    /** A URL link to the image */
+    image:string,
     code: string,
     label: string,
     /** This is filled by the system automatically */
@@ -158,7 +157,7 @@ export declare interface PaymentMethodInfo {
 
 
 
-export declare type PaymentMethodsInfo = [PaymentMethodInfo]
+export declare type PaymentMethodsInfo = PaymentMethodInfo[]
 
 
 export declare type ClientPaymentMethodInfo = PaymentMethodInfo

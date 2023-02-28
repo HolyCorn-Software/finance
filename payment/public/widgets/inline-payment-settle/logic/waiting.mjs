@@ -31,17 +31,14 @@ export async function waitingUILogic(widget, waiting_ui) {
         }
 
         if (widget.state_data.payment_data.method) {
-            if (configured) {
-                if (!listening) {
-                    //In the case that we are returning to the waiting ui after a canceled transaction
-                    setup_checker();
-                }
-                return
+            if (configured && !listening) {
+                //In the case that we are returning to the waiting ui after a canceled transaction
+                setup_checker();
             }
 
             try {
                 await configure()
-                configured = true;
+
             } catch (e) {
                 handle(e)
                 setTimeout(() => widget.state_data.stage = 'enter-payment-details', 1000)
@@ -54,7 +51,6 @@ export async function waitingUILogic(widget, waiting_ui) {
          */
         function setup_checker() {
 
-            console.log(`Setting interval`)
 
             const checker_interval = setInterval(async () => {
 
@@ -68,7 +64,7 @@ export async function waitingUILogic(widget, waiting_ui) {
                     clearInterval(checker_interval)
                     listening = false;
                 }
-                if (record.failed && record.failed.reason) {
+                if (record.failed && record.failed.reason && record.failed.fatal) {
                     widget.state_data.stage = 'canceled';
                     clearInterval(checker_interval)
                     listening = false;
@@ -100,12 +96,36 @@ export async function waitingUILogic(widget, waiting_ui) {
 
     async function configure() {
 
+        async function confirmExecute() {
+            return await new Promise((resolve, reject) => {
+
+                const popup = new BrandedBinaryPopup(
+                    {
+                        title: `Try Again`,
+                        question: `You tried to execute this transaction in the past.\nDo you want to launch it again?\nIf you launch it again, any previous payments will be counted.`,
+                        negative: `No`,
+                        positive: `Try Again`,
+                        execute() {
+                            resolve(true)
+                        }
+                    }
+                );
+
+                popup.show()
+                popup.addEventListener('hide', () => resolve(false))
+            })
+        }
+
+        async function execute() {
+            await finRpc.finance.payment.execute({ id: widget.state_data.payment_data.id });
+            //Now, since the payment data has changed due to execution, we now fetch it
+            widget.state_data.payment_data = await finRpc.finance.payment.getPublicData({ id: widget.state_data.payment_data.id })
+        }
+
         // First things first, has the payment been executed ?
-        if (!widget.state_data.payment_data.executed) {
+        if (!widget.state_data.payment_data.executed || await confirmExecute()) {
             try {
-                await finRpc.finance.payment.execute({ id: widget.state_data.payment_data.id });
-                //Now, since the payment data has changed due to execution, we now fetch it
-                widget.state_data.payment_data = await finRpc.finance.payment.getPublicData({ id: widget.state_data.payment_data.id })
+                await execute()
             } catch (e) {
                 widget.state_data.stage = 'failure'
                 handle(e)
@@ -135,7 +155,6 @@ export async function waitingUILogic(widget, waiting_ui) {
         //From now on, wait for payment to complete, then move to the completion UI
 
         //Now, make use of the Cancel button
-        console.log(`waiting_ui.actions `, waiting_ui.actions)
         waiting_ui.actions[0].addEventListener('click', () => cancel_payment(widget))
     }
 

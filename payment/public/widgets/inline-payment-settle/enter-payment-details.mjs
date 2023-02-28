@@ -28,7 +28,6 @@ export class EnterPaymentDetails extends Widget {
             `
         });
 
-        /** @type {MultiFlexForm} */ this.formWidget
         this.widgetProperty({
             selector: '.hc-multi-flex-form',
             parentSelector: `.container >.multi-flex-form`,
@@ -39,19 +38,19 @@ export class EnterPaymentDetails extends Widget {
             }
         });
 
-        this.formWidget = new MultiFlexForm()
+        /** @type {MultiFlexForm} */ this.formWidget = new MultiFlexForm()
 
         /** @type {[HTMLElement]} */ this.actions
         this.pluralWidgetProperty({
-            selector:'*',
-            parentSelector:'.container >.actions',
-            childType:'html',
-            property:'actions'
+            selector: '*',
+            parentSelector: '.container >.actions',
+            childType: 'html',
+            property: 'actions'
         });
 
         this.actions.push(
             new ActionButton({
-                content:'Continue'
+                content: 'Continue'
             }).html
         )
 
@@ -61,7 +60,6 @@ export class EnterPaymentDetails extends Widget {
             this.render()
         })
 
-        this.render();
     }
 
     render() {

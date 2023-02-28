@@ -33,7 +33,6 @@ export async function startupLogic(widget) {
             return stop();
         }
 
-        console.log(`Where do we resume `, payment_data)
 
         //Now deciding on where the widget will go
         if (payment_data.settled_amount.value >= payment_data.amount.value) { //If the user has paid the amount or more

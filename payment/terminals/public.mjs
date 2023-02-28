@@ -85,16 +85,7 @@ export default class PaymentPublicMethods {
      */
     async getPaymentMethods() {
 
-        let methods = await this[controller_symbol].getPaymentMethods();
-
-        //Simply convert the buffers into data urls
-        return methods.map(method => {
-            method.image.mimeType ||= 'image/png'
-            /** @type {method} */
-            let new_method = { ...method, image: { mimeType: method.image.mimeType } }
-            new_method.image.data = `data:${method.image.mimeType};base64,${method.image.data.toString('base64')}`
-            return new_method
-        })
+        return await this[controller_symbol].getPaymentMethods();
 
     }
 

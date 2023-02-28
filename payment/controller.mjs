@@ -145,6 +145,9 @@ export default class PaymentController {
 
     async publicUpdate0({ data, id }) {
 
+        /**
+         * @type {Pick<finance['PaymentRecord'], "client_data"|"method">}
+         */
         const final_data = {}
 
         soulUtils.exclusiveUpdate(
@@ -155,6 +158,33 @@ export default class PaymentController {
             data,
             final_data
         );
+
+        //Now, if there's user input, let's check that the input is correct
+        if (final_data.client_data?.input) {
+            let record;
+            /**
+             * 
+             * @returns {Promise<finance['PaymentRecord']>}
+             */
+            const getRecord = async () => {
+                return record ||= await this.findRecord({ id })
+            }
+            const method = final_data.method || (await getRecord()).method
+
+            if (method) {
+                const results = await (await this.getProvider({ method })).validateUserInput(
+                    {
+                        data: final_data.client_data.input,
+                        intent: (await getRecord()).type
+                    }
+                );
+
+                if (results.status !== 'valid') {
+                    throw new Exception(results.message)
+                }
+            }
+        }
+
 
         await this.updateRecord({ search: { id }, update: final_data })
 
@@ -305,10 +335,12 @@ export default class PaymentController {
             return; //It's already being executed, or it wasn't executed too long from now
         }
 
+        let record;
+
         try {
 
 
-            const record = await this.findAndCheckOwnership({ search: { id }, userid })
+            record = await this.findAndCheckOwnership({ search: { id }, userid })
 
             //Now, check that the payment is mature (It has sufficient data that will permit the provider to execute it)
             for (let field of ['amount', 'method', 'type']) {
@@ -324,14 +356,35 @@ export default class PaymentController {
             if (record.type === 'invoice') {
                 await provider.charge(record)
             } else {
-                await provider.payout(record)
+                if (record.failed?.time) {
+                    if (!record.failed?.fatal) {
+                        await provider.payout(record)
+                    } else {
+                        throw new Exception(`Cannot retry payout, because it did not fail.`)
+                    }
+                } else {
+                    await provider.payout(record)
+                }
             }
 
             record.executed = Date.now()
 
-            await this.updateRecord({ search: { id: record.id }, update: record })
+            await this.updateRecord({ search: { id: record.id }, update: { ...record } })
         } catch (e) {
             this[executeLock].unlock(id)
+
+            if (record) {
+                record.failed = {
+                    reason: e instanceof Exception ? e.message : new Exception(`System Error`),
+                    time: Date.now(),
+                    fatal: e.fatal ?? false
+                }
+                try {
+                    await this.updateRecord({ search: { id: record.id }, update: record })
+                } catch (updateErr) {
+                    console.error(`Could not update record, after failure to execute it.\nCould not update because: \n`, updateErr.stack || updateErr)
+                }
+            }
             throw e
         }
 

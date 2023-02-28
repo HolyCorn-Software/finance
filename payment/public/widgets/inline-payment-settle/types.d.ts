@@ -4,7 +4,6 @@
  * This script contains type definitions for the inline-debit widget
  */
 
-finance['ClientPaymentMethodInfo'] } from "faculty/finance/payment/types"
 import {AlarmObject} from "/$/system/static/html-hc/lib/alarm/alarm-types";
 import { MultiFlexFormDefinitionData } from "/$/system/static/html-hc/widgets/multi-flex-form/types";
 
@@ -20,10 +19,10 @@ export interface StateStorage {
     stage: ('select-payment-method' | 'enter-payment-details' | 'waiting' | 'success' | 'failure' | 'canceled'),
     data: {
         paymentMethods: [
-            ClientPaymentMethodInfo
+            finance['ClientPaymentMethodInfo']
         ],
         form: MultiFlexFormDefinitionData
-    },
+    }
 
     payment_data: finance['PaymentRecord']
 }

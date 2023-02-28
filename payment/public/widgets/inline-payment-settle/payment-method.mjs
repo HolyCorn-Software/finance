@@ -32,8 +32,8 @@ export class PaymentMethod extends Widget {
         /** @type {string} */ this.label
         this.htmlProperty('.container >.label', 'label', 'innerHTML')
 
-        /** @type {string} */ this.image_url
-        this.htmlProperty('.container >.img img', 'image_url', 'attribute', undefined, 'src')
+        /** @type {string} */ this.image
+        this.htmlProperty('.container >.img img', 'image', 'attribute', undefined, 'src')
 
         /** @type {string} */ this.code
 
@@ -42,9 +42,6 @@ export class PaymentMethod extends Widget {
         this.html.addEventListener('click', () => {
             this.dispatchEvent(new CustomEvent('click'))
         })
-
-        this.image_url = data?.image.data
-
 
         Object.assign(this, data)
 

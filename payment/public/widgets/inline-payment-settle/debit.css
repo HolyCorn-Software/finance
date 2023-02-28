@@ -5,6 +5,10 @@
     This stylesheet determines the looks of the inline-payment-settle widget
 */
 
+.hc-cayofedpeople-payment-settle{
+    display: flex;
+    justify-content: center;
+}
 
 .hc-cayofedpeople-payment-settle >.container{
     display:inline-flex;

@@ -25,8 +25,10 @@ export async function paymentSelectLogic(widget, selection_widget) {
 
         try {
 
+            console.log(`Selection widget value is `, selection_widget.value)
+
             if (!selection_widget.value) {
-                return console.log(`selection_widget.value is`, selection_widget.value);
+                return
             }
 
             selection_widget.loadBlock();
@@ -43,6 +45,7 @@ export async function paymentSelectLogic(widget, selection_widget) {
             widget.state_data.payment_data.method = selection_widget.value;
 
             widget.state_data.stage = 'enter-payment-details'
+            selection_widget.loadUnblock();
         } catch (e) {
             selection_widget.loadUnblock();
             handle(e)

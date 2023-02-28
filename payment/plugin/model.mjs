@@ -42,13 +42,16 @@ export default class PaymentPlugin extends PluginModelModel {
      * 
      * This message will be shown to client after the action of debit.
      * 
-     * NOTE! The plugin should store in the 'plugin_data' field, the minimum data that can be used to retrieve information of the transaction on the plugin's gateway.
+     * NOTE! The plugin should store in the 'provider_data' field, the minimum data that can be used to retrieve information of the transaction on the plugin's gateway.
      * 
      * For example, if a plugin is paypal, it should store just what it needs to pull information from paypal.
      * 
      * The reason is because, this field will be used by the system for intergrity checks.
      * 
      * The plugin can modify all fields of the record, but is advised to modify only what is necessary.
+     * 
+     * If the plugin throws an error, it should add a field 'fatal' true to the error, if it deems it impossible to retry the same transaction
+     * 
      * @param {finance["PaymentRecord"]} record 
      * @returns {Promise<void>}
      */
