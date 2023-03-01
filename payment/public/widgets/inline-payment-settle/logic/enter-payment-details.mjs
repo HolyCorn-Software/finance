@@ -25,15 +25,30 @@ export async function enterPaymentDetailsLogic(widget, enter_details_widget) {
             return;
         }
 
-        if (widget.state_data.payment_data.method && enter_details_widget.formWidget.items.length === 0) {
 
-            try {
+        try {
 
 
-                let form_structure = await finRpc.finance.payment.getInlineForm({
-                    intent: 'invoice',
-                    method: widget.state_data.payment_data.method
-                });
+            let form_structure = await finRpc.finance.payment.getInlineForm({
+                intent: 'invoice',
+                method: widget.state_data.payment_data.method
+            });
+
+            /**
+             * This method checks if two forms are equal
+             * @param {import("/$/system/static/html-hc/widgets/multi-flex-form/types.js").MultiFlexFormDefinitionData} form1 
+             * @param {import("/$/system/static/html-hc/widgets/multi-flex-form/types.js").MultiFlexFormDefinitionData} form2 
+             * @returns {boolean}
+             */
+            function formsEqual(form1, form2) {
+                const flat1 = form1.flat(2)
+                const flat2 = form2.flat(2)
+                return (flat1.length === flat2.length) && flat1.every(f1 => flat2.findIndex(f2 => f2.name === f1.name) !== -1)
+            }
+
+            //If the payment method is set, then the payment details may be entered
+            if (widget.state_data.payment_data.method) {
+
 
                 if (form_structure === null || !form_structure) {
 
@@ -54,35 +69,40 @@ export async function enterPaymentDetailsLogic(widget, enter_details_widget) {
                     );
 
                     return widget.state_data.stage = 'waiting';
-                }
+                } else {
 
 
-                widget.state_data.data.form = form_structure
-                enter_details_widget.formWidget.values = widget.state_data.payment_data.client_data.input
+                    // Here, there's a form, and we have not set the form on the widget before
+                    if (!formsEqual(enter_details_widget.formWidget.quickStructure, form_structure)) {
 
-                enter_details_widget.actions[0].addEventListener('click', async () => {
-                    //Now, if the user submits his details, update the payment details and move to the next phase
-                    //Debit will be initiated by the next phase ('waiting')
+                        widget.state_data.data.form = form_structure
+                        enter_details_widget.formWidget.values = widget.state_data.payment_data.client_data.input
+
+                        enter_details_widget.actions[0].addEventListener('click', async () => {
+                            //Now, if the user submits his details, update the payment details and move to the next phase
+                            //Debit will be initiated by the next phase ('waiting')
 
 
-                    try {
+                            try {
 
-                        //So, while submitting the details, show a waiting dialogue as expected
-                        await enter_details_widget.loadBlock()
+                                //So, while submitting the details, show a waiting dialogue as expected
+                                await enter_details_widget.loadBlock()
 
-                        await sendUserInput(widget, enter_details_widget)
-                        widget.state_data.stage = 'waiting'
-                    } catch (e) {
-                        handle(e)
+                                await sendUserInput(widget, enter_details_widget)
+                                widget.state_data.stage = 'waiting'
+                            } catch (e) {
+                                handle(e)
+                            }
+
+                            enter_details_widget.loadUnblock()
+
+                        })
+
                     }
-
-                    enter_details_widget.loadUnblock()
-
-                })
-
-            } catch (e) {
-                handle(e)
+                }
             }
+        } catch (e) {
+            handle(e)
         }
     }
 

@@ -25,8 +25,11 @@ export async function waitingUILogic(widget, waiting_ui) {
 
     let listening; //Are we listening for the event of settled transaction ?
 
+    let checker_interval;
+
     async function widget_statedata_onchange() {
         if (widget.state_data.stage !== 'waiting') {
+            stop_checker()
             return;
         }
 
@@ -51,23 +54,28 @@ export async function waitingUILogic(widget, waiting_ui) {
          */
         function setup_checker() {
 
+            stop_checker()
 
-            const checker_interval = setInterval(async () => {
+
+            checker_interval = setInterval(async () => {
 
 
                 let record = await finRpc.finance.payment.getPublicData({
                     id: widget.state_data.payment_data.id
                 })
+
+                Object.assign(widget.state_data.payment_data, record)
+
+
                 if (record.settled_amount.value >= record.amount.value) {
                     //Then payment is complete
                     widget.state_data.stage = 'success'
-                    clearInterval(checker_interval)
-                    listening = false;
+                    return stop_checker()
                 }
+
                 if (record.failed && record.failed.reason && record.failed.fatal) {
                     widget.state_data.stage = 'canceled';
-                    clearInterval(checker_interval)
-                    listening = false;
+                    return stop_checker()
                 }
 
 
@@ -75,7 +83,6 @@ export async function waitingUILogic(widget, waiting_ui) {
                     await finRpc.finance.payment.forceRefresh({ id: record.id })
                 }
 
-                Object.assign(widget.state_data.payment_data, record)
 
             }, 4500);
 
@@ -83,13 +90,22 @@ export async function waitingUILogic(widget, waiting_ui) {
 
             widget.state_data.$0.addEventListener('stage-change', () => {
                 if (widget.state_data.stage !== 'waiting') {
-                    return clearInterval(checker_interval)
+                    stop_checker()
                 }
             })
 
         }
 
         setup_checker();
+
+    }
+
+    function stop_checker() {
+
+
+        listening = false;
+        return clearInterval(checker_interval)
+
 
     }
 
@@ -120,6 +136,10 @@ export async function waitingUILogic(widget, waiting_ui) {
             await finRpc.finance.payment.execute({ id: widget.state_data.payment_data.id });
             //Now, since the payment data has changed due to execution, we now fetch it
             widget.state_data.payment_data = await finRpc.finance.payment.getPublicData({ id: widget.state_data.payment_data.id })
+        }
+
+        const cancel = async () => {
+            cancel_payment(widget)
         }
 
         // First things first, has the payment been executed ?
@@ -155,7 +175,7 @@ export async function waitingUILogic(widget, waiting_ui) {
         //From now on, wait for payment to complete, then move to the completion UI
 
         //Now, make use of the Cancel button
-        waiting_ui.actions[0].addEventListener('click', () => cancel_payment(widget))
+        waiting_ui.actions[0].addEventListener('click', cancel)
     }
 
 
@@ -177,10 +197,7 @@ export const cancel_payment = (widget) => {
             question: `Do you want to permanently cancel this payment ?`,
             title: `Cancel Payment ?`,
             execute: async () => {
-
-                if (widget.state_data.stage !== 'waiting') {
-                    return waiting_ui.actions[0].removeEventListener('click', cancel_payment);
-                }
+                
                 try {
                     await finRpc.finance.payment.cancelPayment({
                         id: widget.state_data.payment_data.id
