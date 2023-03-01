@@ -12,15 +12,16 @@ import { PaymentType } from "./public/widgets/payment-manager/widgets/listings/t
 
 export declare interface PaymentRecord {
 
-    id: string,
+    id: string
 
     type: PaymentRecordType,
-    method: string,
+    method: string
+    method_whitelist: string[]
     amount: Amount,
-    settled_amount: Amount,
+    settled_amount: Amount
 
     lastRefresh: {
-        client: number,
+        client: number
         system: number
     }
 
@@ -37,13 +38,13 @@ export declare interface PaymentRecord {
         }
     },
 
-    created: number,
+    created: number
     done: boolean
-    settled_time: number,
+    settled_time: number
 
-    owners: [string],
+    owners: [string]
 
-    executed: number,
+    executed: number
 
     failed: {
         time: number
@@ -87,11 +88,12 @@ export declare type PaymentRecordInit = Pick<PaymentRecord,
     | "method"
     | "owners"
     | "meta"
+    | "method_whitelist"
 >
 
 
 export declare interface Amount {
-    currency: string,
+    currency: string
     value: number
 }
 
@@ -107,7 +109,7 @@ export declare interface PaymentWritablePublicData {
     client_data: {
         input: object
     },
-    method: string,
+    method: string
 
 }
 
@@ -126,9 +128,9 @@ export declare type PaymentProviderCredentialsCollection = Collection<PaymentPro
 
 
 export declare interface PaymentCollections {
-    hot: PaymentRecordCollection,
-    middle: PaymentRecordCollection,
-    archive: PaymentRecordCollection,
+    hot: PaymentRecordCollection
+    middle: PaymentRecordCollection
+    archive: PaymentRecordCollection
     credentials: Collection<{ name: string }>
 }
 
@@ -147,9 +149,9 @@ export declare interface PaymentUserInputValidationData {
 
 export declare interface PaymentMethodInfo {
     /** A URL link to the image */
-    image:string,
-    code: string,
-    label: string,
+    image: string
+    code: string
+    label: string
     /** This is filled by the system automatically */
     plugin: string
 }

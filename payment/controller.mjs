@@ -63,12 +63,14 @@ export default class PaymentController {
             throw new Error(`Invalid input for amount, when creating a new payment record.`)
         }
 
+        /** @type {finance['PaymentRecord']} */
         const data = {}
 
         data.type = input.type
         data.method = input.method
         data.owners = input.owners || []
         data.amount = input.amount
+        data.method_whitelist = input.method_whitelist
 
         data.created = Date.now()
         data.lastRefresh = {
@@ -172,6 +174,14 @@ export default class PaymentController {
             const method = final_data.method || (await getRecord()).method
 
             if (method) {
+
+                //Check if the payment method is legal
+                if ((await getRecord()).method_whitelist?.length > 0) {
+                    if ((await getRecord()).method_whitelist.findIndex(x => x == method) == -1) {
+                        throw new Exception(`The payment method is not allowed for this transaction`)
+                    }
+                }
+
                 const results = await (await this.getProvider({ method })).validateUserInput(
                     {
                         data: final_data.client_data.input,

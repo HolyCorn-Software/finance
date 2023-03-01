@@ -17,21 +17,16 @@ import { handle } from "/$/system/static/errors/error.mjs";
  */
 export async function paymentSelectLogic(widget, selection_widget) {
 
-    if (widget.state_data.stage !== 'select-payment-method') {
-        return;
-    }
 
     selection_widget.addEventListener('change', async () => {
 
+        if (!selection_widget.value) {
+            return
+        }
+
+        selection_widget.loadBlock();
+
         try {
-
-            console.log(`Selection widget value is `, selection_widget.value)
-
-            if (!selection_widget.value) {
-                return
-            }
-
-            selection_widget.loadBlock();
 
             //When the user selects a payment method, we set it as the selected payment method and move over to input payment details
             await finRpc.finance.payment.publicUpdate(
@@ -45,11 +40,11 @@ export async function paymentSelectLogic(widget, selection_widget) {
             widget.state_data.payment_data.method = selection_widget.value;
 
             widget.state_data.stage = 'enter-payment-details'
-            selection_widget.loadUnblock();
         } catch (e) {
-            selection_widget.loadUnblock();
             handle(e)
         }
+
+        selection_widget.loadUnblock();
 
     })
 

@@ -20,7 +20,7 @@ export class NewPaymentPopup extends PopupForm {
                         name: 'owner',
                         type: 'customWidget',
                         customWidgetUrl: '/$/modernuser/static/widgets/user-n-role-input/widget.mjs',
-                        mode: 'users'
+                        mode: 'user'
                     }
                 ],
                 [

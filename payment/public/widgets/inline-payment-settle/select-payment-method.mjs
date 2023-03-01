@@ -47,7 +47,7 @@ export class ChoosePaymentMethod extends Widget {
                 set: (data) => {
                     let widget = new PaymentMethod(data)
                     widget.code = data.code
-                    
+
                     widget.addEventListener('click', () => {
                         this.value = widget.code
                     })
@@ -73,12 +73,16 @@ export class ChoosePaymentMethod extends Widget {
         this.state_data = state_data
 
         //Each time the state_data widget changes, update the list of payment methods
-        this.state_data.$0.addEventListener('change', () => this.render())
+        this.state_data.$0.addEventListener('stage-change', () => this.render())
     }
 
     render() {
-        if (this.state_data?.data?.paymentMethods) {
-            this.paymentMethods = this.state_data.data.paymentMethods
+        if (this.state_data.stage == 'select-payment-method' && this.state_data?.data?.paymentMethods) {
+            let paymentMethods = this.state_data.data.paymentMethods
+            if (this.state_data.payment_data.method_whitelist) {
+                paymentMethods = this.state_data.payment_data.method_whitelist.map(x => paymentMethods.find(m => m.code == x))
+            }
+            this.paymentMethods = paymentMethods
         }
     }
 
