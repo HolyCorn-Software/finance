@@ -29,6 +29,7 @@
     overflow-x:auto;
     width:clamp(70px, 100% - 1em, 100% - 1em);
     text-align: center;
+    padding-left:8px;
 }
 
 .hc-hcts-payment-inline-debit-select-payment-method >.container >.methods::-webkit-scrollbar{
