@@ -5,44 +5,43 @@
  */
 
 
-.hc-hcts-payment-inline-debit-select-payment-method >.container{
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-    gap:2em;
+.hc-hcts-payment-inline-debit-select-payment-method>.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2em;
     font-family: bariolBold;
-    min-width:250px;
-    max-width:100%;
+    min-width: 250px;
+    max-width: 100%;
     align-items: center;
 }
-.hc-hcts-payment-inline-debit-select-payment-method >.container >.title{
-    color:rgb(218, 20, 142);
+
+.hc-hcts-payment-inline-debit-select-payment-method>.container>.title {
+    color: rgb(218, 20, 142);
 }
 
-.hc-hcts-payment-inline-debit-select-payment-method >.container >.methods{
+.hc-hcts-payment-inline-debit-select-payment-method>.container>.methods {
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:1.5em;
-    overflow:hidden;
-    overflow-x:auto;
-    width:clamp(70px, 100% - 1em, 100% - 1em);
+    display: flex;
+    align-items: center;
+    gap: 1.5em;
+    overflow: hidden;
+    overflow-x: auto;
+    max-width: calc(clamp(300px, var(--final-width), 350px) - 5em);
     text-align: center;
-    padding-left:8px;
-}
-
-.hc-hcts-payment-inline-debit-select-payment-method >.container >.methods::-webkit-scrollbar{
-    border-radius:0px;
-    /* border-top:6px solid red; */
-    /* color:green; */
-    background-color:transparent;
+    padding-left: 8px;
+    position: relative;
 }
 
 
-
-.hc-hcts-payment-inline-debit-select-payment-method >.container >.methods::-webkit-scrollbar-thumb{
-    border-radius:0px;
-    border-top:3px solid rgb(173, 8, 85);
+.hc-hcts-payment-inline-debit-select-payment-method>.container>.methods::-webkit-scrollbar {
+    border-radius: 0px;
+    background-color: transparent;
 }
 
+
+
+.hc-hcts-payment-inline-debit-select-payment-method>.container>.methods::-webkit-scrollbar-thumb {
+    border-radius: 0px;
+    border-top: 3px solid rgb(173, 8, 85);
+}

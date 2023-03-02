@@ -1,7 +1,3 @@
 .
 
-Added feature to restrict payment methods for a payment
-
-Made inline-payment-settle widget more robust
-
-Updated use of modernuser's user-n-role-input widget, to follow the new standards
+Corrected minor UI bug with inline-payment-settle widget, that prevented the widget from correctly displaying payment methods, when they're quite many
