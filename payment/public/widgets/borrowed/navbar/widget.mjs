@@ -4,21 +4,28 @@
  * The Navbar widget
  */
 
-
+import systemRpc from "/$/system/static/comm/rpc/system-rpc.mjs";
 import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
 import { Widget } from "/$/system/static/html-hc/lib/widget/index.mjs";
 
 
+let Navbar
 
+try {
+    Navbar = ((await import('/$/shared/static/widgets/navbar/widget.mjs'))).default
 
-export default class Navbar extends Widget {
+} catch (e) {
 
-    constructor() {
-        super();
+    systemRpc.system.error.report(`There's no navbar widget in /$/shared/static/widgets/, the default has been used`)
+    
+    Navbar = class extends Widget {
 
-        this.html = hc.spawn({
-            classes: ['hc-donorforms-navbar'],
-            innerHTML: `
+        constructor() {
+            super();
+
+            this.html = hc.spawn({
+                classes: ['hc-donorforms-navbar'],
+                innerHTML: `
                 <div class='container'>
                     <div class='main'>
                         <div class='logo'>
@@ -30,53 +37,59 @@ export default class Navbar extends Widget {
                     </div>
                 </div>
             `
-        });
+            });
 
 
         /** @type {[{label:string, href:string}]} */ this.links
-        this.pluralWidgetProperty({
-            selector: 'a',
-            property: 'links',
-            parentSelector: '.container >.main >.center >.links',
-            transforms: {
-                set: ({ label, href } = {}) => {
+            this.pluralWidgetProperty({
+                selector: 'a',
+                property: 'links',
+                parentSelector: '.container >.main >.center >.links',
+                transforms: {
+                    set: ({ label, href } = {}) => {
 
-                    return hc.spawn({
-                        tag: 'a',
-                        innerHTML: label,
-                        attributes: {
-                            href
+                        return hc.spawn({
+                            tag: 'a',
+                            innerHTML: label,
+                            attributes: {
+                                href
+                            }
+                        })
+                    },
+                    get: (a) => {
+                        return {
+                            label: a.innerHTML,
+                            href: a.getAttribute('href')
                         }
-                    })
-                },
-                get: (a) => {
-                    return {
-                        label: a.innerHTML,
-                        href: a.getAttribute('href')
                     }
                 }
-            }
-        });
+            });
 
-        this.links.push(
-            {
-                label: 'Home',
-                href: '/'
-            },
-            {
-                label: 'Compete',
-                href: '#'
-            },
-            {
-                label: 'Vote',
-                href: '#'
-            }
-        )
+            this.links.push(
+                {
+                    label: 'Home',
+                    href: '/'
+                },
+                {
+                    label: 'Compete',
+                    href: '#'
+                },
+                {
+                    label: 'Vote',
+                    href: '#'
+                }
+            )
+        }
+
+        static get classList() {
+            return ['hc-donorforms-navbar']
+        }
+
     }
 
-    static get classList() {
-        return ['hc-donorforms-navbar']
-    }
+
 
 }
 
+
+export default Navbar;
