@@ -182,7 +182,9 @@ export default class PaymentController {
                     }
                 }
 
-                const results = await (await this.getProvider({ method })).validateUserInput(
+                const plugin = await this.getProvider({ method })
+
+                const results = await plugin.validateUserInput(
                     {
                         data: final_data.client_data.input,
                         intent: (await getRecord()).type
@@ -366,12 +368,8 @@ export default class PaymentController {
             if (record.type === 'invoice') {
                 await provider.charge(record)
             } else {
-                if (record.failed?.time) {
-                    if (!record.failed?.fatal) {
-                        await provider.payout(record)
-                    } else {
-                        throw new Exception(`Cannot retry payout, because it did not fail.`)
-                    }
+                if (record.executed && !record.failed?.fatal) {
+                    throw new Exception(`Cannot retry payout, because it did not fail.`)
                 } else {
                     await provider.payout(record)
                 }
@@ -384,8 +382,10 @@ export default class PaymentController {
             this[executeLock].unlock(id)
 
             if (record) {
+                const errorId = shortUUID.generate()
+                console.log(`${e.stack || e.message || e}\nid:${errorId}`)
                 record.failed = {
-                    reason: e instanceof Exception ? e.message : new Exception(`System Error`),
+                    reason: e instanceof Exception ? e.message : `System Error: ${errorId}`,
                     time: Date.now(),
                     fatal: e.fatal ?? false
                 }
@@ -416,7 +416,7 @@ export default class PaymentController {
 
         try {
 
-            if (record.executed && record.method && record.amount?.value && record.amount?.currency && record.provider_data && Reflect.ownKeys(record.provider_data).length > 0) {
+            if (record.executed && record.method && record.amount?.value && record.amount?.currency && ((record.provider_data && Reflect.ownKeys(record.provider_data).length > 0) || record.executed)) {
                 const provider = await this.getProvider({ method: record.method })
                 await provider.refresh(record);
                 record.lastRefresh ||= { client: 0, system: 0 }
