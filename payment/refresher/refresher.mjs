@@ -126,7 +126,6 @@ export default class PaymentRefresher {
      */
     async start_loop() {
         await FacultyPlatform.get().pluginManager.waitForLoad()
-        await new Promise(x => setTimeout(x, 5000))
         for (let refresher of this.refreshers) {
             refresher.loop()
         }
