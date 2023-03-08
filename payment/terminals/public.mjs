@@ -66,7 +66,7 @@ export default class PaymentPublicMethods {
      * This method is used by a client to update a record
      * @param {object} param0 
      * @param {string} param0.id
-     * @param {import("../types.js").PaymentWritablePublicData} param0.data
+     * @param {Finance.Payment.PaymentWritablePublicData} param0.data
      * @returns {Promise<void>}
      */
     async publicUpdate({ id, data }) {

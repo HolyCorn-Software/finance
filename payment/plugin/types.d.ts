@@ -6,8 +6,6 @@
 
 import _PaymentPlugin from "./model.mjs"
 
-PaymentRecord
-
-declare global {
-    class PaymentPlugin<CredentialsData = {}, ClientInputData = {}, ClientOutputData = {}> extends _PaymentPlugin<CredentialsData, ClientInputData, ClientOutputData>{ }
+global {
+    let PaymentPlugin = _PaymentPlugin
 }

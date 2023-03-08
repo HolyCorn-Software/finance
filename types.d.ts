@@ -15,7 +15,8 @@ import {
     PaymentUserInputValidationData as _PaymentUserInputValidationData,
     PaymentRecordType as _PaymentRecordType,
     ClientPaymentMethodInfo as _ClientPaymentMethodInfo,
-    PaymentMethodInfo as _PaymentMethodInfo
+    PaymentMethodInfo as _PaymentMethodInfo,
+    PaymentWritablePublicData as _PaymentWritablePublicData
 } from "./payment/types";
 
 import { ProductCollections } from "./product/types";
@@ -42,6 +43,7 @@ declare global {
             declare interface PaymentUserInputValidationData<ClientInputData = {}> extends _PaymentUserInputValidationData<ClientInputData> { }
             declare type PaymentRecordType = _PaymentRecordType
             declare interface ClientPaymentMethodInfo extends _ClientPaymentMethodInfo { }
+            declare interface PaymentWritablePublicData extends _PaymentWritablePublicData { }
         }
 
         declare interface Remote {

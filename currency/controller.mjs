@@ -45,7 +45,7 @@ export class CurrencyController {
      */
     async convert(value, from, to) {
         let rates = (await this.rates()); //rates are in the base currency
-        if (from === to) {
+        if (from === to || value === 0) {
             return value
         }
         for (const property of [from, to]) {

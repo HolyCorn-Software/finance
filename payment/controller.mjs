@@ -135,7 +135,7 @@ export default class PaymentController {
      * @param {object} param0 
      * @param {string} param0.userid If specified, security checks will be made
      * @param {string} param0.id
-     * @param {import("./types.js").PaymentWritablePublicData} param0.data
+     * @param {Finance.Payment.PaymentWritablePublicData} param0.data
      * @returns {Promise<void>}
      */
     async publicUpdate({ userid, id, data }) {
