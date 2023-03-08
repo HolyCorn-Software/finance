@@ -11,7 +11,7 @@ import payRpc from "/$/payment/static/lib/rpc/rpc.mjs";
  * Creates a new payment
  * @param {object} param0 
  * @param {string} param0.userid
- * @param {finance['Amount']} param0.amount
+ * @param {Finance.Payment.Amount} param0.amount
  * @returns {Promise<void>}
  */
 export async function createNewPayment({userid, amount, type}){

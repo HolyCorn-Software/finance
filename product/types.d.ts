@@ -6,13 +6,12 @@
  * This module (types) contains type definitions used by it's parent module (product)
  */
 
-import { Amount } from "../payment/types";
 import { ProductDataCollection } from "./data/types";
 import { ProductPurchaseCollection } from "./purchase/types";
 
 export declare interface ProductCollections {
 
-    data: ProductDataCollection,
+    data: ProductDataCollection
     purchase: ProductPurchaseCollection
 
 }

@@ -28,7 +28,7 @@ export default class PaymentInternalMethods {
     /**
      * 
      * This method is used to create a payment
-     * @param {finance["PaymentRecordInit"]} data 
+     * @param {Finance.Payment.PaymentRecordInit} data 
      */
     async create(data) {
         return await this[controller_symbol].createRecord(arguments[1])
@@ -39,7 +39,7 @@ export default class PaymentInternalMethods {
      * This method is used to retrieve info of a payment
      * @param {object} param0 
      * @param {string} param0.id
-     * @returns {Promise<finance["PaymentRecord"]>}
+     * @returns {Promise<Finance.Payment.PaymentRecord>}
      */
     async getPayment({ id }) {
         return await this[controller_symbol].findRecord({ ...arguments[1] })
@@ -67,7 +67,7 @@ export default class PaymentInternalMethods {
 
     /**
      * This returns the list of all payment methods
-     * @returns {Promise<[finance['ClientPaymentMethodInfo']]>}
+     * @returns {Promise<[Finance.Payment.ClientPaymentMethodInfo]>}
      */
     async getPaymentMethods() {
 

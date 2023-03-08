@@ -25,7 +25,7 @@ export default class FinancePublicMethods extends FacultyPublicMethods {
         this.payment = new PaymentPublicMethods(controller.payment, controller.refresher)
         this.product = new ProductPublicMethods(controller.product.data, controller.product.purchase)
         /** @type  {CurrencyController} */
-        this.currency = new FunctionProxy.SkipArgOne(new CurrencyController())
+        this.currency = new FunctionProxy.SkipArgOne(controller.currency)
 
     }
 

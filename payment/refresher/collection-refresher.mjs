@@ -89,7 +89,7 @@ export default class CollectionRefresher {
 
     /**
      * This method refreshes a single record
-     * @param {finance["PaymentRecord"] record 
+     * @param {Finance.Payment.PaymentRecord record 
      * @returns {Promise<void>}
      */
     async refresh(record) {
@@ -136,7 +136,7 @@ export default class CollectionRefresher {
 
 
         //Now if the last time the record was refreshed is not very far from now, or it was created less than a minute ago, just ignore this record
-        if (Date.now() - record.lastRefresh.system < this.delay || Date.now() - record.created < (1 * 60 * 1000)) {
+        if ((Date.now() - record.lastRefresh.system < this.delay) || ((Date.now() - record.created) < (1 * 60 * 1000))) {
             //The reason for ignoring the record if it was created less than a minute ago, is to prevent the situation where the refresher updates a record immediately after
             //A change was already made to it, thereby causing data loss.
             return;
@@ -147,19 +147,14 @@ export default class CollectionRefresher {
 
         try {
             await this.payment_controller.refreshRecord(record, 'system')
-            await this.collection.updateOne({ id: record.id }, { $set: record })
+            //After refreshing, we perform the terminal checks again
+            terminal_checks()
         } catch (e) {
             console.warn(`Could not refresh payment ${record.id} because\n`, e)
         }
 
         delete this.recordLocks[record.id]
 
-        //After refreshing, we perform the terminal checks again
-        terminal_checks()
-
-
-        //Now store information on the last refresh time
-        record.lastRefresh.system = Date.now()
     }
 
 

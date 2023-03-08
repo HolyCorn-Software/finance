@@ -30,7 +30,7 @@ export async function enterPaymentDetailsLogic(widget, enter_details_widget) {
 
 
             let form_structure = await finRpc.finance.payment.getInlineForm({
-                intent: 'invoice',
+                intent: widget.state_data.payment_data.type,
                 method: widget.state_data.payment_data.method
             });
 

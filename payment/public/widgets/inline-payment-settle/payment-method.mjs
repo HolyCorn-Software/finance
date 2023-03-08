@@ -13,7 +13,7 @@ export class PaymentMethod extends Widget {
 
     /**
      * 
-     * @param {finance['ClientPaymentMethodInfo']} data 
+     * @param {Finance.Payment.ClientPaymentMethodInfo} data 
      */
     constructor(data) {
         super();

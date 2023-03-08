@@ -11,7 +11,11 @@ import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
 
 export class PaymentFailureUI extends PaymentDone {
 
-    constructor() {
+    /**
+     * 
+     * @param {import('./types').StateStorageObject} statedata 
+     */
+    constructor(statedata) {
         super();
 
         super.image = './res/payment-failure.png'
@@ -19,17 +23,23 @@ export class PaymentFailureUI extends PaymentDone {
 
         let retry = new ActionButton({
             content: 'Try Again',
-            onclick: ()=>{
+            onclick: () => {
                 this.dispatchEvent(new CustomEvent('retry'))
             }
         });
         /** @type {function(('retry'), function(CustomEvent), AddEventListenerOptions)} */ this.addEventListener
-        
+
         this.html.classList.add('hcts-inline-payment-settle-payment-failure')
         retry.html.classList.add('retry')
         this.actions.push(
             retry.html
-        )
+        );
+
+        statedata.$0.addEventListener('payment_data.failed-change', () => {
+            if (statedata.payment_data.failed) {
+                this.text = `Payment Failed!\n<br>${statedata.payment_data.failed.reason}`
+            }
+        })
     }
 
 }

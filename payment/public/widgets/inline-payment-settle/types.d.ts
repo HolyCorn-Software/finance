@@ -19,12 +19,12 @@ export interface StateStorage {
     stage: ('select-payment-method' | 'enter-payment-details' | 'waiting' | 'success' | 'failure' | 'canceled'),
     data: {
         paymentMethods: [
-            finance['ClientPaymentMethodInfo']
+            Finance.Payment.ClientPaymentMethodInfo
         ],
         form: MultiFlexFormDefinitionData
     }
 
-    payment_data: finance['PaymentRecord']
+    payment_data: Finance.Payment.PaymentRecord
 }
 
 export type StateStorageObject = AlarmObject<StateStorage>

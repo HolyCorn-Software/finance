@@ -14,6 +14,3 @@ export { PaymentProvidedUI } from './provided-ui/model.js'
 
 /**This widget is an easy to use module allowing providers to create a UI for showing payment details, without inventing much */
 export { default as GeneralPaymentUI } from './general-show-payment-data/general.js'
-
-/** This widget allows providers to easily create a payment form whereby users can input payment details */
-export {SimplePaymentForm} from './simple-form/simple-form.js'

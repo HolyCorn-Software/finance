@@ -38,7 +38,7 @@ export default class PaymentRefresher {
             new CollectionRefresher(
                 {
                     collection: collections.hot,
-                    delay: 1000,
+                    delay: 10_000,
                     time_to_live: 15 * 60 * 1000,
                     timeout: 5000,
                     payment_controller
@@ -47,7 +47,7 @@ export default class PaymentRefresher {
             new CollectionRefresher(
                 {
                     collection: collections.middle,
-                    delay: 5000,
+                    delay: 30_000,
                     time_to_live: 45 * 60 * 1000,
                     timeout: 10_000,
                     payment_controller
@@ -71,15 +71,26 @@ export default class PaymentRefresher {
                 collections.archive
             ]
 
-            for (let event of ['expire', 'complete', 'fail']) {
+            for (let event of ['complete', 'fail']) {
 
-                refresher.events.addListener(event, (id) => {
-                    move_record_lower(id, rank)
-
+                refresher.events.addListener(event, async (id) => {
                     this.events.emit(event, id)
+                    
+                    //Now, when a record fails, or completes, it is moved straight to the archives
+                    console.log(`Payment ${id} ${event}d, and will be moved to the archives!`)
+                    const record = await collections_ranked[rank].findOne({ id })
+                    await collections_ranked[rank].deleteOne({ id })
+                    await collections_ranked.at(-1).updateOne({ id }, { $set: record }, { upsert: true })
 
-                    //Now let other faculties know that a certain payment expired, completed or failed
-                    faculty.connectionManager.events.emit(`${faculty.descriptor.name}.payment-${event}`, id); //For example finance.payment-complete, or finance.payment.expire
+                    //And then the other faculties are informed that a certain payment completed, or failed
+                    faculty.connectionManager.events.emit(`${faculty.descriptor.name}.payment-${event}`, id); //For example finance.payment-complete, or finance.payment.fail
+
+                })
+
+                // When the time for a record to be refreshed at a given rate is over
+                //We move it to a lower level
+                refresher.events.addListener('expire', async (id) => {
+                    move_record_lower(id, rank)
                 })
 
             }
@@ -96,14 +107,6 @@ export default class PaymentRefresher {
 
             }
 
-
-            //And failed transactions should go straight to the archives
-            refresher.events.addListener('fail', async (id) => {
-                console.log(`Payment ${id} failed, and will be moved to the archives!`)
-                const record = await collections_ranked[rank].findOne({ id })
-                await collections_ranked.at(-1).updateOne({ id }, { $set: record }, { upsert: true })
-                await collections_ranked[rank].deleteOne({ id })
-            })
         }
 
 
@@ -122,6 +125,8 @@ export default class PaymentRefresher {
      * This method starts the infinite loop
      */
     async start_loop() {
+        await FacultyPlatform.get().pluginManager.waitForLoad()
+        await new Promise(x => setTimeout(x, 5000))
         for (let refresher of this.refreshers) {
             refresher.loop()
         }

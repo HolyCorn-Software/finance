@@ -7,16 +7,15 @@
  */
 
 import { Collection } from "mongodb";
-import { Amount } from "../../payment/types.js";
 
 
 export declare interface ProductData {
-    id: string,
-    label: string,
-    description: string,
-    time: number,
-    owners: [string],
-    price: Amount,
+    id: string
+    label: string
+    description: string
+    time: number
+    owners: string[]
+    price: Finance.Amount
 }
 
 

@@ -28,7 +28,7 @@ export class ChoosePaymentMethod extends Widget {
             `
         });
 
-        /** @type {[finance['ClientPaymentMethodInfo']]} */ this.paymentMethods
+        /** @type {Finance.Payment.ClientPaymentMethodInfo[]} */ this.paymentMethods
         this.pluralWidgetProperty({
             selector: '*',
             parentSelector: '.container >.methods',
@@ -41,7 +41,7 @@ export class ChoosePaymentMethod extends Widget {
 
                 /**
                  * 
-                 * @param {finance['ClientPaymentMethodInfo']} data 
+                 * @param {Finance.Payment.ClientPaymentMethodInfo} data 
                  * @returns 
                  */
                 set: (data) => {
@@ -80,7 +80,7 @@ export class ChoosePaymentMethod extends Widget {
         if (this.state_data.stage == 'select-payment-method' && this.state_data?.data?.paymentMethods) {
             let paymentMethods = this.state_data.data.paymentMethods
             if (this.state_data.payment_data.method_whitelist) {
-                paymentMethods = this.state_data.payment_data.method_whitelist.map(x => paymentMethods.find(m => m.code == x))
+                paymentMethods = this.state_data.payment_data.method_whitelist.map(x => paymentMethods.find(m => m.code == x)).filter(x => typeof x !== 'undefined')
             }
             this.paymentMethods = paymentMethods
         }

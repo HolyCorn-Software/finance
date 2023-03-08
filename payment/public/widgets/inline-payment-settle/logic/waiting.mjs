@@ -67,14 +67,15 @@ export async function waitingUILogic(widget, waiting_ui) {
                 Object.assign(widget.state_data.payment_data, record)
 
 
+
                 if (record.settled_amount.value >= record.amount.value) {
                     //Then payment is complete
                     widget.state_data.stage = 'success'
                     return stop_checker()
                 }
 
-                if (record.failed && record.failed.reason && record.failed.fatal) {
-                    widget.state_data.stage = 'canceled';
+                if (record.failed && record.failed.reason) {
+                    widget.state_data.stage = record.failed.fatal ? 'canceled' : 'failure';
                     return stop_checker()
                 }
 
@@ -172,10 +173,23 @@ export async function waitingUILogic(widget, waiting_ui) {
             widget.state_data.stage = 'failure'
         });
 
+        const onchange = () => {
+            Object.assign(frame.content.data, widget.state_data.$0data.payment_data)
+        }
+
+        let timeout;
+        widget.state_data.$0.addEventListener('change', () => {
+            if (widget.state_data.stage === 'waiting') {
+                clearTimeout(timeout);
+                timeout = setTimeout(onchange, 500)
+            }
+        })
+
         //From now on, wait for payment to complete, then move to the completion UI
 
         //Now, make use of the Cancel button
         waiting_ui.actions[0].addEventListener('click', cancel)
+        configured = true
     }
 
 
@@ -197,7 +211,7 @@ export const cancel_payment = (widget) => {
             question: `Do you want to permanently cancel this payment ?`,
             title: `Cancel Payment ?`,
             execute: async () => {
-                
+
                 try {
                     await finRpc.finance.payment.cancelPayment({
                         id: widget.state_data.payment_data.id

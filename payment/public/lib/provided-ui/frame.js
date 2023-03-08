@@ -14,7 +14,7 @@ const pathUtils = (await import('/$/system/static/html-hc/lib/path/path.mjs'))
 
 
 /**
- * @template ContentWidgetType
+ * @template {PaymentProvidedUI} ContentWidgetType
  */
 export class PaymentProvidedUIFrame extends Widget {
 

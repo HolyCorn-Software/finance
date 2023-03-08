@@ -5,6 +5,7 @@
  * The decision to create this controller is more based on the need to organize things
  */
 
+import { CurrencyController } from "./currency/controller.mjs";
 import PaymentController from "./payment/controller.mjs";
 import PaymentRefresher from "./payment/refresher/refresher.mjs";
 import ProductController from "./product/controller.mjs";
@@ -21,7 +22,8 @@ export default class FinanceController {
      */
     constructor({ collections }) {
 
-        this.payment = new PaymentController(collections.payment)
+        this.currency = new CurrencyController()
+        this.payment = new PaymentController(collections.payment, this.currency)
         this.refresher = new PaymentRefresher(collections.payment, this.payment)
         this.product = new ProductController({
             collections: collections.product,
@@ -33,9 +35,8 @@ export default class FinanceController {
 
     /**
      * This method initializes the controlling parts of the Faculty of Finance
-     * @param {HTTPServer} http
      */
-    async init(http) {
+    async init() {
         await this.payment.init()
         await this.product.init();
         this.refresher.start_loop()

@@ -51,10 +51,9 @@ export class PaymentProvidedUI extends Widget {
         
         /**
          * This contains data about the payment
-         * @type {finance["PaymentRecord"]& {payment_method_info: finance['ClientPaymentMethodInfo']}>}
+         * @type {import("/$/system/static/html-hc/lib/alarm/alarm-types").AlarmObjectType<Finance.Payment.PaymentRecord& {payment_method_info: Finance.Payment.ClientPaymentMethodInfo}>>}
          */
         this.data = new AlarmObject();
-
 
         // Auto import CSS for the widget
         hc.importModuleCSS(hc.getCaller())

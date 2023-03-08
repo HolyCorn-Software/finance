@@ -10,15 +10,14 @@ import FinanceInternalMethods from "../terminals/internal.mjs"
 import { PaymentType } from "./public/widgets/payment-manager/widgets/listings/types"
 
 
-export declare interface PaymentRecord {
+export declare interface PaymentRecord<ProviderData = {}, ClientInputData = {}, ClientOutputData = {}> {
 
     id: string
-
-    type: PaymentRecordType,
+    type: PaymentRecordType
     method: string
     method_whitelist: string[]
-    amount: Amount,
-    settled_amount: Amount
+    amount: Finance.Amount
+    settled_amount: Finance.Amount
 
     lastRefresh: {
         client: number
@@ -26,23 +25,23 @@ export declare interface PaymentRecord {
     }
 
 
-    provider_data: object
+    provider_data: ProviderData
 
     client_data: {
-        input: object
+        input: ClientInputData
         output: {
             message: {
                 html: string
                 text: string
             }
-        }
-    },
+        } & ClientOutputData
+    }
 
     created: number
     done: boolean
     settled_time: number
 
-    owners: [string]
+    owners: string[]
 
     executed: number
 
@@ -51,7 +50,7 @@ export declare interface PaymentRecord {
         reason: string
         reason_code: string
         fatal: boolean
-    },
+    }
 
     refresher_time: number
 
@@ -63,6 +62,9 @@ export declare interface PaymentRecord {
             category: ("electronics" | "content" | "homeTools" | "fashion" | "child" | "automotive" | "credit" | "entertainment" | "jewelry" | "homeService" | "beauty" | "sports" | "foodAndDrugs" | "pet" | "science" | "other")
             type: "physical" | "virtual"
         }
+        recipient_name: string
+        reason: string
+        note: string
     }
 
     archived: boolean
@@ -70,7 +72,7 @@ export declare interface PaymentRecord {
 }
 
 
-export declare type PaymentRecordMinimal = Pick<PaymentRecord,
+export declare type PaymentRecordMinimal<ProviderData = {}> = Pick<PaymentRecord<ProviderData, {}, {}>,
     "id"
     | "type"
     | "method"
@@ -82,7 +84,7 @@ export declare type PaymentRecordMinimal = Pick<PaymentRecord,
 >
 
 
-export declare type PaymentRecordInit = Pick<PaymentRecord,
+export declare type PaymentRecordInit<ProviderData = {}, ClientInputData = {}, ClientOutputData = {}> = Pick<PaymentRecord<ProviderData, ClientInputData, ClientOutputData>,
     "amount"
     | "type"
     | "method"
@@ -102,16 +104,10 @@ export declare interface Amount {
 export type PaymentRecordType = ("invoice" | "payout")
 
 
-export declare type PaymentPublicData = Omit<PaymentRecord, "provider_data" | "owners">
+export declare type PaymentPublicData<ClientInputData, ClientOutputData> = Omit<PaymentRecord<{}, sClientInputData, ClientOutputData>, "provider_data" | "owners">
 
 
-export declare interface PaymentWritablePublicData {
-    client_data: {
-        input: object
-    },
-    method: string
-
-}
+export declare type PaymentWritablePublicData<ClientInputData> = Pick<PaymentRecord<{}, ClientInputData, {}>, "client_data" | "method">
 
 
 
@@ -136,13 +132,14 @@ export declare interface PaymentCollections {
 
 
 export declare interface PaymentUserInputValidationResult {
-    status: ("valid" | "invalid"),
+    status: ("valid" | "invalid")
     message: string
 }
 
-export declare interface PaymentUserInputValidationData {
-    data: object
+export declare interface PaymentUserInputValidationData<ClientInputData = {}> {
+    data: ClientInputData
     intent: PaymentType
+    method: string
 }
 
 
@@ -165,22 +162,33 @@ export declare type PaymentMethodsInfo = PaymentMethodInfo[]
 export declare type ClientPaymentMethodInfo = PaymentMethodInfo
 
 
-interface _PaymentRecord extends PaymentRecord { }
-
 declare global {
 
 
+    /**
+     * @deprecated Use Finance instead of finance or global['finance']
+     */
     type finance = {
 
+        /** @deprecated use Finance.Payment.PaymentRecord instead of global['finance']['PaymentRecord'] */
         PaymentRecord: PaymentRecord
+        /** @deprecated use Finance.Payment.PaymentRecordMinimal instead of global['finance']['PaymentRecordMinimal'] */
         PaymentRecordMinimal: PaymentRecordMinimal
+        /** @deprecated use Finance.Payment.PaymentRecordInit instead of global['finance']['PaymentRecordInit'] */
         PaymentRecordInit: PaymentRecordInit
+        /** @deprecated use Finance.Payment.PaymentUserInputValidationResult instead of global['finance']['PaymentUserInputValidationResult'] */
         PaymentUserInputValidationResult: PaymentUserInputValidationResult
+        /** @deprecated use Finance.Payment.PaymentMethodsInfo instead of global['finance']['PaymentMethodsInfo'] */
         PaymentMethodsInfo: PaymentMethodsInfo
+        /** @deprecated use Finance.Payment.PaymentUserInputValidationData instead of global['finance']['PaymentUserInputValidationData'] */
         PaymentUserInputValidationData: PaymentUserInputValidationData
+        /** @deprecated use Finance.Payment.PaymentRecordType instead of global['finance']['PaymentRecordType'] */
         PaymentRecordType: PaymentRecordType
+        /** @deprecated use Finance.Amount */
         Amount: Amount
+        /** @deprecated use Finance.PaymentMethodInfo */
         ClientPaymentMethodInfo: ClientPaymentMethodInfo
+        /** @deprecated use Finance.InternalMethods */
         remote: {
             internal: FinanceInternalMethods
         }

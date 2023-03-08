@@ -5,7 +5,8 @@
  */
 
 .hcts-inline-payment-settle-payment-failure>.container>.text {
-    color: rgb(206, 4, 75);
+    color: rgb(206, 4, 38);
+    text-align:center;
 }
 
 .hcts-inline-payment-settle-payment-failure>.container>.actions .hc-action-button>.container {

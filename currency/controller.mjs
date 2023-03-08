@@ -45,8 +45,11 @@ export class CurrencyController {
      */
     async convert(value, from, to) {
         let rates = (await this.rates()); //rates are in the base currency
+        if (from === to) {
+            return value
+        }
         for (const property of [from, to]) {
-            if (!rates[property]) {
+            if (!rates?.[property]) {
                 throw new Exception(`The currency '${property}' was not found`)
             }
         }
@@ -60,8 +63,8 @@ export class CurrencyController {
      * If so, it returns 1.
      * If less than the second, it returns -1.
      * If both numbers are equal, it returns 0
-     * @param {finance['Amount']} amount1 
-     * @param {finance['Amount']} amount2 
+     * @param {Finance.Payment.Amount} amount1 
+     * @param {Finance.Payment.Amount} amount2 
      * @returns {Promise<1|-1|0>}
      */
     async compare(amount1, amount2) {

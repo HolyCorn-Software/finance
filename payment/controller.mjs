@@ -9,6 +9,7 @@ import shortUUID from "short-uuid"
 import muser_common from "muser_common"
 import financePlugins from "../helper.mjs"
 import PaymentPlugin from "./plugin/model.mjs"
+import { CurrencyController } from "../currency/controller.mjs"
 
 
 
@@ -17,6 +18,7 @@ const collections_symbol = Symbol()
 const faculty = FacultyPlatform.get()
 
 const executeLock = Symbol()
+const currency = Symbol()
 
 
 export default class PaymentController {
@@ -24,10 +26,13 @@ export default class PaymentController {
     /**
      * 
      * @param {import("./types.js").PaymentCollections} collections 
+     * @param {CurrencyController} currencyController
      */
-    constructor(collections) {
+    constructor(collections, currencyController) {
 
         this[collections_symbol] = collections
+
+        this[currency] = currencyController
 
 
 
@@ -47,7 +52,7 @@ export default class PaymentController {
 
     /**
      * This creates a blank record
-     * @param {finance["PaymentRecordInit"]} input 
+     * @param {Finance.Payment.PaymentRecordInit} input 
      * @returns {Promise<string>}
      */
     async createRecord(input) {
@@ -63,7 +68,7 @@ export default class PaymentController {
             throw new Error(`Invalid input for amount, when creating a new payment record.`)
         }
 
-        /** @type {finance['PaymentRecord']} */
+        /** @type {Finance.Payment.PaymentRecord} */
         const data = {}
 
         data.type = input.type
@@ -112,7 +117,7 @@ export default class PaymentController {
      * This method gets the publicly accessible data of a payment record.
      * 
      * It simply takes away what is not necessary
-     * @param {finance["PaymentRecord"] record
+     * @param {Finance.Payment.PaymentRecord record
      * @returns {PaymentPublicData}
      */
     getPublicData(record) {
@@ -148,7 +153,7 @@ export default class PaymentController {
     async publicUpdate0({ data, id }) {
 
         /**
-         * @type {Pick<finance['PaymentRecord'], "client_data"|"method">}
+         * @type {Pick<Finance.Payment.PaymentRecord, "client_data"|"method">}
          */
         const final_data = {}
 
@@ -166,7 +171,7 @@ export default class PaymentController {
             let record;
             /**
              * 
-             * @returns {Promise<finance['PaymentRecord']>}
+             * @returns {Promise<Finance.Payment.PaymentRecord>}
              */
             const getRecord = async () => {
                 return record ||= await this.findRecord({ id })
@@ -187,7 +192,8 @@ export default class PaymentController {
                 const results = await plugin.validateUserInput(
                     {
                         data: final_data.client_data.input,
-                        intent: (await getRecord()).type
+                        intent: (await getRecord()).type,
+                        method
                     }
                 );
 
@@ -207,8 +213,8 @@ export default class PaymentController {
     /**
      * Determines the collection that contains a record and updates it
      * @param {object} param0 
-     * @param {finance["PaymentRecord"] param0.search
-     * @param {finance["PaymentRecord"] param0.update
+     * @param {Finance.Payment.PaymentRecord param0.search
+     * @param {Finance.Payment.PaymentRecord param0.update
      * @returns {Promise<void>}
      */
     async updateRecord({ search, update }) {
@@ -227,10 +233,10 @@ export default class PaymentController {
 
     /**
      * This method searches for a record thoroughly, irrespective of the actual collection it resides
-     * @param {finance["PaymentRecord"] param0 
+     * @param {Finance.Payment.PaymentRecord param0 
      * @param {object} param1
      * @param {boolean} param1.throwError
-     * @returns {Promise<finance["PaymentRecord"]}
+     * @returns {Promise<Finance.Payment.PaymentRecord}
      */
     async findRecord({ ...data }, { throwError } = {}) {
 
@@ -258,10 +264,10 @@ export default class PaymentController {
     /**
      * This method searchs for a record and does ownership check immediately before returning the record
      * @param {object} param0 
-     * @param {finance['PaymentRecord']} param0.search
+     * @param {Finance.Payment.PaymentRecord} param0.search
      * @param {string} param0.userid If specified ownership checks will be made to see if the user owns this
      * @param {[string]} param0.permissions When specified, it will define the permissions to check for. By default this is an array containing permissions.finance.payment.modify_any_payment
-     * @returns {Promise<finance["PaymentRecord"]}
+     * @returns {Promise<Finance.Payment.PaymentRecord}
      */
     async findAndCheckOwnership({ search, userid, permissions = ['permissions.finance.payment.modify_any_payment'] }) {
         const record = await this.findRecord({ ...search }, { throwError: true })
@@ -295,7 +301,7 @@ export default class PaymentController {
 
     /**
      * This returns the list of all payment methods
-     * @returns {Promise<finance["PaymentMethodsInfo"]>}
+     * @returns {Promise<Finance.Payment.PaymentMethodsInfo>}
      */
     async getPaymentMethods() {
 
@@ -328,6 +334,7 @@ export default class PaymentController {
         let the_provider = (await financePlugins.list.namespaces.payment.callback.matchPlugin(method)).success.find(x => x.value)
 
         if (!the_provider) {
+            console.log(`The plugins: `, financePlugins.list.namespaces.payment)
             throw new Exception(`No provider for ${method}`)
         }
         return the_provider.plugin
@@ -368,19 +375,26 @@ export default class PaymentController {
             if (record.type === 'invoice') {
                 await provider.charge(record)
             } else {
-                if (record.executed && !record.failed?.fatal) {
-                    throw new Exception(`Cannot retry payout, because it did not fail.`)
+                if (record.executed && !record.failed) {
+                    throw new Exception(`Cannot retry this payout, because it has not failed`)
                 } else {
+                    if (record.failed?.fatal) {
+                        throw new Exception(`Cannot retry this payout, because it failed for a very big reason.\n${record.failed.reason}`)
+                    }
                     await provider.payout(record)
                 }
             }
 
             record.executed = Date.now()
+            record.failed = undefined
 
-            await this.updateRecord({ search: { id: record.id }, update: { ...record } })
+            console.log(`Updating with `, record)
+
+            await this.updateRecord({ search: { id: record.id }, update: record })
         } catch (e) {
             this[executeLock].unlock(id)
 
+            //Store the error in the record
             if (record) {
                 const errorId = shortUUID.generate()
                 console.log(`${e.stack || e.message || e}\nid:${errorId}`)
@@ -404,15 +418,16 @@ export default class PaymentController {
 
     /**
      * This method refreshes a record
-     * @param {finance["PaymentRecord"] record 
+     * @param {Finance.Payment.PaymentRecord record 
      * @param {('system'|'client')} actor
-     * @returns {Promise<finance["PaymentRecord"]}
+     * @returns {Promise<Finance.Payment.PaymentRecord}
      */
     async refreshRecord(record, actor = 'client') {
 
-        while (!this[executeLock].canUpdate(record)) {
-            await Promise(x => setTimeout(x, 200))
+        while (!this[executeLock].canUpdate(record.id)) {
+            await new Promise(x => setTimeout(x, 200))
         }
+        this[executeLock].lock(record.id)
 
         try {
 
@@ -422,12 +437,24 @@ export default class PaymentController {
                 record.lastRefresh ||= { client: 0, system: 0 }
                 record.lastRefresh[actor === 'client' ? 'client' : 'system'] = Date.now()
                 record.archived = false
-                this.updateRecord({ search: { id: record.id }, update: record })
+
+                const settled_real_value = await this[currency].convert(record.settled_amount.value, record.settled_amount.currency, record.amount.currency)
+                record.settled_amount = {
+                    value: settled_real_value,
+                    currency: record.amount.currency
+                }
+                if (!record.done) {
+                    record.done = (record.amount.value > 0) && record.settled_amount.value >= record.amount.value ? true : false
+                }
+                await this.updateRecord({ search: { id: record.id }, update: record })
             }
 
         } catch (e) {
+            this[executeLock].unlock(record.id)
             throw e
         }
+
+        this[executeLock].unlock(record.id)
 
         return record;
     }
@@ -483,7 +510,7 @@ export default class PaymentController {
  * This uses a userid to check if the user has ownership of a payment record or to ignore the results of the ownership check if the user has the given permissions
  * @param {object} param0 
  * @param {string} param0.userid
- * @param {finance["PaymentRecord"] param0.record
+ * @param {Finance.Payment.PaymentRecord param0.record
  * @param {[string]} param0.bypass_permissions
  * @returns {Promise<void>}
  */

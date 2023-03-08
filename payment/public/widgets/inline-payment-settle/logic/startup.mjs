@@ -45,6 +45,15 @@ export async function startupLogic(widget) {
         try {
             widget.loadBlock();
 
+
+            const load_payment_providers_ui = async () => {
+                widget.state_data.data.paymentMethods = await finRpc.finance.payment.getPaymentMethods()
+            }
+
+            //So load the payment selection UI
+            await load_payment_providers_ui();
+
+
             let payment_data = await finRpc.finance.payment.getPublicData({
                 id: widget.state_data.payment_data.id
             });
@@ -53,7 +62,8 @@ export async function startupLogic(widget) {
 
 
             if (payment_data.failed?.time !== undefined) {
-                widget.state_data.stage = 'canceled';
+                console.log(`failed: `, payment_data.failed)
+                widget.state_data.stage = payment_data.failed.fatal ? 'canceled' : 'failure';
                 return stop();
             }
 
@@ -64,16 +74,9 @@ export async function startupLogic(widget) {
                 return stop()
             }
 
-            const load_payment_providers_ui = async () => {
-                widget.state_data.data.paymentMethods = await finRpc.finance.payment.getPaymentMethods()
-            }
-
-
 
             //Well, from here, it is only possible that the user has not completed payment
 
-            //So load the payment selection UI
-            await load_payment_providers_ui();
 
             //So, if a payment method has not already been chosen, show a UI for that
             if (!widget.state_data.payment_data.method) {

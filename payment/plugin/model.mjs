@@ -10,8 +10,11 @@ import PaymentPluginSystemInterface from "./system.mjs"
 const system = Symbol()
 
 /**
- * @template CredentialsType
- * @extends PluginModelModel<CredentialsType>
+ * @template CredentialsData
+ * @template ProviderData
+ * @template ClientInputData
+ * @template ClientOutputData
+ * @extends PluginModelModel<CredentialsData,ProviderData,ClientInputData,ClientOutputData>
  */
 export default class PaymentPlugin extends PluginModelModel {
 
@@ -52,7 +55,7 @@ export default class PaymentPlugin extends PluginModelModel {
      * 
      * If the plugin throws an error, it should add a field 'fatal' true to the error, if it deems it impossible to retry the same transaction
      * 
-     * @param {finance["PaymentRecord"]} record 
+     * @param {Finance.Payment.PaymentRecord<ProviderData, ClientInputData, ClientOutputData>} record 
      * @returns {Promise<void>}
      */
     async charge(record) {
@@ -62,7 +65,7 @@ export default class PaymentPlugin extends PluginModelModel {
      * The system calls this method when it requests that the wallet transfers an amount of money to a given destination, within the capability of the wallet.
      * 
      * The method is async, and manipulates the Payout data directly to make changes
-     * @param {finance["PaymentRecord"]} payout The information of where and how much to pay
+     * @param {Finance.Payment.PaymentRecord<ProviderData, ClientInputData, ClientOutputData>} payout The information of where and how much to pay
      * @returns {Promise<void>}
      */
     async payout(payout) {
@@ -77,7 +80,7 @@ export default class PaymentPlugin extends PluginModelModel {
      * The plugin should modify the necessary fields (e.g amount, expiry, done) according to the new state of the transaction.
      * 
      * plugins should have nothing to do with the lastRefresh field
-     * @param {finance["PaymentRecord"]} record 
+     * @param {Finance.Payment.PaymentRecord<ProviderData, ClientInputData, ClientOutputData>} record 
      * @returns {Promise<void>}
      */
     async refresh(record) {
@@ -95,8 +98,8 @@ export default class PaymentPlugin extends PluginModelModel {
      * Rather the plugins sets the sets the status to 'invalid'
      * 
      * Then set the reason why the payment data is wrong in 'message'
-     * @param {finance['PaymentUserInputValidationData']} paymentData
-     * @returns {Promise<finance["PaymentUserInputValidationResult"]>}
+     * @param {Finance.Payment.PaymentUserInputValidationData<ClientInputData>} paymentData
+     * @returns {Promise<Finance.Payment.PaymentUserInputValidationResult>}
      */
     async validateUserInput(paymentData) {
 
@@ -114,7 +117,7 @@ export default class PaymentPlugin extends PluginModelModel {
     /**
      * This method is called by the system in order to get the list of payment methods supported by this plugin
      * 
-     * @returns {Promise<finance["PaymentMethodsInfo"]>}
+     * @returns {Promise<Finance.Payment.PaymentMethodsInfo>}
      */
     async getPaymentMethodsInfo() {
 
@@ -123,7 +126,7 @@ export default class PaymentPlugin extends PluginModelModel {
     /**
      * plugins should override this method so as to provide public clients with a form that can be filled when entering details for an invoice or payout
      * @param {object} param0
-     * @param {('invoice'|'payout')} param0.intent
+     * @param {Finance.Payment.PaymentRecordType} param0.intent
      * @param {string} param0.method
      * @returns {Promise<import("/$/system/static/html-hc/widgets/multi-flex-form/types.js").MultiFlexFormDefinitionData}
      */

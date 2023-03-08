@@ -8,6 +8,6 @@ import _PaymentPlugin from "./model.mjs"
 
 PaymentRecord
 
-declare global{
-    const PaymentPlugin = _PaymentPlugin
+declare global {
+    class PaymentPlugin<CredentialsData = {}, ClientInputData = {}, ClientOutputData = {}> extends _PaymentPlugin<CredentialsData, ClientInputData, ClientOutputData>{ }
 }

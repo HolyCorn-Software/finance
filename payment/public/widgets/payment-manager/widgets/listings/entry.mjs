@@ -47,11 +47,11 @@ export class PaymentListing extends Widget {
             }
         })
 
-        /** @type {finance['Amount']} */ this.amount
+        /** @type {Finance.Payment.Amount} */ this.amount
         Reflect.defineProperty(this, 'amount', {
             /**
              * 
-             * @param {finance['Amount']} value 
+             * @param {Finance.Payment.Amount} value 
              */
             set: (value) => {
                 this.__amount__ = `${value.value} ${value.currency}`
