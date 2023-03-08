@@ -9,6 +9,10 @@ import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
 import AlarmObject from "/$/system/static/html-hc/lib/alarm/alarm.mjs"
 import { Widget } from "/$/system/static/html-hc/lib/widget/index.mjs";
 
+/**
+ * @template ClientInputData
+ * @template ClientOutputData
+ */
 export class PaymentProvidedUI extends Widget {
 
     constructor() {
@@ -51,7 +55,7 @@ export class PaymentProvidedUI extends Widget {
         
         /**
          * This contains data about the payment
-         * @type {import("/$/system/static/html-hc/lib/alarm/alarm-types").AlarmObjectType<Finance.Payment.PaymentRecord& {payment_method_info: Finance.Payment.ClientPaymentMethodInfo}>>}
+         * @type {import("/$/system/static/html-hc/lib/alarm/alarm-types").AlarmObjectType<Finance.Payment.PaymentRecord<{}, ClientInputData, ClientOutputData>& {payment_method_info: Finance.Payment.ClientPaymentMethodInfo}>>}
          */
         this.data = new AlarmObject();
 

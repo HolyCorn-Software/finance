@@ -136,7 +136,7 @@ export default class CollectionRefresher {
 
 
         //Now if the last time the record was refreshed is not very far from now, or it was created less than a minute ago, just ignore this record
-        if ((Date.now() - record.lastRefresh.system < this.delay) || ((Date.now() - record.created) < (1 * 60 * 1000))) {
+        if ((Date.now() - record.lastRefresh.system < this.delay) || ((Date.now() - record.created) < (1 * 60 * 1000)) || ((Date.now() - record.failed?.time || 0) < this.delay)) {
             //The reason for ignoring the record if it was created less than a minute ago, is to prevent the situation where the refresher updates a record immediately after
             //A change was already made to it, thereby causing data loss.
             return;
