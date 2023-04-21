@@ -5,7 +5,8 @@
     "http": {
         "staticPaths": {
             "${fPath}/payment/static": "./payment/public",
-            "${fPath}/static": "./public"
+            "${fPath}/static": "./public",
+            "${fPath}/product/static": "./product/public/"
         }
     },
     "plugin": {
