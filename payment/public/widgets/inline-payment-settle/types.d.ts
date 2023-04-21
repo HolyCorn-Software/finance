@@ -4,7 +4,6 @@
  * This script contains type definitions for the inline-debit widget
  */
 
-import {AlarmObject} from "/$/system/static/html-hc/lib/alarm/alarm-types";
 import { MultiFlexFormDefinitionData } from "/$/system/static/html-hc/widgets/multi-flex-form/types";
 
 
@@ -27,4 +26,4 @@ export interface StateStorage {
     payment_data: Finance.Payment.PaymentRecord
 }
 
-export type StateStorageObject = AlarmObject<StateStorage>
+export type StateStorageObject = htmlhc.lib.alarm.AlarmObject<StateStorage>

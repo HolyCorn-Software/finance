@@ -5,9 +5,10 @@
  * This module makes it easy to access public methods of the Faculty
  */
 
-import hcRpc from "/$/system/static/comm/rpc/aggregate-rpc.js";
+import hcRpc from "/$/system/static/comm/rpc/aggregate-rpc.mjs";
 
 /**
+ * @deprecated use hcRpc
  * @type {{finance:import("faculty/finance/terminals/public.mjs").default}}
  */
 const finRpc = hcRpc

@@ -196,3 +196,13 @@ declare global {
 
 
 }
+
+
+global {
+    namespace modernuser.permission {
+        interface AllPermissions {
+            'permissions.finance.payment.modify_any_payment': true
+            'permissions.finance.payment.view_any_payment': true
+        }
+    }
+}

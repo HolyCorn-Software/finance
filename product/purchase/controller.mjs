@@ -112,7 +112,7 @@ export default class ProductPurchaseController {
      * @param {object} param0 
      * @param {string} param0.userid
      * @param {object} param0.product If specified, the results will be filtered to only the ones that concern the given product
-     * @returns {Promise<[import("./types.js").PendingProductPurchase]>}
+     * @returns {Promise<import("./types.js").PendingProductPurchase[]>}
      */
     async getPendingPurchases({ userid, product }) {
         const query = { userid }

@@ -35,7 +35,7 @@ export class PaymentDetails extends Widget {
             `
         });
 
-        /** @type {[import("./types.js").FieldDescriptor]} */ this.descriptors
+        /** @type {import("./types.js").FieldDescriptor[]} */ this.descriptors
         this.pluralWidgetProperty({
             selector: 'tr.hc-donorforms-payment-manager-field',
             parentSelector: '.container >.data >tbody',
@@ -70,7 +70,7 @@ export class PaymentDetails extends Widget {
         });
 
 
-        /** @type {[HTMLElement]} */ this.actions
+        /** @type {HTMLElement[]} */ this.actions
         this.pluralWidgetProperty({
             selector: '*',
             parentSelector: '.container >.actions',

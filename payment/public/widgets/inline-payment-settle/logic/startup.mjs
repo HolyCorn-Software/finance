@@ -5,7 +5,7 @@
  */
 
 import InlinePaymentSettle from "../debit.mjs";
-import finRpc from "/$/finance/static/lib/rpc/rpc.mjs";
+import hcRpc from "/$/system/static/comm/rpc/aggregate-rpc.mjs";
 import { handle } from "/$/system/static/errors/error.mjs";
 
 const lastStartupId = Symbol()
@@ -47,14 +47,14 @@ export async function startupLogic(widget) {
 
 
             const load_payment_providers_ui = async () => {
-                widget.state_data.data.paymentMethods = await finRpc.finance.payment.getPaymentMethods()
+                widget.state_data.data.paymentMethods = await hcRpc.finance.payment.getPaymentMethods()
             }
 
             //So load the payment selection UI
             await load_payment_providers_ui();
 
 
-            let payment_data = await finRpc.finance.payment.getPublicData({
+            let payment_data = await hcRpc.finance.payment.getPublicData({
                 id: widget.state_data.payment_data.id
             });
 

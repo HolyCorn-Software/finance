@@ -32,7 +32,7 @@ export default class ProductDataController {
      * @param {object} param0
      * @param {Omit<import("./types.js").ProductMutableData>} param0.data 
      * @param {string} param0.userid If specified, the user will be authenticated against the given action
-     * @param {[string]} param0.zones If specified alongside userid, the system will check if the given user has permissions to create products in the given zone
+     * @param {string[]} param0.zones If specified alongside userid, the system will check if the given user has permissions to create products in the given zone
      * @returns {Promise<string>}
      */
     async createProduct({ data, userid, zones }) {
@@ -55,7 +55,7 @@ export default class ProductDataController {
                 }
             )
         ) {
-            throw new Exception(`You are not permitted to create a prudct`)
+            throw new Exception(`You are not permitted to create a product`)
         }
 
         const fields = ProductDataController.product_mutable_fields
@@ -84,7 +84,7 @@ export default class ProductDataController {
      * @param {string} param0.id
      * @param {object} param0.security
      * @param {string} param0.security.userid If specified, checks will be performed to make sure the user is allowed to do this
-     * @param {[string]} param0.security.zones If specified together with the userid, security checks will be made to ensure that the users powers
+     * @param {string[]} param0.security.zones If specified together with the userid, security checks will be made to ensure that the users powers
      * to alter a product he doesn't own, are valid within those zones
      * @param {Promise<import("./types.js").ProductMutableData>}
      */
@@ -185,18 +185,4 @@ export default class ProductDataController {
     }
 
 }
-
-
-/**
- * @type {[import("faculty/modernuser/permission/data/types.js").PermissionData]}
- */
-export let product_data_permissions = [
-    {
-
-        name: 'permissions.finance.product.modify_any_product',
-        label: `Modify a payment you don't own`,
-        time: Date.now()
-    }
-]
-
 

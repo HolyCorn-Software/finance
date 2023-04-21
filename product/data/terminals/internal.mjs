@@ -28,7 +28,7 @@ export default class ProductDataInternalMethods {
      * @param {Omit<import("../types.js").ProductData, "id"|"time">} param0.data  Information about the new product
      * @param {string} param0.userid If specified, permission checks will be made with that user. After that, the product will be owned 
      * by the user
-     * @param {[string]} param0.zones If specified alongside the userid, checks will be made to ensure that the given userid has permissions to create products
+     * @param {string[]} param0.zones If specified alongside the userid, checks will be made to ensure that the given userid has permissions to create products
      * in the given zone
      * 
      * @returns {Promise<string>}

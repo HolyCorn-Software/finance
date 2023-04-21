@@ -31,7 +31,7 @@ export class PaymentDone extends Widget {
         /** @type {string} */ this.text
         this.htmlProperty('.container >.text', 'text', 'innerHTML')
 
-        /** @type {[HTMLElement]} */ this.actions
+        /** @type {HTMLElement[]} */ this.actions
         this.pluralWidgetProperty({
             selector: '*',
             parentSelector: '.container >.actions',

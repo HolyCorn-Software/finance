@@ -6,7 +6,7 @@
 
 import InlinePaymentSettle from "../debit.mjs";
 import { ChoosePaymentMethod } from "../select-payment-method.mjs";
-import finRpc from "/$/finance/static/lib/rpc/rpc.mjs";
+import hcRpc from "/$/system/static/comm/rpc/aggregate-rpc.mjs";
 import { handle } from "/$/system/static/errors/error.mjs";
 
 
@@ -29,7 +29,7 @@ export async function paymentSelectLogic(widget, selection_widget) {
         try {
 
             //When the user selects a payment method, we set it as the selected payment method and move over to input payment details
-            await finRpc.finance.payment.publicUpdate(
+            await hcRpc.finance.payment.publicUpdate(
                 {
                     id: widget.state_data.payment_data.id,
                     data: {

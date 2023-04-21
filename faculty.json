@@ -29,5 +29,23 @@
                 }
             }
         }
+    },
+    "meta": {
+        "modernuser": {
+            "permissions": [
+                {
+                    "name": "permissions.finance.product.modify_any_product",
+                    "label": "Modify a payment you don't own"
+                },
+                {
+                    "name": "permissions.finance.payment.modify_any_payment",
+                    "label": "Modify any payment"
+                },
+                {
+                    "name": "permissions.finance.payment.view_any_payment",
+                    "label": "View data about any payment"
+                }
+            ]
+        }
     }
 }

@@ -40,7 +40,7 @@ export class EnterPaymentDetails extends Widget {
 
         /** @type {MultiFlexForm} */ this.formWidget = new MultiFlexForm()
 
-        /** @type {[HTMLElement]} */ this.actions
+        /** @type {HTMLElement[]} */ this.actions
         this.pluralWidgetProperty({
             selector: '*',
             parentSelector: '.container >.actions',

@@ -16,7 +16,7 @@ import ProductInternalMethods from "../product/terminals/internal.mjs";
 
 
 
-export default class FinanceInternalMethods extends FacultyPublicMethods {
+export default class FinanceInternalMethods extends FacultyFacultyRemoteMethods {
 
     /**
      * 

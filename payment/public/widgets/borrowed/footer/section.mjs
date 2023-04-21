@@ -16,7 +16,7 @@ export default class FooterSection extends Widget {
      * 
      * @param {object} param0 
      * @param {string} param0.title
-     * @param {[import("./types.js").FooterLink]} param0.links
+     * @param {import("./types.js").FooterLink[]} param0.links
      */
     constructor({title, links}={}) {
         super();
@@ -34,7 +34,7 @@ export default class FooterSection extends Widget {
         /** @type {string} */ this.title
         this.htmlProperty('.container >.title', 'title', 'innerHTML')
 
-        /** @type {[import("./types.js").FooterLink]} */ this.links
+        /** @type {import("./types.js").FooterLink[]} */ this.links
         this.pluralWidgetProperty({
             parentSelector: '.container >.links',
             selector: 'a',

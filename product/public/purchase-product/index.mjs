@@ -8,7 +8,7 @@
 import ProductDescription from './widgets/product-description/widget.mjs'
 import InlinePaymentSettle from '/$/finance/payment/static/widgets/inline-payment-settle/debit.mjs'
 import PaymentPage from '/$/finance/payment/static/widgets/payment-page/widget.mjs'
-import finRpc from '/$/finance/static/lib/rpc/rpc.mjs'
+import hcRpc from "/$/system/static/comm/rpc/aggregate-rpc.mjs";
 import { handle, report_error_direct } from '/$/system/static/errors/error.mjs'
 import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
 
@@ -60,7 +60,7 @@ const init = async () => {
 
         page.content.push(wrapper)
 
-        finRpc.finance.product.data.getProduct({ id }).then((data) => {
+        hcRpc.finance.product.data.getProduct({ id }).then((data) => {
 
             let description_widget = new ProductDescription(data)
             wrapper.prepend(description_widget.html)
@@ -88,7 +88,7 @@ const init = async () => {
 async function get_product_payment_id(id) {
 
     //This method should determine whether we should create a new payment or resume a previous one
-    let pending = await finRpc.finance.product.purchase.getPendingPurchases({ product: id })
+    let pending = await hcRpc.finance.product.purchase.getPendingPurchases({ product: id })
 
     return await new Promise(async (resolve, reject) => {
 
@@ -96,7 +96,7 @@ async function get_product_payment_id(id) {
             return resolve(await create_new())
         }
 
-        /** @type {[import('../../purchase/types.js').PendingProductPurchase & {state: ('complete'|'pending')}]} */
+        /** @type {(import('../../purchase/types.js').PendingProductPurchase & {state: ('complete'|'pending')})[]} */
         let eligible_purchases = []
         let nChecked = 0;
 
@@ -117,7 +117,7 @@ async function get_product_payment_id(id) {
 
             }
 
-            finRpc.finance.payment.getPublicData({ id: pending_purchase.payment }).then(public_data => {
+            hcRpc.finance.payment.getPublicData({ id: pending_purchase.payment }).then(public_data => {
 
                 if (!public_data.failed?.reason) {
 
@@ -158,7 +158,7 @@ async function get_product_payment_id(id) {
          * @returns {Promise<string>}
          */
         async function create_new() {
-            return await finRpc.finance.product.purchase.purchase({ product: id, quantity: 1 })
+            return await hcRpc.finance.product.purchase.purchase({ product: id, quantity: 1 })
         }
 
     });

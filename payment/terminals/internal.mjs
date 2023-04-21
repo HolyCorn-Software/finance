@@ -67,7 +67,7 @@ export default class PaymentInternalMethods {
 
     /**
      * This returns the list of all payment methods
-     * @returns {Promise<[Finance.Payment.ClientPaymentMethodInfo]>}
+     * @returns {Promise<Finance.Payment.ClientPaymentMethodInfo[]>}
      */
     async getPaymentMethods() {
 

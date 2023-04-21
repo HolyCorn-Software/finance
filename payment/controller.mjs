@@ -266,7 +266,7 @@ export default class PaymentController {
      * @param {object} param0 
      * @param {Finance.Payment.PaymentRecord} param0.search
      * @param {string} param0.userid If specified ownership checks will be made to see if the user owns this
-     * @param {[string]} param0.permissions When specified, it will define the permissions to check for. By default this is an array containing permissions.finance.payment.modify_any_payment
+     * @param {modernuser.permission.PermissionEnum[]} param0.permissions When specified, it will define the permissions to check for. By default this is an array containing permissions.finance.payment.modify_any_payment
      * @returns {Promise<Finance.Payment.PaymentRecord}
      */
     async findAndCheckOwnership({ search, userid, permissions = ['permissions.finance.payment.modify_any_payment'] }) {
@@ -511,7 +511,7 @@ export default class PaymentController {
  * @param {object} param0 
  * @param {string} param0.userid
  * @param {Finance.Payment.PaymentRecord param0.record
- * @param {[string]} param0.bypass_permissions
+ * @param {string[]} param0.bypass_permissions
  * @returns {Promise<void>}
  */
 export const ownership_check = async ({ userid, record, bypass_permissions }) => {
@@ -538,35 +538,6 @@ export const ownership_check = async ({ userid, record, bypass_permissions }) =>
 }
 
 
-
-
-
-
-// Setup necessary permissions
-
-const init = async () => {
-
-    const modernuser = await muser_common.getConnection()
-
-    let permissions = [
-
-        {
-            name: 'permissions.finance.payment.modify_any_payment',
-            label: `Modify any payment`
-        },
-
-        {
-            name: 'permissions.finance.payment.view_any_payment',
-            label: `View data about any payment`
-        }
-    ]
-
-    for (let permission of permissions) {
-        await modernuser.permissions.data.createPermission(permission)
-    }
-}
-
-setTimeout(() => init(), 500)
 
 
 const locks = Symbol()

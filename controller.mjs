@@ -38,7 +38,6 @@ export default class FinanceController {
      */
     async init() {
         await this.payment.init()
-        await this.product.init();
         this.refresher.start_loop()
     }
 

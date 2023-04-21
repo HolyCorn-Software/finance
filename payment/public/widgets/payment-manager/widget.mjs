@@ -66,7 +66,7 @@ export default class PaymentManager extends Widget {
 
         this.listings = PaymentListings.testWidget
 
-        /** @type {[ActionButton]} */ this.actions
+        /** @type {ActionButton[]} */ this.actions
         this.pluralWidgetProperty({
             selector: '.hc-action-button',
             property: 'actions',

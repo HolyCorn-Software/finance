@@ -43,7 +43,7 @@ export default class PaymentListings extends Widget {
 
         /** @type {function(('show-detail-popup'), function( CustomEvent<{data: import("./types.js").FrontendPaymentData, popup:PaymentDetailsPopup}>), AddEventListenerOptions)} */ this.addEventListener
 
-        /** @type {[PaymentListing]} */ this.itemWidgets
+        /** @type {PaymentListing[]} */ this.itemWidgets
         this.pluralWidgetProperty({
             selector: '.hc-donorforms-admin-payment-listing',
             parentSelector: '.container >tbody',
@@ -52,7 +52,7 @@ export default class PaymentListings extends Widget {
             immediate: false,
         });
 
-        /** @type {[import("./types.js").FrontendPaymentData]} */ this.itemsData
+        /** @type {import("./types.js").FrontendPaymentData[]} */ this.itemsData
 
         this.pluralWidgetProperty({
             selector: '.hc-donorforms-admin-payment-listing',
@@ -93,7 +93,7 @@ export default class PaymentListings extends Widget {
         this.mainCheckbox = new Checkbox()
 
 
-        /** @type {[string]} */ this.headers
+        /** @type {string[]} */ this.headers
         this.pluralWidgetProperty({
             selector: '.header',
             parentSelector: '.headers ',

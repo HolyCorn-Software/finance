@@ -10,11 +10,10 @@ import { PaymentProvidedUI } from "../provided-ui/model.js";
 import { handle } from "/$/system/static/errors/error.mjs";
 import ActionButton from "/$/system/static/html-hc/widgets/action-button/button.mjs"
 import AlarmObject from "/$/system/static/html-hc/lib/alarm/alarm.mjs"
-import finRpc from "/$/finance/static/lib/rpc/rpc.mjs";
+import hcRpc from "/$/system/static/comm/rpc/aggregate-rpc.mjs";
 import MultiFlexForm  from "/$/system/static/html-hc/widgets/multi-flex-form/flex.mjs";
 
-
-const paymentMethods = await finRpc.finance.payment.getPaymentMethods()
+const paymentMethods = await hcRpc.finance.payment.getPaymentMethods()
 
 
 /**
@@ -57,8 +56,8 @@ export class SimplePaymentForm extends PaymentProvidedUI {
         /** @type {string} */ this.caption
         this.htmlProperty('.details >.caption', 'caption', 'innerHTML')
 
-        /** @type {[{name: string, label:string}]} */ this.actions
-        /** @type {[ActionButton & {name:string}]} */ this.actionButtons
+        /** @type {{name: string, label:string}[]} */ this.actions
+        /** @type {(ActionButton & {name:string})[]} */ this.actionButtons
 
         const defineTheActionProperty = (property) => {
 

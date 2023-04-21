@@ -23,3 +23,12 @@ export type ProductDataCollection = Collection<ProductData>
 
 
 export type ProductMutableData = Omit<ProductData, "id" | "time">
+
+global {
+    namespace modernuser.permission {
+        interface AllPermissions {
+            'permissions.finance.product.create': true
+            'permissions.finance.product.modify_any_product': true
+        }
+    }
+}

@@ -38,7 +38,7 @@ export class WaitingUI extends Widget {
             property: 'paymentUI'
         })
 
-        /** @type {[HTMLElement]} */ this.actions
+        /** @type {HTMLElement[]} */ this.actions
         this.pluralWidgetProperty({
             selector: '*',
             parentSelector: '.container >.actions',

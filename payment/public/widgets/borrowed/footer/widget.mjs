@@ -6,7 +6,7 @@
  */
 
 import FooterSection from "./section.mjs";
-import systemRpc from "/$/system/static/comm/rpc/system-rpc.mjs";
+import hcRpc from "/$/system/static/comm/rpc/aggregate-rpc.mjs";
 import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
 import { Widget } from "/$/system/static/html-hc/lib/widget/index.mjs";
 
@@ -17,7 +17,7 @@ try {
 
 } catch (e) {
 
-    systemRpc.system.error.report(`There's no footer widget in /$/shared/static/widgets/, the default has been used`)
+    hcRpc.system.error.report(`There's no footer widget in /$/shared/static/widgets/, the default has been used`)
 
     Footer = class extends Widget {
 
@@ -46,7 +46,7 @@ try {
             `
             });
 
-        /** @type {[import("./types.js").FooterSectionData]} */ this.data
+        /** @type {import("./types.js").FooterSectionData[]} */ this.data
             this.pluralWidgetProperty({
                 selector: '.hc-donorforms-footer-section',
                 parentSelector: '.container >.main >.data-section',

@@ -56,8 +56,20 @@ declare global {
             value: number
         }
     }
+
+    namespace faculty {
+        interface faculties {
+            finance: {
+                remote: {
+                    internal: FinanceInternalMethods
+                    public: FinancePublicMethods
+                }
+            }
+        }
+    }
 }
 
 type FinancePluginNamespaceMap = {
     payment: PaymentPlugin<{}>[]
 }
+

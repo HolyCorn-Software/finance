@@ -7,7 +7,7 @@
 
 import InlinePaymentSettle from "../debit.mjs";
 import { EnterPaymentDetails } from "../enter-payment-details.mjs";
-import finRpc from "/$/finance/static/lib/rpc/rpc.mjs";
+import hcRpc from "/$/system/static/comm/rpc/aggregate-rpc.mjs";
 import { handle } from "/$/system/static/errors/error.mjs";
 
 
@@ -29,7 +29,7 @@ export async function enterPaymentDetailsLogic(widget, enter_details_widget) {
         try {
 
 
-            let form_structure = await finRpc.finance.payment.getInlineForm({
+            let form_structure = await hcRpc.finance.payment.getInlineForm({
                 intent: widget.state_data.payment_data.type,
                 method: widget.state_data.payment_data.method
             });
@@ -55,7 +55,7 @@ export async function enterPaymentDetailsLogic(widget, enter_details_widget) {
 
                     //Now if the provider doesn't require any input to charge the client, then just go ahead
 
-                    await finRpc.finance.payment.publicUpdate(
+                    await hcRpc.finance.payment.publicUpdate(
                         {
                             id: widget.state_data.payment_data.id,
                             data: {
@@ -121,7 +121,7 @@ export async function enterPaymentDetailsLogic(widget, enter_details_widget) {
  */
 async function sendUserInput(widget, enter_details_widget) {
 
-    return await finRpc.finance.payment.publicUpdate(
+    return await hcRpc.finance.payment.publicUpdate(
         {
             id: widget.state_data.payment_data.id,
             data: {

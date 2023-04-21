@@ -39,7 +39,7 @@ export default class CollectionRefresher {
 
         /**
          * This object keeps track of records that are being processed, thereby preventing an external module from making update at the wrong time; a move that could lead to data loss
-         * @type {[id: string]: true}
+         * @type {id: string[]: true}
          */
         this.recordLocks = {}
 
@@ -65,7 +65,7 @@ export default class CollectionRefresher {
     async tick() {
         const cursor = this.collection.find({});
 
-        /** @type {[Promise]} */
+        /** @type {Promise[]} */
         const promises = []
 
 

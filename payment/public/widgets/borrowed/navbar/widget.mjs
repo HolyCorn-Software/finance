@@ -4,7 +4,7 @@
  * The Navbar widget
  */
 
-import systemRpc from "/$/system/static/comm/rpc/system-rpc.mjs";
+import hcRpc from "/$/system/static/comm/rpc/aggregate-rpc.mjs";
 import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
 import { Widget } from "/$/system/static/html-hc/lib/widget/index.mjs";
 
@@ -16,7 +16,7 @@ try {
 
 } catch (e) {
 
-    systemRpc.system.error.report(`There's no navbar widget in /$/shared/static/widgets/, the default has been used`)
+    hcRpc.system.error.report(`There's no navbar widget in /$/shared/static/widgets/, the default has been used`)
     
     Navbar = class extends Widget {
 
@@ -40,7 +40,7 @@ try {
             });
 
 
-        /** @type {[{label:string, href:string}]} */ this.links
+        /** @type {{label:string, href:string}[]} */ this.links
             this.pluralWidgetProperty({
                 selector: 'a',
                 property: 'links',

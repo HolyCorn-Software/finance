@@ -8,7 +8,7 @@
 import { PaymentProvidedUIFrame } from "../../../lib/index.mjs";
 import InlinePaymentSettle from "../debit.mjs";
 import { WaitingUI } from "../waiting.mjs";
-import finRpc from "/$/finance/static/lib/rpc/rpc.mjs";
+import hcRpc from "/$/system/static/comm/rpc/aggregate-rpc.mjs";
 import { handle } from "/$/system/static/errors/error.mjs";
 import BrandedBinaryPopup from "/$/system/static/html-hc/widgets/branded-binary-popup/widget.mjs";
 
@@ -60,7 +60,7 @@ export async function waitingUILogic(widget, waiting_ui) {
             checker_interval = setInterval(async () => {
 
 
-                let record = await finRpc.finance.payment.getPublicData({
+                let record = await hcRpc.finance.payment.getPublicData({
                     id: widget.state_data.payment_data.id
                 })
 
@@ -81,7 +81,7 @@ export async function waitingUILogic(widget, waiting_ui) {
 
 
                 if (listening && (record.archived)) {
-                    await finRpc.finance.payment.forceRefresh({ id: record.id })
+                    await hcRpc.finance.payment.forceRefresh({ id: record.id })
                 }
 
 
@@ -134,9 +134,9 @@ export async function waitingUILogic(widget, waiting_ui) {
         }
 
         async function execute() {
-            await finRpc.finance.payment.execute({ id: widget.state_data.payment_data.id });
+            await hcRpc.finance.payment.execute({ id: widget.state_data.payment_data.id });
             //Now, since the payment data has changed due to execution, we now fetch it
-            widget.state_data.payment_data = await finRpc.finance.payment.getPublicData({ id: widget.state_data.payment_data.id })
+            widget.state_data.payment_data = await hcRpc.finance.payment.getPublicData({ id: widget.state_data.payment_data.id })
         }
 
         const cancel = async () => {
@@ -213,13 +213,13 @@ export const cancel_payment = (widget) => {
             execute: async () => {
 
                 try {
-                    await finRpc.finance.payment.cancelPayment({
+                    await hcRpc.finance.payment.cancelPayment({
                         id: widget.state_data.payment_data.id
                     });
                     widget.state_data.stage = 'canceled';
                     widget.state_data.payment_data.canceled = true;
                     //Now update the data we have about the payment
-                    Object.assign(widget.state_data.payment_data, await finRpc.finance.payment.getPublicData({ id: widget.state_data.payment_data.id }))
+                    Object.assign(widget.state_data.payment_data, await hcRpc.finance.payment.getPublicData({ id: widget.state_data.payment_data.id }))
 
                 } catch (e) {
                     handle(e)

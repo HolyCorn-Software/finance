@@ -58,7 +58,7 @@ export class ProvidedFrameErrorUI extends Widget {
             get: () => resChoice
         })
 
-        /** @type {[{name, label}]} */ this.actions
+        /** @type {{name, label}[]} */ this.actions
 
         this.pluralWidgetProperty({
             selector: `.hc-action-button`,
@@ -85,7 +85,7 @@ export class ProvidedFrameErrorUI extends Widget {
         })
 
 
-        /** @type {[ActionButton]} */ this.actionButtons
+        /** @type {ActionButton[]} */ this.actionButtons
         this.pluralWidgetProperty({
             selector: `.hc-action-button`,
             parentSelector: '.container >.actions',
