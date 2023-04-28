@@ -80,7 +80,7 @@ export default class PaymentInternalMethods {
      * @param {object} param0 
      * @param {('invoice'|'payout')} param0.intent
      * @param {string} param0.method
-     * @returns {Promise<import("/$/system/static/html-hc/widgets/multi-flex-form/types.js").MultiFlexFormDefinitionData}
+     * @returns {Promise<htmlhc.widget.multiflexform.MultiFlexFormDefinitionData}
      */
     async getInlineForm({ intent, method }) {
         return await this[controller_symbol].getInlineForm({ ...arguments[1] })
