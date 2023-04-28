@@ -316,7 +316,7 @@ export default class PaymentController {
      * @param {object} param0 
      * @param {('invoice'|'payout')} param0.intent
      * @param {string} param0.method
-     * @returns {Promise<import("/$/system/static/html-hc/widgets/multi-flex-form/types.js").MultiFlexFormDefinitionData}
+     * @returns {Promise<htmlhc.widget.multiflexform.MultiFlexFormDefinitionData}
      */
     async getInlineForm({ intent, method }) {
         let provider = await this.getProvider({ method })

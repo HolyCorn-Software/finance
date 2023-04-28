@@ -4,8 +4,7 @@
  * This script contains type definitions for the inline-debit widget
  */
 
-import { MultiFlexFormDefinitionData } from "/$/system/static/html-hc/widgets/multi-flex-form/types";
-
+import { Collection } from "mongodb"
 
 
 
@@ -20,7 +19,7 @@ export interface StateStorage {
         paymentMethods: [
             Finance.Payment.ClientPaymentMethodInfo
         ],
-        form: MultiFlexFormDefinitionData
+        form: htmlhc.widget.multiflexform.MultiFlexFormDefinitionData
     }
 
     payment_data: Finance.Payment.PaymentRecord

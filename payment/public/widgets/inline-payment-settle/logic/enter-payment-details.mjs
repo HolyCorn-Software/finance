@@ -36,8 +36,8 @@ export async function enterPaymentDetailsLogic(widget, enter_details_widget) {
 
             /**
              * This method checks if two forms are equal
-             * @param {import("/$/system/static/html-hc/widgets/multi-flex-form/types.js").MultiFlexFormDefinitionData} form1 
-             * @param {import("/$/system/static/html-hc/widgets/multi-flex-form/types.js").MultiFlexFormDefinitionData} form2 
+             * @param {htmlhc.widget.multiflexform.MultiFlexFormDefinitionData} form1 
+             * @param {htmlhc.widget.multiflexform.MultiFlexFormDefinitionData} form2 
              * @returns {boolean}
              */
             function formsEqual(form1, form2) {
