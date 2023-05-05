@@ -53,7 +53,7 @@ export default class GeneralPaymentUI extends PaymentProvidedUI{
         // this.loader = new Loader();
         // this.html.$('.middle .loader').appendChild(this.loader.html)
         
-        this.html.$('.bottom .payment-button').on('click', function(){
+        this.html.$('.bottom .payment-button').addEventListener('click', function(){
             window.open(this.getAttribute('link'))
         })
 
