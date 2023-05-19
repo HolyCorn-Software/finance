@@ -1,3 +1,3 @@
 .
 
-Updated code to stop use of deprecated methods
+Removed unnecessary code

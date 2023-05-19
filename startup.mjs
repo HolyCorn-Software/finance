@@ -21,8 +21,6 @@ export default async function init() {
     console.log(`${faculty.descriptor.label.magenta} is working!`)
 
 
-    const http = await HTTPServer.new()
-
 
 
     //Initialize the controller
@@ -46,7 +44,7 @@ export default async function init() {
 
 
     //Initialize the logic
-    await overall_controller.init(http)
+    await overall_controller.init()
 
     //Then setup public rpc
     faculty.remote.public = new FinancePublicMethods(overall_controller)
