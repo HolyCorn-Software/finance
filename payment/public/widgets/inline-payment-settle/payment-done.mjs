@@ -42,7 +42,7 @@ export class PaymentDone extends Widget {
     }
 
     set image(img_url) {
-        this.html.$('.image img').src = new URL(img_url, hc.getCaller()).href
+        this.html.$('.image img').src = new URL(img_url, import.meta.url).href
     }
     get image() {
         this.html.$('.image img').src

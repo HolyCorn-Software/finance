@@ -1,3 +1,3 @@
 .
 
-Corrected minor bug that has to do with payment refresh
+Corrected minor UI bug
