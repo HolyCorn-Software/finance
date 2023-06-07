@@ -105,6 +105,7 @@ export default class PaymentRefresher {
                     record.archived = true
                 }
 
+                console.trace(`Moving record\n`, record, `\nlower`)
             }
 
         }

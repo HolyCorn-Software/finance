@@ -387,8 +387,11 @@ export default class PaymentController {
 
             record.executed = Date.now()
             record.failed = undefined
-
-            console.log(`Updating with `, record)
+            delete record.archived
+            // Force the record into the hot collection
+            this[collections_symbol].archive.deleteOne({ id: record.id })
+            this[collections_symbol].middle.deleteOne({ id: record.id })
+            this[collections_symbol].hot.updateOne({ id: record.id }, { $set: record }, { upsert: true })
 
             await this.updateRecord({ search: { id: record.id }, update: record })
         } catch (e) {
