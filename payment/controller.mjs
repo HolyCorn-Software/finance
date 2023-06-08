@@ -386,7 +386,8 @@ export default class PaymentController {
             }
 
             record.executed = Date.now()
-            record.failed = undefined
+            delete record.failed
+            delete record.done
             delete record.archived
             // Force the record into the hot collection
             this[collections_symbol].archive.deleteOne({ id: record.id })
