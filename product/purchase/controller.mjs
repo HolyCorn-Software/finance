@@ -93,7 +93,7 @@ export default class ProductPurchaseController {
             }
         );
 
-        this[collection_symbol].insertOne(
+        await this[collection_symbol].insertOne(
             {
                 userid,
                 product,
