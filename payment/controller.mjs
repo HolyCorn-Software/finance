@@ -233,7 +233,7 @@ export default class PaymentController {
 
     /**
      * This method searches for a record thoroughly, irrespective of the actual collection it resides
-     * @param {Finance.Payment.PaymentRecord param0 
+     * @param {Finance.Payment.PaymentRecord} param0 
      * @param {object} param1
      * @param {boolean} param1.throwError
      * @returns {Promise<Finance.Payment.PaymentRecord}
