@@ -16,8 +16,8 @@ export declare interface PaymentRecord<ProviderData = {}, ClientInputData = {}, 
     type: PaymentRecordType
     method: string
     method_whitelist: string[]
-    amount: Finance.Amount
-    settled_amount: Finance.Amount
+    amount: finance.Amount
+    settled_amount: finance.Amount
 
     lastRefresh: {
         client: number
@@ -104,10 +104,10 @@ export declare interface Amount {
 export type PaymentRecordType = ("invoice" | "payout")
 
 
-export declare type PaymentPublicData<ClientInputData, ClientOutputData> = Omit<PaymentRecord<{}, sClientInputData, ClientOutputData>, "provider_data" | "owners">
+export declare type PaymentPublicData<ClientInputData = {}, ClientOutputData = {}> = Omit<PaymentRecord<{}, ClientInputData, ClientOutputData>, "provider_data" | "owners">
 
 
-export declare type PaymentWritablePublicData<ClientInputData> = Pick<PaymentRecord<{}, ClientInputData, {}>, "client_data" | "method">
+export declare type PaymentWritablePublicData<ClientInputData = {}> = Pick<PaymentRecord<{}, ClientInputData, {}>, "client_data" | "method">
 
 
 
@@ -151,6 +151,8 @@ export declare interface PaymentMethodInfo {
     label: string
     /** This is filled by the system automatically */
     plugin: string
+    /** This optional field tells us if the payment method is constrained to a particular type of payment. Perhaps some payment methods are only for invoice. */
+    type?: PaymentRecordType
 }
 
 
@@ -162,47 +164,15 @@ export declare type PaymentMethodsInfo = PaymentMethodInfo[]
 export declare type ClientPaymentMethodInfo = PaymentMethodInfo
 
 
-declare global {
-
-
-    /**
-     * @deprecated Use Finance instead of finance or global['finance']
-     */
-    type finance = {
-
-        /** @deprecated use Finance.Payment.PaymentRecord instead of global['finance']['PaymentRecord'] */
-        PaymentRecord: PaymentRecord
-        /** @deprecated use Finance.Payment.PaymentRecordMinimal instead of global['finance']['PaymentRecordMinimal'] */
-        PaymentRecordMinimal: PaymentRecordMinimal
-        /** @deprecated use Finance.Payment.PaymentRecordInit instead of global['finance']['PaymentRecordInit'] */
-        PaymentRecordInit: PaymentRecordInit
-        /** @deprecated use Finance.Payment.PaymentUserInputValidationResult instead of global['finance']['PaymentUserInputValidationResult'] */
-        PaymentUserInputValidationResult: PaymentUserInputValidationResult
-        /** @deprecated use Finance.Payment.PaymentMethodsInfo instead of global['finance']['PaymentMethodsInfo'] */
-        PaymentMethodsInfo: PaymentMethodsInfo
-        /** @deprecated use Finance.Payment.PaymentUserInputValidationData instead of global['finance']['PaymentUserInputValidationData'] */
-        PaymentUserInputValidationData: PaymentUserInputValidationData
-        /** @deprecated use Finance.Payment.PaymentRecordType instead of global['finance']['PaymentRecordType'] */
-        PaymentRecordType: PaymentRecordType
-        /** @deprecated use Finance.Amount */
-        Amount: Amount
-        /** @deprecated use Finance.PaymentMethodInfo */
-        ClientPaymentMethodInfo: ClientPaymentMethodInfo
-        /** @deprecated use Finance.InternalMethods */
-        remote: {
-            internal: FinanceInternalMethods
-        }
-    }
-
-
-}
-
 
 global {
     namespace modernuser.permission {
         interface AllPermissions {
             'permissions.finance.payment.modify_any_payment': true
             'permissions.finance.payment.view_any_payment': true
+            'permissions.finance.payment.create_record.invoice': true
+            'permissions.finance.payment.create_record.payout': true
+            'permissions.finance.payment.create_record.any': true
         }
     }
 }

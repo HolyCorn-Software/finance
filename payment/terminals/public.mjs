@@ -66,7 +66,7 @@ export default class PaymentPublicMethods {
      * This method is used by a client to update a record
      * @param {object} param0 
      * @param {string} param0.id
-     * @param {Finance.Payment.PaymentWritablePublicData} param0.data
+     * @param {finance.payment.PaymentWritablePublicData} param0.data
      * @returns {Promise<void>}
      */
     async publicUpdate({ id, data }) {
@@ -81,7 +81,7 @@ export default class PaymentPublicMethods {
 
     /**
      * This returns the list of all payment methods
-     * @returns {Promise<Finance.Payment.ClientPaymentMethodInfo[]>}
+     * @returns {Promise<finance.payment.ClientPaymentMethodInfo[]>}
      */
     async getPaymentMethods() {
 
@@ -125,6 +125,19 @@ export default class PaymentPublicMethods {
     async cancelPayment({ id }) {
 
         await this[controller_symbol].userDismiss({ id: arguments[1]?.id, client: arguments[0] })
+    }
+
+    async getRecords() {
+        return new JSONRPC.ActiveObject(await this[controller_symbol].getRecords())
+    }
+
+    /**
+     * 
+     * @param {finance.payment.PaymentRecordInit} init 
+     */
+    async createRecord(init) {
+        init = arguments[1]
+        return await this[controller_symbol].createRecord(init, (await muser_common.getUser(arguments[0])).id)
     }
 
 

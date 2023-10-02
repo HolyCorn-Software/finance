@@ -15,7 +15,7 @@ export declare interface ProductData {
     description: string
     time: number
     owners: string[]
-    price: Finance.Amount
+    price: finance.Amount
 }
 
 

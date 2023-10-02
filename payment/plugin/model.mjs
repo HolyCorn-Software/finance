@@ -4,10 +4,15 @@
  * This module contains a pattern payment plugins are expected to follow
  */
 
+import PaymentController from "../controller.mjs";
 import PaymentPluginSystemInterface from "./system.mjs"
 
 
 const system = Symbol()
+
+/** @type {PaymentController} */
+let controller;
+
 
 /**
  * @template CredentialsData
@@ -29,7 +34,7 @@ export default class PaymentPlugin extends PluginModelModel {
      */
     get system() {
         if (!this[system]) {
-            this[system] = new PaymentPluginSystemInterface()
+            this[system] = new PaymentPluginSystemInterface(controller)
         }
         return this[system]
     }
@@ -55,7 +60,7 @@ export default class PaymentPlugin extends PluginModelModel {
      * 
      * If the plugin throws an error, it should add a field 'fatal' true to the error, if it deems it impossible to retry the same transaction
      * 
-     * @param {Finance.Payment.PaymentRecord<ProviderData, ClientInputData, ClientOutputData>} record 
+     * @param {finance.payment.PaymentRecord<ProviderData, ClientInputData, ClientOutputData>} record 
      * @returns {Promise<void>}
      */
     async charge(record) {
@@ -65,7 +70,7 @@ export default class PaymentPlugin extends PluginModelModel {
      * The system calls this method when it requests that the wallet transfers an amount of money to a given destination, within the capability of the wallet.
      * 
      * The method is async, and manipulates the Payout data directly to make changes
-     * @param {Finance.Payment.PaymentRecord<ProviderData, ClientInputData, ClientOutputData>} payout The information of where and how much to pay
+     * @param {finance.payment.PaymentRecord<ProviderData, ClientInputData, ClientOutputData>} payout The information of where and how much to pay
      * @returns {Promise<void>}
      */
     async payout(payout) {
@@ -80,7 +85,7 @@ export default class PaymentPlugin extends PluginModelModel {
      * The plugin should modify the necessary fields (e.g amount, expiry, done) according to the new state of the transaction.
      * 
      * plugins should have nothing to do with the lastRefresh field
-     * @param {Finance.Payment.PaymentRecord<ProviderData, ClientInputData, ClientOutputData>} record 
+     * @param {finance.payment.PaymentRecord<ProviderData, ClientInputData, ClientOutputData>} record 
      * @returns {Promise<void>}
      */
     async refresh(record) {
@@ -98,8 +103,8 @@ export default class PaymentPlugin extends PluginModelModel {
      * Rather the plugins sets the sets the status to 'invalid'
      * 
      * Then set the reason why the payment data is wrong in 'message'
-     * @param {Finance.Payment.PaymentUserInputValidationData<ClientInputData>} paymentData
-     * @returns {Promise<Finance.Payment.PaymentUserInputValidationResult>}
+     * @param {finance.payment.PaymentUserInputValidationData<ClientInputData>} paymentData
+     * @returns {Promise<finance.payment.PaymentUserInputValidationResult>}
      */
     async validateUserInput(paymentData) {
 
@@ -117,7 +122,7 @@ export default class PaymentPlugin extends PluginModelModel {
     /**
      * This method is called by the system in order to get the list of payment methods supported by this plugin
      * 
-     * @returns {Promise<Finance.Payment.PaymentMethodsInfo>}
+     * @returns {Promise<finance.payment.PaymentMethodsInfo>}
      */
     async getPaymentMethodsInfo() {
 
@@ -126,7 +131,7 @@ export default class PaymentPlugin extends PluginModelModel {
     /**
      * plugins should override this method so as to provide public clients with a form that can be filled when entering details for an invoice or payout
      * @param {object} param0
-     * @param {Finance.Payment.PaymentRecordType} param0.intent
+     * @param {finance.payment.PaymentRecordType} param0.intent
      * @param {string} param0.method
      * @returns {Promise<htmlhc.widget.multiflexform.MultiFlexFormDefinitionData}
      */
@@ -138,3 +143,11 @@ export default class PaymentPlugin extends PluginModelModel {
 
 
 global.PaymentPlugin = PaymentPlugin
+
+/**
+ * 
+ * @param {PaymentController} controller_ 
+ */
+export async function paymentPluginModelInit(controller_) {
+    controller = controller_
+}

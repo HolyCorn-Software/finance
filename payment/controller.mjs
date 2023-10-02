@@ -8,7 +8,6 @@
 import shortUUID from "short-uuid"
 import muser_common from "muser_common"
 import financePlugins from "../helper.mjs"
-import PaymentPlugin from "./plugin/model.mjs"
 import { CurrencyController } from "../currency/controller.mjs"
 
 
@@ -45,17 +44,17 @@ export default class PaymentController {
      * When the system calls it, the PaymentController sets up the necessary stuff
      */
     async init() {
-
-        await import('./plugin/model.mjs'); //Make the model globally accessible
+        await (await import('./plugin/model.mjs')).paymentPluginModelInit(this); //Make the model globally accessible
     }
 
 
     /**
      * This creates a blank record
-     * @param {Finance.Payment.PaymentRecordInit} input 
+     * @param {finance.payment.PaymentRecordInit} input 
+     * @param {string} userid If set, the system will check to see that the user has permissions to create payments
      * @returns {Promise<string>}
      */
-    async createRecord(input) {
+    async createRecord(input, userid) {
 
         if (typeof input !== 'object') {
             throw new Exception(`Please pass an object`, { code: 'error.system.unplanned' })
@@ -68,7 +67,18 @@ export default class PaymentController {
             throw new Error(`Invalid input for amount, when creating a new payment record.`)
         }
 
-        /** @type {Finance.Payment.PaymentRecord} */
+        if (userid) {
+            await muser_common.whitelisted_permission_check(
+                {
+                    userid,
+                    permissions: [
+                        input.type === 'invoice' ? 'permissions.finance.payment.create_record.invoice' : 'permissions.finance.payment.create_record.payout'
+                    ]
+                }
+            )
+        }
+
+        /** @type {finance.payment.PaymentRecord} */
         const data = {}
 
         data.type = input.type
@@ -117,7 +127,7 @@ export default class PaymentController {
      * This method gets the publicly accessible data of a payment record.
      * 
      * It simply takes away what is not necessary
-     * @param {Finance.Payment.PaymentRecord record
+     * @param {finance.payment.PaymentRecord record
      * @returns {PaymentPublicData}
      */
     getPublicData(record) {
@@ -135,27 +145,29 @@ export default class PaymentController {
      * @param {object} param0 
      * @param {string} param0.userid If specified, security checks will be made
      * @param {string} param0.id
-     * @param {Finance.Payment.PaymentWritablePublicData} param0.data
+     * @param {finance.payment.PaymentWritablePublicData} param0.data
      * @returns {Promise<void>}
      */
     async publicUpdate({ userid, id, data }) {
-        if (userid) {
 
-            const record = await this.findAndCheckOwnership({ search: { id }, userid, })
-            await ownership_check({ userid, record, bypass_permissions: ['permissions.finance.payment.modify_any_payment'] })
-        }
+        const record = await this.findAndCheckOwnership({ search: { id }, userid, })
 
-
-        await this.publicUpdate0({ data, id })
+        await this.publicUpdate0({ data, id, record })
 
     }
 
-    async publicUpdate0({ data, id }) {
+    /**
+     * 
+     * @param {object} param0 
+     * @param {string} param0.id
+     * @param {finance.payment.PaymentPublicData} param0.data
+     * @param {finance.payment.PaymentRecord} record
+     */
+    async publicUpdate0({ data, id, record: final_data }) {
 
         /**
-         * @type {Pick<Finance.Payment.PaymentRecord, "client_data"|"method">}
+         * @type {Pick<finance.payment.PaymentRecord, "client_data"|"method">}
          */
-        const final_data = {}
 
         soulUtils.exclusiveUpdate(
             {
@@ -166,12 +178,13 @@ export default class PaymentController {
             final_data
         );
 
+
         //Now, if there's user input, let's check that the input is correct
         if (final_data.client_data?.input) {
             let record;
             /**
              * 
-             * @returns {Promise<Finance.Payment.PaymentRecord>}
+             * @returns {Promise<finance.payment.PaymentRecord>}
              */
             const getRecord = async () => {
                 return record ||= await this.findRecord({ id })
@@ -213,8 +226,8 @@ export default class PaymentController {
     /**
      * Determines the collection that contains a record and updates it
      * @param {object} param0 
-     * @param {Finance.Payment.PaymentRecord param0.search
-     * @param {Finance.Payment.PaymentRecord param0.update
+     * @param {finance.payment.PaymentRecord} param0.search
+     * @param {finance.payment.PaymentRecord} param0.update
      * @returns {Promise<void>}
      */
     async updateRecord({ search, update }) {
@@ -233,10 +246,10 @@ export default class PaymentController {
 
     /**
      * This method searches for a record thoroughly, irrespective of the actual collection it resides
-     * @param {Finance.Payment.PaymentRecord} param0 
+     * @param {finance.payment.PaymentRecord} param0 
      * @param {object} param1
      * @param {boolean} param1.throwError
-     * @returns {Promise<Finance.Payment.PaymentRecord}
+     * @returns {Promise<finance.payment.PaymentRecord}
      */
     async findRecord({ ...data }, { throwError } = {}) {
 
@@ -264,10 +277,10 @@ export default class PaymentController {
     /**
      * This method searchs for a record and does ownership check immediately before returning the record
      * @param {object} param0 
-     * @param {Finance.Payment.PaymentRecord} param0.search
+     * @param {finance.payment.PaymentRecord} param0.search
      * @param {string} param0.userid If specified ownership checks will be made to see if the user owns this
      * @param {modernuser.permission.PermissionEnum[]} param0.permissions When specified, it will define the permissions to check for. By default this is an array containing permissions.finance.payment.modify_any_payment
-     * @returns {Promise<Finance.Payment.PaymentRecord}
+     * @returns {Promise<finance.payment.PaymentRecord}
      */
     async findAndCheckOwnership({ search, userid, permissions = ['permissions.finance.payment.modify_any_payment'] }) {
         const record = await this.findRecord({ ...search }, { throwError: true })
@@ -301,7 +314,7 @@ export default class PaymentController {
 
     /**
      * This returns the list of all payment methods
-     * @returns {Promise<Finance.Payment.PaymentMethodsInfo>}
+     * @returns {Promise<finance.payment.PaymentMethodsInfo>}
      */
     async getPaymentMethods() {
 
@@ -327,7 +340,7 @@ export default class PaymentController {
      * This method returns the plugin that can handle the given method
      * @param {object} param0 
      * @param {string} param0.method
-     * @returns {Promise<PaymentPlugin>}
+     * @returns {Promise<import("./plugin/model.mjs").default>}
      */
     async getProvider({ method }) {
 
@@ -422,9 +435,9 @@ export default class PaymentController {
 
     /**
      * This method refreshes a record
-     * @param {Finance.Payment.PaymentRecord record 
+     * @param {finance.payment.PaymentRecord record 
      * @param {('system'|'client')} actor
-     * @returns {Promise<Finance.Payment.PaymentRecord}
+     * @returns {Promise<finance.payment.PaymentRecord}
      */
     async refreshRecord(record, actor = 'client') {
 
@@ -504,6 +517,89 @@ export default class PaymentController {
     }
 
 
+    /**
+     * This method returns records in the system
+     */
+    async getRecords() {
+
+        let userids = new Set()
+        let profilesNext;
+        /** @type {faculty.faculties['modernuser']['remote']['internal']} */
+        let modernuser
+
+        return {
+            /** @type {()=> AsyncGenerator<finance.payment.PaymentRecord>} */
+            data:
+                (
+                    /**
+                     * @this PaymentController
+                     */
+                    async function* () {
+                        /** @type {(keyof this[collections_symbol])[]} */
+                        const collectionKeys = ['hot', 'middle', 'archive']
+                        for (const cType of collectionKeys) {
+                            /** @type {import('mongodb').Collection<finance.payment.PaymentRecord>} */
+                            const collection = this[collections_symbol][cType]
+                            const cursor = collection.find({}, { sort: { created: 'descending' } })
+                            while (await cursor.hasNext()) {
+                                const next = await cursor.next()
+                                userids.add(...next.owners)
+                                yield next
+                                profilesNext?.()
+
+                            }
+                        }
+                        profilesNext?.(true)
+                    }
+                ).bind(this),
+
+            /** @type {()=> AsyncGenerator<modernuser.profile.UserProfileData>} */
+            profiles:
+                (
+                    /**
+                 * @this PaymentController
+                 */
+                    async function* () {
+                        let lastUseridsSize = 0;
+
+
+                        while (true) {
+                            try {
+
+                                // We wait for the data generator, if the size of the userid set hasn't changed.
+                                // But, if the data generator says it's over, then it's over
+                                if ((userids.size === lastUseridsSize) && await new Promise((resolve) => (profilesNext = resolve))) {
+                                    return;
+                                }
+
+                                if (userids.size > lastUseridsSize) {
+                                    const batch = [...userids].slice(lastUseridsSize, userids.size)
+
+                                    modernuser ||= await FacultyPlatform.get().connectionManager.overload.modernuser()
+
+                                    const profiles = await modernuser.profile.getProfiles(batch)
+                                    for (const profile of profiles) {
+                                        yield profile
+                                    }
+
+                                }
+
+                                lastUseridsSize = userids.size
+
+                            } catch (e) {
+                                console.warn(`Error while looping through payment records\n`, e)
+                            }
+                        }
+
+
+                    }
+                ).bind(this)
+
+        }
+
+    }
+
+
 
 }
 
@@ -514,7 +610,7 @@ export default class PaymentController {
  * This uses a userid to check if the user has ownership of a payment record or to ignore the results of the ownership check if the user has the given permissions
  * @param {object} param0 
  * @param {string} param0.userid
- * @param {Finance.Payment.PaymentRecord param0.record
+ * @param {finance.payment.PaymentRecord param0.record
  * @param {string[]} param0.bypass_permissions
  * @returns {Promise<void>}
  */

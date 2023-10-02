@@ -16,7 +16,8 @@ import {
     PaymentRecordType as _PaymentRecordType,
     ClientPaymentMethodInfo as _ClientPaymentMethodInfo,
     PaymentMethodInfo as _PaymentMethodInfo,
-    PaymentWritablePublicData as _PaymentWritablePublicData
+    PaymentWritablePublicData as _PaymentWritablePublicData,
+    PaymentPublicData as _PaymentPublicData
 } from "./payment/types";
 
 import { ProductCollections } from "./product/types";
@@ -32,8 +33,21 @@ export declare interface FinanceCollections {
 
 declare global {
 
+
+    /** @deprecated  Use {@link finance}*/
     namespace Finance {
+
+    }
+    namespace finance {
+
+        /**
+         * @deprecated 
+         * Use {@link payment} instead
+         */
         namespace Payment {
+
+        }
+        namespace payment {
             declare interface PaymentRecord<ProviderData = {}, ClientInputData = {}, ClientOutputData = {}> extends _PaymentRecord<ProviderData, ClientInputData, ClientOutputData> { }
             declare interface PaymentRecordMinimal<ProviderData> extends _PaymentRecordMinimal<ProviderData> { }
             declare interface PaymentRecordInit<ProviderData = {}> extends _PaymentRecordInit<ProviderData> { }
@@ -44,6 +58,7 @@ declare global {
             declare type PaymentRecordType = _PaymentRecordType
             declare interface ClientPaymentMethodInfo extends _ClientPaymentMethodInfo { }
             declare interface PaymentWritablePublicData extends _PaymentWritablePublicData { }
+            declare interface PaymentPublicData<ClientInputData = {}, ClientOutputData = {}> extends _PaymentPublicData<ClientInputData, ClientOutputData> { }
         }
 
         declare interface Remote {
@@ -66,10 +81,15 @@ declare global {
                 }
             }
         }
+        namespace plugin {
+            interface plugins {
+                payment: finance.plugins.payment.plugins
+            }
+        }
     }
 }
 
 type FinancePluginNamespaceMap = {
-    payment: PaymentPlugin<{}>[]
+    payment: PaymentPlugin<{}, {}, {}, {}>[]
 }
 

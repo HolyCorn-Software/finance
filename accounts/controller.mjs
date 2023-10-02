@@ -114,7 +114,7 @@ export default class FinanceAccountController {
      * 
      * @param {object} param0
      * @param {string} param0.account
-     * @param {Finance.Payment.PaymentRecordMinimal} param0.transaction 
+     * @param {finance.payment.PaymentRecordMinimal} param0.transaction 
      * @returns {Promise<void>}
      * 
      */

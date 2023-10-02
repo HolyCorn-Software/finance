@@ -63,8 +63,8 @@ export class CurrencyController {
      * If so, it returns 1.
      * If less than the second, it returns -1.
      * If both numbers are equal, it returns 0
-     * @param {Finance.Payment.Amount} amount1 
-     * @param {Finance.Payment.Amount} amount2 
+     * @param {finance.payment.Amount} amount1 
+     * @param {finance.payment.Amount} amount2 
      * @returns {Promise<1|-1|0>}
      */
     async compare(amount1, amount2) {

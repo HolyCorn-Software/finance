@@ -8,4 +8,10 @@ import _PaymentPlugin from "./model.mjs"
 
 global {
     let PaymentPlugin = _PaymentPlugin
+
+    namespace finance.plugins.payment {
+        interface plugins {
+
+        }
+    }
 }

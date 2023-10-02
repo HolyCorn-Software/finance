@@ -1,105 +1,295 @@
 /**
- * Copyright 2022 HolyCorn Software
- * The Donor Forms Project
- * This widget allows an authorized personnel to manage the payments of the system
+ * Copyright 2023 HolyCorn Software
+ * The Faculty of Finance
+ * This widget allows an authorized personnel to manage payment transactions 
  */
 
-import PaymentDetailsPopup from "./widgets/details/widget.mjs";
-import { convertToFrontendFormat } from "./widgets/listings/logic.mjs";
-import PaymentListings from "./widgets/listings/widget.mjs";
-import { NewPaymentPopup } from "./widgets/new/widget.mjs";
-import ActionButton from "/$/system/static/html-hc/widgets/action-button/button.mjs"
-import { hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
-import { Widget } from "/$/system/static/html-hc/lib/widget/index.mjs";
+
+import { Widget, hc } from "/$/system/static/html-hc/lib/widget/index.mjs";
+import hcRpc from "/$/system/static/comm/rpc/aggregate-rpc.mjs";
+import InlineUserProfile from "/$/modernuser/static/widgets/inline-profile/widget.mjs";
+import SlideIn from "/$/system/static/html-hc/widgets/slidein/widget.mjs";
+import ListDataManager from "/$/system/static/html-hc/widgets/list-data-manager/widget.mjs";
+import soulMan from "/$/system/static/lib.mjs"
+
+const paymentMethods = Symbol()
+const profiles = Symbol()
+
+const session = Symbol()
+
+const externalActions = Symbol()
 
 
-export default class PaymentManager extends Widget {
+/**
+ * @extends ListDataManager<finance.payment.PaymentRecord>
+ */
+export default class PaymentManager extends ListDataManager {
 
     constructor() {
-        super();
 
-        this.html = hc.spawn({
-            classes: ['hc-donorforms-payment-manager'],
-            innerHTML: `
-                <div class='container'>
 
-                    <div class='top-section'>
-                        <div class='title'>Payments</div>
-                        <div class='actions'>
+        super(
+            {
+                title: `Payments`,
+                config: {
+                    fetch: async () => {
+                        this[session] = await hcRpc.finance.payment.getRecords();
 
-                        </div>
-                    </div>
+                        this[session].profiles().then(async profileStream => {
+                            for await (let profile of profileStream) {
+                                this[profiles].push(profile)
+                                this.dispatchEvent(new CustomEvent('profiles-change', { detail: profile }))
+                            }
+                        })
 
-                    <div class='listings'>
+                        return this[session].data()
+                    },
+                    display: [
 
-                    </div>
-                
-                </div>
-            `
-        });
+                        {
+                            label: `ID`,
+                            name: 'id',
+                            view: '::text'
+                        },
+                        {
+                            label: `User`,
+                            view: async data => {
+                                const owner = data?.[0]
 
-        /** @type {string} */ this.title
-        this.htmlProperty('.top-section >.title', 'title', 'innerHTML')
+                                if (this[profiles].findIndex(item => item.id == owner) == -1) {
+                                    await new Promise(resolve => {
+                                        /**
+                                         * 
+                                         * @param {CustomEvent<modernuser.profile.UserProfileData>} event 
+                                         */
+                                        const onChange = (event) => {
+                                            if (event.detail.id == owner) {
+                                                this.removeEventListener('profiles-change', onChange)
+                                                resolve()
+                                            }
+                                        }
 
-        /** @type {PaymentListings} */ this.listings
-        this.widgetProperty({
-            selector: '.hc-donorforms-admin-payment-listings',
-            parentSelector: '.container >.listings',
-            childType: 'widget',
-            property: 'listings',
-            transforms: {
-                /**
-                 * 
-                 * @param {PaymentListings} widget 
-                 * @returns 
-                 */
-                set: (widget) => {
-                    //TODO: Proper clean up
-                    widget.addEventListener('show-detail-popup', (e) => {
-                        this.dispatchEvent(new CustomEvent('show-detail-popup', { detail: e.detail }))
-                    })
-                    return widget.html
-                },
-                get: (html) => html?.widgetObject
+                                        this.addEventListener('profiles-change', onChange)
+                                    })
+                                }
+                                return new InlineUserProfile(this[profiles].find(x => x.id == owner)).html
+                            },
+                            name: 'owners',
+                        },
+                        {
+                            label: `Amount`,
+                            name: 'amount',
+                            view: (input) => hc.spawn({ innerHTML: `${input?.value} ${input?.currency}` })
+                        },
+                        {
+                            label: `Payment Method`,
+                            view: async (input) => {
+                                const fetchNew = async () => {
+                                    await (paymentMethodsPromise = (async () => {
+                                        this[paymentMethods] = await hcRpc.finance.payment.getPaymentMethods();
+                                    })())
+                                }
+
+                                try {
+                                    if (!paymentMethodsPromise) {
+                                        await fetchNew()
+                                    } else {
+                                        await paymentMethodsPromise
+                                    }
+                                } catch {
+                                    await fetchNew()
+                                }
+
+                                const method = this[paymentMethods].find(x => x.code == input);
+                                if (!method) {
+                                    return input
+                                }
+                                return hc.spawn(
+                                    {
+                                        classes: ['hc-finance-payment-manager-entry-payment-method'],
+                                        innerHTML: `
+                                            <div class='container'>
+                                                <img src='${method.image}'>
+                                                <div class='label'>${method.label}</div>
+                                            </div>
+                                        `
+                                    }
+                                )
+                            },
+                            name: 'method'
+                        },
+                        {
+                            label: `Date`,
+                            view: (input) => {
+                                return new Date(input).toString()
+                            },
+                            name: 'created',
+                        },
+                        {
+                            label: `Status`,
+                            name: 'failed',
+                            view: (input, superdata) => {
+                                return hc.spawn(
+                                    {
+                                        innerHTML: superdata.failed ? `Failed` : superdata.done ? `Complete` : `Pending`
+                                    }
+                                )
+                            }
+                        }
+                    ],
+                    actions: (input) => {
+                        let externalActionsPlaceholder = new Widget();
+                        externalActionsPlaceholder.html = hc.spawn(
+                            {
+                                classes: [PaymentManager.classList[0] + '-external-actions-placeholder']
+                            }
+                        );
+
+
+                        externalActionsPlaceholder.blockWithAction(async () => {
+                            await Promise.allSettled(
+                                this[externalActions].map(async ext => {
+                                    for (const item of await ext.callback(input)) {
+                                        await externalActionsPlaceholder.waitTillDOMAttached()
+                                        const parent = externalActionsPlaceholder.html.parentElement
+                                        parent.appendChild(item)
+                                    }
+                                })
+                            ).then(() => externalActionsPlaceholder.html.remove())
+                        })
+
+                        return [
+                            externalActionsPlaceholder.html,
+                            hc.spawn(
+                                {
+                                    tag: 'img',
+                                    attributes: {
+                                        src: new URL('./copy-link.svg', import.meta.url).href
+                                    },
+                                    onclick: () => {
+                                        const url = `https://${new URL(window.location.href).host}/$/finance/payment/static/settle-payment/?id=${input.id}`
+                                        let message = `Copied Link to clipboard`
+                                        let timeout = 2500;
+                                        try {
+                                            window.navigator.clipboard.writeText(url)
+                                        } catch {
+                                            message = `Failed to copy to clipboard.\n<br>Use <a target=_blank href='${url}'>${url}</a>`
+                                            timeout = 7500;
+                                        }
+
+                                        const slideIn = new SlideIn({
+                                            content: hc.spawn({
+                                                innerHTML: message
+                                            })
+                                        })
+                                        slideIn.show()
+                                        slideIn.dismiss(timeout)
+                                    }
+
+                                }
+                            ),
+                        ]
+                    },
+                    input: [
+                        [
+                            {
+                                label: `Amount`,
+                                name: 'amount_value',
+                                type: 'number',
+                                valueProperty: 'valueAsNumber'
+                            },
+                            {
+                                label: `Currency`,
+                                name: 'amount_currency',
+                                type: 'customWidget',
+                                customWidgetUrl: "/$/system/static/html-hc/widgets/binance-currency-input/widget.mjs",
+                                value: 'XAF'
+                            }
+                        ],
+                        [
+                            {
+                                label: `Type`,
+                                name: 'type',
+                                type: 'choose',
+                                values: {
+                                    invoice: 'Invoice',
+                                    payout: 'Payout'
+                                }
+                            }
+                        ],
+                        [
+                            {
+                                label: `User`,
+                                name: 'owner_0',
+                                type: 'customWidget',
+                                customWidgetUrl: "/$/modernuser/static/widgets/user-n-role-input/widget.mjs",
+                                mode: "user"
+                            }
+                        ]
+                    ],
+                    create: async (input) => {
+
+                        return await Promise.all(
+                            input.map(async record => {
+                                const transaction = {
+                                    amount: {
+                                        value: record.amount_value,
+                                        currency: record.amount_currency || 'XAF'
+                                    },
+                                    type: record.type,
+                                    owners: [record.owner_0.id],
+                                };
+
+                                transaction.id = await hcRpc.finance.payment.createRecord(transaction)
+                                transaction.created = Date.now()
+                                return transaction
+                            })
+                        )
+                    },
+
+                }
             }
-        });
-
-        this.listings = PaymentListings.testWidget
-
-        /** @type {ActionButton[]} */ this.actions
-        this.pluralWidgetProperty({
-            selector: '.hc-action-button',
-            property: 'actions',
-            parentSelector: '.top-section >.actions',
-            childType: 'widget',
-        });
-
-        let createNew = new ActionButton({
-            content: 'Create New',
-            onclick: () => {
-                let popup = new NewPaymentPopup();
-                popup.show();
-                popup.addEventListener('create', ({ detail: data }) => {
-                    this.listings.itemsData.push(
-                        convertToFrontendFormat(data)
-                    )
-                    this.dispatchEvent(new CustomEvent('new', { detail: { data: data } }))
-                });
-
-            }
-        });
-
-        let deleteMany = new ActionButton({
-            content: 'Delete Many'
-        })
-        this.actions.push(
-            createNew,
-            deleteMany
         );
 
-        /** @type {function(('show-detail-popup'|'new'), function( CustomEvent<{data:import("./widgets/listings/types.js").FrontendPaymentData, popup:PaymentDetailsPopup}>), AddEventListenerOptions)} */ this.addEventListener
 
+        /** @type {modernuser.profile.UserProfileData[]} */
+        this[profiles] = []
+
+        /** @type {finance.ui.payment_manager.ExternalAction[]} */
+        this[externalActions] = []
+
+        this.html.classList.add(...PaymentManager.classList)
+
+        let paymentMethodsPromise;
+
+        this.blockWithAction(async () => {
+            await soulMan.run.addScope('hc-finance-payment-manager')
+        })
 
     }
 
+    /**
+     * This method is designed for external sources to call, in order to add additional features to the widget.
+     * 
+     * The parameter you pass contains a function that would be invoked when the user wants to take action on a payment record.
+     * 
+     * The function should return an array of HTMLElements, that would be displayed on the options menu.
+     * @param {finance.ui.payment_manager.ExternalAction} action 
+     * 
+     */
+    addExternalAction(action) {
+        this[externalActions] = [
+            ...this[externalActions].filter(x => x.name !== action.name),
+            action
+        ]
+    }
+
+    /** @readonly */
+    static get classList() {
+        return ['hc-finance-payment-manager']
+    }
+
 }
+
+
+hc.importModuleCSS(import.meta.url)

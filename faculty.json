@@ -45,6 +45,22 @@
                 {
                     "name": "permissions.finance.payment.view_any_payment",
                     "label": "View data about any payment"
+                },
+                {
+                    "name": "permissions.finance.payment.create_record.payout",
+                    "label": "Directly create an payout payment"
+                },
+                {
+                    "name": "permissions.finance.payment.create_record.invoice",
+                    "label": "Directly create an invoice payment"
+                },
+                {
+                    "name": "permissions.finance.payment.create_record.any",
+                    "label": "Directly create any payment",
+                    "inherits": [
+                        "permissions.finance.payment.create_record.payout",
+                        "permissions.finance.payment.create_record.invoice"
+                    ]
                 }
             ]
         }

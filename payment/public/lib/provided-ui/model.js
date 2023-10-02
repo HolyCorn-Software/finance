@@ -52,10 +52,10 @@ export class PaymentProvidedUI extends Widget {
         this.states = new AlarmObject();
 
         this.states.done = false;
-        
+
         /**
          * This contains data about the payment
-         * @type {import("/$/system/static/html-hc/lib/alarm/alarm-types").AlarmObjectType<Finance.Payment.PaymentRecord<{}, ClientInputData, ClientOutputData>& {payment_method_info: Finance.Payment.ClientPaymentMethodInfo}>>}
+         * @type {htmlhc.lib.alarm.AlarmObject<finance.payment.PaymentRecord<{}, ClientInputData, ClientOutputData>& {payment_method_info: finance.payment.ClientPaymentMethodInfo}>>}
          */
         this.data = new AlarmObject();
 

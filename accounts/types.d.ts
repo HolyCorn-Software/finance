@@ -36,7 +36,7 @@ export declare namespace AccountTransactionData {
 
         type: ("create" | "destroy"),
 
-        transaction: Finance.Payment.PaymentRecordMinimalnimal,
+        transaction: finance.payment.PaymentRecordMinimalnimal,
 
     }
 
@@ -46,7 +46,7 @@ export declare namespace AccountTransactionData {
         internal_data: {
             account: string,
             time: number,
-            amount: Finance.Amount
+            amount: finance.Amount
         }
     }
 }

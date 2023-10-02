@@ -1,0 +1,10 @@
+{
+    "admin": [
+        {
+            "label": "Payments",
+            "icon": "./dashboard-icon.png",
+            "name": "payments_admin",
+            "view": "./widget.mjs"
+        }
+    ]
+}

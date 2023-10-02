@@ -89,7 +89,7 @@ export default class CollectionRefresher {
 
     /**
      * This method refreshes a single record
-     * @param {Finance.Payment.PaymentRecord record 
+     * @param {finance.payment.PaymentRecord record 
      * @returns {Promise<void>}
      */
     async refresh(record) {

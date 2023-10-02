@@ -19,8 +19,8 @@ export default function configureFailureUI(payment_widget, failure_widget) {
     failure_widget.addEventListener('retry', () => {
 
         const hasInput = Array.isArray(payment_widget.state_data.data.form)
-        const paymentMethodLabel = payment_widget.state_data.data.paymentMethods.find(x => x.code === payment_widget.state_data.payment_data.method).label
-        
+        const paymentMethodLabel = payment_widget.state_data.data.paymentMethods.find(x => x.code === payment_widget.state_data.payment_data.method)?.label || payment_widget.state_data.payment_data.method
+
         const popup = new ListPopup(
             {
                 hideOnOutsideClick: false,

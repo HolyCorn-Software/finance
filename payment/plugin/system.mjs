@@ -7,18 +7,22 @@
  */
 
 import { CurrencyController } from "../../currency/controller.mjs";
+import PaymentController from "../controller.mjs";
 
 
 
 const currency = Symbol()
+const controller = Symbol()
 
 export default class PaymentPluginSystemInterface {
 
 
-    constructor() {
-
-
-
+    /**
+     * 
+     * @param {PaymentController} _controller 
+     */
+    constructor(_controller) {
+        this[controller] = _controller
 
     }
 
@@ -27,6 +31,10 @@ export default class PaymentPluginSystemInterface {
      */
     get currency() {
         return this[currency] ||= new CurrencyController()
+    }
+
+    get controller() {
+        return this[controller];
     }
 
 }

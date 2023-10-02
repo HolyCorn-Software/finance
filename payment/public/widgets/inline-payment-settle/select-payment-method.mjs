@@ -28,7 +28,7 @@ export class ChoosePaymentMethod extends Widget {
             `
         });
 
-        /** @type {Finance.Payment.ClientPaymentMethodInfo[]} */ this.paymentMethods
+        /** @type {finance.payment.ClientPaymentMethodInfo[]} */ this.paymentMethods
         this.pluralWidgetProperty({
             selector: '*',
             parentSelector: '.container >.methods',
@@ -41,7 +41,7 @@ export class ChoosePaymentMethod extends Widget {
 
                 /**
                  * 
-                 * @param {Finance.Payment.ClientPaymentMethodInfo} data 
+                 * @param {finance.payment.ClientPaymentMethodInfo} data 
                  * @returns 
                  */
                 set: (data) => {
