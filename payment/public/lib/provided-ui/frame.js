@@ -5,7 +5,7 @@ This widget allows the client UI to display UIs that come from providers, which 
 This widget focuses on UIs provided by the SwapD faculty.
 */
 
-import { CalculatedError } from "/$/system/static/errors/error.mjs";
+
 import { Widget } from "/$/system/static/html-hc/lib/widget/index.mjs";
 import { PaymentProvidedUI } from "./model.js";
 
@@ -82,7 +82,7 @@ export class PaymentProvidedUIFrame extends Widget {
             //Now check if the module follows the structure
             if (!(Module.prototype instanceof PaymentProvidedUI)) {
                 console.log(`Could not load `, Module)
-                throw new CalculatedError({
+                throw new Error({
                     message: `A technical error occurred.\nA page that was to be shown to you doesn't conform to some inheritance requirements. This is not your fault dear user, we are working on it. More info (${typeof Module === 'undefined' ? 'No default export' : 'Default export doesn\'t follow inheritance constraints.'})`,
                     code: 'error.system.unplanned'
                 })
