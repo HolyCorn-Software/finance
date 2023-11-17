@@ -96,7 +96,7 @@ async function get_product_payment_id(id) {
             return resolve(await create_new())
         }
 
-        /** @type {(import('../../purchase/types.js').PendingProductPurchase & {state: ('complete'|'pending')})[]} */
+        /** @type {(finance.product.purchase.PendingProductPurchase & {state: ('complete'|'pending')})[]} */
         let eligible_purchases = []
         let nChecked = 0;
 

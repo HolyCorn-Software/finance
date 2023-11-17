@@ -21,7 +21,7 @@ export default class ProductDataController {
 
     /**
      * 
-     * @param {import("./types.js").ProductDataCollection} collection 
+     * @param {finance.product.data.ProductDataCollection} collection 
      */
     constructor(collection) {
         this[collection_symbol] = collection
@@ -30,7 +30,7 @@ export default class ProductDataController {
     /**
      * This method is used to create a new product
      * @param {object} param0
-     * @param {Omit<import("./types.js").ProductMutableData>} param0.data 
+     * @param {finance.product.data.ProductMutableData} param0.data 
      * @param {string} param0.userid If specified, the user will be authenticated against the given action
      * @param {string[]} param0.zones If specified alongside userid, the system will check if the given user has permissions to create products in the given zone
      * @returns {Promise<string>}
@@ -86,7 +86,7 @@ export default class ProductDataController {
      * @param {string} param0.security.userid If specified, checks will be performed to make sure the user is allowed to do this
      * @param {string[]} param0.security.zones If specified together with the userid, security checks will be made to ensure that the users powers
      * to alter a product he doesn't own, are valid within those zones
-     * @param {Promise<import("./types.js").ProductMutableData>}
+     * @param {Promise<finance.product.data.ProductMutableData>}
      */
     async modifyProduct({ id, data, security }) {
 
@@ -109,7 +109,7 @@ export default class ProductDataController {
      * Finds a product by id
      * @param {object} param0 
      * @param {string} param0.id
-     * @returns {Promise<import("./types.js").ProductData>}
+     * @returns {Promise<finance.product.data.ProductData>}
      */
     async findProduct({ id }) {
         const product = await this[collection_symbol].findOne({ id });
@@ -142,7 +142,7 @@ export default class ProductDataController {
      * @param {object} param0 
      * @param {string} param0.id
      * @param {string} param0.userid
-     * @returns {Promise<import("./types.js").ProductData>}
+     * @returns {Promise<finance.product.data.ProductData>}
      */
     async getAndCheckPermissions({ id, userid }) {
 

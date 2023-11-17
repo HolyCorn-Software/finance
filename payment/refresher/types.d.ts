@@ -13,3 +13,12 @@ export interface EventsInterface extends EventEmitter {
     addListener(event: 'expire', listener: (id: string) => void): this;
     addListener(event: 'fail', listener: (id: string) => void): this;
 }
+
+global {
+    namespace faculty {
+        interface FacultyEvents {
+            'finance.payment-complete': [string]
+            'finance.payment-fail': [string]
+        }
+    }
+}

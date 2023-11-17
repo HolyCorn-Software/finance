@@ -28,7 +28,7 @@ export default class ProductDataPublicMethods {
      * This returns information about a product
      * @param {object} param0
      * @param {string} param0.id
-     * @returns {Promise<import("../types.js").ProductData>}
+     * @returns {Promise<finance.product.data.ProductData>}
      */
     async getProduct({id}) {
         let data = await this[controller_symbol].findProduct({ id: arguments[1]?.id })

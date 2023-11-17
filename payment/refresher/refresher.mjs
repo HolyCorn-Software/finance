@@ -75,7 +75,7 @@ export default class PaymentRefresher {
 
                 refresher.events.addListener(event, async (id) => {
                     this.events.emit(event, id)
-                    
+
                     //Now, when a record fails, or completes, it is moved straight to the archives
                     console.log(`Payment ${id} ${event}d, and will be moved to the archives!`)
                     const record = await collections_ranked[rank].findOne({ id })
@@ -99,13 +99,14 @@ export default class PaymentRefresher {
             const move_record_lower = async (id, rank) => {
                 //When a record expires, simply move it from the current collection to the lower one
                 const record = await collections_ranked[rank].findOne({ id })
-                await collections_ranked[rank + 1].updateOne({ id }, { $set: record }, { upsert: true })
-                await collections_ranked[rank].deleteOne({ id })
-                if (rank === 1) {
+
+                if (rank > 0) {
                     record.archived = true
                 }
 
-                console.trace(`Moving record\n`, record, `\nlower`)
+                await collections_ranked[rank + 1].updateOne({ id }, { $set: record }, { upsert: true })
+                await collections_ranked[rank].deleteOne({ id })
+                // console.trace(`Moving record\n`, record, `\nlower`)
             }
 
         }

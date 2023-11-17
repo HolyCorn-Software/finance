@@ -24,7 +24,7 @@ export default class ProductPurchaseController {
     /**
      * 
      * @param {object} param0
-     * @param {import("./types.js").ProductPurchaseCollection} param0.collection
+     * @param {finance.product.purchase.ProductPurchaseCollection} param0.collection
      * @param {PaymentController} param0.payment_controller 
      * @param {ProductDataController} param0.data_controller
      */
@@ -67,7 +67,7 @@ export default class ProductPurchaseController {
      * This method is used to purchase a product.
      * 
      * It returns a payment id
-     * @param {import("./types.js").ProductPurchaseCommon} param0 
+     * @param {finance.product.purchase.ProductPurchaseCommon} param0 
      */
     async purchase({ userid, product, quantity }) {
 
@@ -112,7 +112,7 @@ export default class ProductPurchaseController {
      * @param {object} param0 
      * @param {string} param0.userid
      * @param {object} param0.product If specified, the results will be filtered to only the ones that concern the given product
-     * @returns {Promise<import("./types.js").PendingProductPurchase[]>}
+     * @returns {Promise<finance.product.purchase.PendingProductPurchase[]>}
      */
     async getPendingPurchases({ userid, product }) {
         const query = { userid }

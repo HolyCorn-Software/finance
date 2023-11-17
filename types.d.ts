@@ -27,7 +27,7 @@ import FinancePublicMethods from "./terminals/public.mjs";
 
 export declare interface FinanceCollections {
     payment: PaymentCollections,
-    product: ProductCollections
+    product: finance.product.ProductCollections
 }
 
 

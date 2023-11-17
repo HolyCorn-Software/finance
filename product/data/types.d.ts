@@ -9,20 +9,24 @@
 import { Collection } from "mongodb";
 
 
-export declare interface ProductData {
-    id: string
-    label: string
-    description: string
-    time: number
-    owners: string[]
-    price: finance.Amount
+/**
+ * @deprecated use {@link finance.product.data.ProductData}
+ */
+export declare interface ProductData extends finance.product.data.ProductData {
 }
 
 
-export type ProductDataCollection = Collection<ProductData>
+/**
+ * @deprecated use {@link finance.product.data.ProductDataCollection}
+ */
+export type ProductDataCollection = finance.product.data.ProductDataCollection
 
 
-export type ProductMutableData = Omit<ProductData, "id" | "time">
+
+/**
+ * @deprecated use {@link finance.product.data.ProductMutableData}
+ */
+export type ProductMutableData = finance.product.data.ProductMutableData
 
 global {
     namespace modernuser.permission {
@@ -30,5 +34,29 @@ global {
             'permissions.finance.product.create': true
             'permissions.finance.product.modify_any_product': true
         }
+    }
+
+    namespace faculty {
+        interface FacultyEvents {
+            'finance.product-delete': [string]
+        }
+    }
+
+    namespace finance.product.data {
+        interface ProductData {
+            id: string
+            label: string
+            description: string
+            time: number
+            owners: string[]
+            price: finance.Amount
+        }
+
+
+        type ProductDataCollection = Collection<ProductData>
+
+        type ProductMutableData = Omit<ProductData, "id" | "time">
+
+
     }
 }

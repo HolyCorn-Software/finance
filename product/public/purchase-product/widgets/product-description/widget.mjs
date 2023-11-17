@@ -17,7 +17,7 @@ export default class ProductDescription extends Widget {
 
     /**
      * 
-     * @param {import("faculty/payment/processor/products/types.js").PaymentProduct} data 
+     * @param {finance.product.data.ProductData} data 
      */
     constructor(data) {
         super();
@@ -36,10 +36,10 @@ export default class ProductDescription extends Widget {
         this.htmlProperty(".container >.title >.product-label", "label", "innerHTML")
 
         /** @type {string} */ this.description
-        
+
 
         this.html.$('.container >.title >.product-label').addEventListener('click', () => {
-            new PaymentProductDetailsPopup({label: this.label, description: this.description}).show()
+            new PaymentProductDetailsPopup({ label: this.label, description: this.description }).show()
         })
 
         /** @type {string} */ this.price_value

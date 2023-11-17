@@ -13,7 +13,7 @@ export default class PaymentProductDetailsPopup extends HCTSBrandedPopup {
 
     /**
      * 
-     * @param {import("faculty/payment/processor/products/types.js").PaymentProduct} data 
+     * @param {finance.product.data.Product} data 
      */
     constructor(data) {
         super();

@@ -8,7 +8,7 @@
                 "./payment/public/*"
             ],
             "/$/finance/product/static/*": [
-                "./product/static/*"
+                "./product/public/*"
             ]
         }
     }

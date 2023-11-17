@@ -18,8 +18,8 @@ export default class ProductController {
      * 
      * @param {object} param0
      * @param {object} param0.collections 
-     * @param {import("./data/types.js").ProductDataCollection} param0.collections.data
-     * @param {import("./purchase/types.js").ProductPurchaseCollection} param0.collections.purchase
+     * @param {finance.product.data.ProductDataCollection} param0.collections.data
+     * @param {finance.product.purchase.ProductPurchaseCollection} param0.collections.purchase
      * @param {PaymentController} param0.payment_controller
      */
     constructor({ collections, payment_controller }) {

@@ -180,7 +180,7 @@ export default class PaymentController {
 
 
         //Now, if there's user input, let's check that the input is correct
-        if (final_data.client_data?.input) {
+        if (data.client_data?.input) {
             let record;
             /**
              * 

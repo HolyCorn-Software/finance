@@ -25,7 +25,7 @@ export default class ProductPurchaseInternalMethods {
 
     /**
      * This method is used to purchase a single product
-     * @param {Omit<import("../types.js").ProductPurchaseCommon, "userid">} param0 
+     * @param {Omit<finance.product.purchase.ProductPurchaseCommon, "userid">} param0 
      * @returns {Promise<string>}
      */
     async createPurchase({ quantity, userid, product }) {

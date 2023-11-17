@@ -15,8 +15,8 @@ import { CollectionProxy } from "../../system/database/collection-proxy.js";
  *     hot_payment_records: import("./payment/types.js").PaymentRecordCollection,
  *     middle_payment_records: import("./payment/types.js").PaymentRecordCollection,
  *     archive_payment_records: import("./payment/types.js").PaymentRecordCollection,
- *     product_data: import("./product/data/types.js").ProductDataCollection,
- *     product_purchase: import("./product/purchase/types.js").ProductPurchaseCollection
+ *     product_data: finance.product.data.ProductDataCollection,
+ *     product_purchase: finance.product.purchase.ProductPurchaseCollection
  * }}
  */
 const collections = new CollectionProxy(

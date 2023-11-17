@@ -175,4 +175,10 @@ global {
             'permissions.finance.payment.create_record.any': true
         }
     }
+
+    namespace faculty {
+        interface FacultyEvents {
+            'finance.payment-delete': [string]
+        }
+    }
 }

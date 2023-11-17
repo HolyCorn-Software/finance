@@ -118,8 +118,8 @@ export async function waitingUILogic(widget, waiting_ui) {
 
                 const popup = new BrandedBinaryPopup(
                     {
-                        title: `Try Again`,
-                        question: `You tried to execute this transaction in the past.\nDo you want to launch it again?\nIf you launch it again, any previous payments will be counted.`,
+                        title: `Redo Payment?`,
+                        question: `You tried to execute this transaction in the past.\nDo you want to launch it again?\nIf you launch it again, any previous payment would be lost, forever.`,
                         negative: `No`,
                         positive: `Try Again`,
                         execute() {

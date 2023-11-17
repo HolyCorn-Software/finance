@@ -6,12 +6,17 @@
  * This module (types) contains type definitions used by it's parent module (product)
  */
 
-import { ProductDataCollection } from "./data/types";
-import { ProductPurchaseCollection } from "./purchase/types";
 
-export declare interface ProductCollections {
 
-    data: ProductDataCollection
-    purchase: ProductPurchaseCollection
+import ''
 
+global {
+
+    namespace finance.product {
+        interface ProductCollections {
+            data: finance.product.data.ProductDataCollection
+            purchase: finance.product.data.ProductPurchaseCollection
+
+        }
+    }
 }

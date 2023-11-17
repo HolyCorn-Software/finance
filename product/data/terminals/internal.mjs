@@ -25,7 +25,7 @@ export default class ProductDataInternalMethods {
     /**
      * This method is used to create a new product
      * @param {object} param0
-     * @param {Omit<import("../types.js").ProductData, "id"|"time">} param0.data  Information about the new product
+     * @param {finance.product.data.ProductMutableData} param0.data  Information about the new product
      * @param {string} param0.userid If specified, permission checks will be made with that user. After that, the product will be owned 
      * by the user
      * @param {string[]} param0.zones If specified alongside the userid, checks will be made to ensure that the given userid has permissions to create products
@@ -61,7 +61,7 @@ export default class ProductDataInternalMethods {
      * If the security parameter is specified, checks will be made to ensure that the given user can make changes to the product.
      * @param {object} param0 
      * @param {string} param0.id
-     * @param {import("../types.js").ProductMutableData} param0.data
+     * @param {finance.product.data.ProductMutableData} param0.data
      * @param {object} param0.security
      * @param {string} param0.security.userid
      * @param {string} param0.security.zones
@@ -75,7 +75,7 @@ export default class ProductDataInternalMethods {
      * This method is used to retrieve a product
      * @param {object} param0 
      * @param {string} param0.id
-     * @returns {Promise<import("../types.js").ProductData>}
+     * @returns {Promise<finance.product.data.ProductData>}
      */
     async getProduct({ id }) {
         return await this[controller_symbol].findProduct({ ...arguments[1] })
