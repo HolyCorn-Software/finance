@@ -11,6 +11,7 @@ import InlineUserProfile from "/$/modernuser/static/widgets/inline-profile/widge
 import SlideIn from "/$/system/static/html-hc/widgets/slidein/widget.mjs";
 import ListDataManager from "/$/system/static/html-hc/widgets/list-data-manager/widget.mjs";
 import soulMan from "/$/system/static/lib.mjs"
+import DelayedAction from "/$/system/static/html-hc/lib/util/delayed-action/action.mjs";
 
 const paymentMethods = Symbol()
 const profiles = Symbol()
@@ -34,11 +35,11 @@ export default class PaymentManager extends ListDataManager {
                 config: {
                     fetch: async () => {
                         this[session] = await hcRpc.finance.payment.getRecords();
-
+                        const profilesChange = new DelayedAction(() => this.dispatchEvent(new CustomEvent('profiles-change')), 250, 1000)
                         this[session].profiles().then(async profileStream => {
                             for await (let profile of profileStream) {
                                 this[profiles].push(profile)
-                                this.dispatchEvent(new CustomEvent('profiles-change', { detail: profile }))
+                                profilesChange()
                             }
                         })
 
@@ -55,24 +56,32 @@ export default class PaymentManager extends ListDataManager {
                             label: `User`,
                             view: async data => {
                                 const owner = data?.[0]
+                                let profile;
 
-                                if (this[profiles].findIndex(item => item.id == owner) == -1) {
+                                const checkProfile = () => {
+                                    profile = this[profiles].find(item => item.id == owner);
+                                    return (typeof profile) != 'undefined'
+                                }
+
+                                if (!checkProfile()) {
                                     await new Promise(resolve => {
-                                        /**
-                                         * 
-                                         * @param {CustomEvent<modernuser.profile.UserProfileData>} event 
-                                         */
-                                        const onChange = (event) => {
-                                            if (event.detail.id == owner) {
+                                        let done;
+
+                                        const onChange = () => {
+                                            if (checkProfile()) {
                                                 this.removeEventListener('profiles-change', onChange)
                                                 resolve()
+                                                done = true
                                             }
+
                                         }
 
                                         this.addEventListener('profiles-change', onChange)
+
+                                        // TODO: Limit the wait, and directly search the profile after a given time period
                                     })
                                 }
-                                return new InlineUserProfile(this[profiles].find(x => x.id == owner)).html
+                                return new InlineUserProfile(profile).html
                             },
                             name: 'owners',
                         },
@@ -85,6 +94,7 @@ export default class PaymentManager extends ListDataManager {
                             label: `Payment Method`,
                             view: async (input) => {
                                 const fetchNew = async () => {
+                                    console.log(`Fetching new payment methods info `)
                                     await (paymentMethodsPromise = (async () => {
                                         this[paymentMethods] = await hcRpc.finance.payment.getPaymentMethods();
                                     })())

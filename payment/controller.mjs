@@ -524,8 +524,6 @@ export default class PaymentController {
 
         let userids = new Set()
         let profilesNext;
-        /** @type {faculty.faculties['modernuser']['remote']['internal']} */
-        let modernuser
 
         return {
             /** @type {()=> AsyncGenerator<finance.payment.PaymentRecord>} */
@@ -543,13 +541,18 @@ export default class PaymentController {
                             const cursor = collection.find({}, { sort: { created: 'descending' } })
                             while (await cursor.hasNext()) {
                                 const next = await cursor.next()
+                                const lastUseridsSize = userids.size;
                                 userids.add(...next.owners)
                                 yield next
-                                profilesNext?.()
+                                if (userids.size != lastUseridsSize) {
+                                    profilesNext?.()
+                                }
 
                             }
                         }
-                        profilesNext?.(true)
+                        profilesNext?.()
+                        userids.add(null)
+
                     }
                 ).bind(this),
 
@@ -563,29 +566,34 @@ export default class PaymentController {
                         let lastUseridsSize = 0;
 
 
-                        while (true) {
+                        while ([...userids][lastUseridsSize - 1] !== null) {
                             try {
 
                                 // We wait for the data generator, if the size of the userid set hasn't changed.
                                 // But, if the data generator says it's over, then it's over
-                                if ((userids.size === lastUseridsSize) && await new Promise((resolve) => (profilesNext = resolve))) {
-                                    return;
-                                }
+                                let timeout = setTimeout(() => profilesNext(), 1000)
+                                await new Promise((resolve) => (profilesNext = resolve))
+                                clearTimeout(timeout);
 
-                                if (userids.size > lastUseridsSize) {
-                                    const batch = [...userids].slice(lastUseridsSize, userids.size)
 
-                                    modernuser ||= await FacultyPlatform.get().connectionManager.overload.modernuser()
+                                let currUseridsSize = userids.size
 
-                                    const profiles = await modernuser.profile.getProfiles(batch)
-                                    for (const profile of profiles) {
-                                        yield profile
+                                if (currUseridsSize > lastUseridsSize) {
+                                    const batch = [...userids].slice(lastUseridsSize, currUseridsSize).filter(x => x !== null)
+
+
+                                    if (batch.length > 0) {
+
+                                        const profiles = await (await FacultyPlatform.get().connectionManager.overload.modernuser()).profile.getProfiles(batch)
+                                        for (const profile of profiles) {
+                                            yield profile
+                                        }
                                     }
 
+
                                 }
 
-                                lastUseridsSize = userids.size
-
+                                lastUseridsSize = currUseridsSize
                             } catch (e) {
                                 console.warn(`Error while looping through payment records\n`, e)
                             }
