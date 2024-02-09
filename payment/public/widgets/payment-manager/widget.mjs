@@ -94,7 +94,6 @@ export default class PaymentManager extends ListDataManager {
                             label: `Payment Method`,
                             view: async (input) => {
                                 const fetchNew = async () => {
-                                    console.log(`Fetching new payment methods info `)
                                     await (paymentMethodsPromise = (async () => {
                                         this[paymentMethods] = await hcRpc.finance.payment.getPaymentMethods();
                                     })())
