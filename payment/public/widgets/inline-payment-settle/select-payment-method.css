@@ -33,6 +33,10 @@
     position: relative;
 }
 
+.hc-hcts-payment-inline-debit-select-payment-method>.container>.methods:empty::before {
+    content: 'No payment methods. This payment cannot continue normally.';
+    font-size: 0.8em;
+}
 
 .hc-hcts-payment-inline-debit-select-payment-method>.container>.methods::-webkit-scrollbar {
     border-radius: 0px;

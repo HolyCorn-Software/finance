@@ -17,8 +17,8 @@ export interface EventsInterface extends EventEmitter {
 global {
     namespace faculty {
         interface FacultyEvents {
-            'finance.payment-complete': [string]
-            'finance.payment-fail': [string]
+            'finance.payment-complete': string
+            'finance.payment-fail': string
         }
     }
 }
