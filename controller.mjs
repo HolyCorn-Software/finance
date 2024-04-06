@@ -5,6 +5,7 @@
  * The decision to create this controller is more based on the need to organize things
  */
 
+import FinanceAccountsController from "./accounts/controller.mjs";
 import { CurrencyController } from "./currency/controller.mjs";
 import PaymentController from "./payment/controller.mjs";
 import PaymentRefresher from "./payment/refresher/refresher.mjs";
@@ -29,6 +30,9 @@ export default class FinanceController {
             collections: collections.product,
             payment_controller: this.payment
 
+        });
+        this.accounts = new FinanceAccountsController({
+            payment: this.payment
         })
 
     }
@@ -39,6 +43,7 @@ export default class FinanceController {
     async init() {
         await this.payment.init()
         this.refresher.start_loop()
+        this.accounts.init()
     }
 
 }

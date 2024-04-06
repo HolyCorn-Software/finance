@@ -5,6 +5,7 @@
  * This module provides publicly available methods from the Faculty of Finance
  */
 
+import FinanceACcountsPublicMethods from "../accounts/remote/public.mjs";
 import FinanceController from "../controller.mjs";
 import { CurrencyController } from "../currency/controller.mjs";
 import PaymentPublicMethods from "../payment/terminals/public.mjs";
@@ -26,6 +27,8 @@ export default class FinancePublicMethods extends FacultyPublicMethods {
         this.product = new ProductPublicMethods(controller.product.data, controller.product.purchase)
         /** @type  {CurrencyController} */
         this.currency = new FunctionProxy.SkipArgOne(controller.currency)
+        
+        this.accounts = new FinanceACcountsPublicMethods(controller.accounts)
 
     }
 

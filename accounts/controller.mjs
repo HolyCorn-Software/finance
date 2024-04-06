@@ -1,172 +1,224 @@
 /**
- * Copyright 2022 HolyCorn Software
- * The CAYOFED People System
+ * Copyright 2024 HolyCorn Software
  * The Faculty of Finance
- * This module is the central starting point of the accounts module
+ * This module (accounts), allows for users to have a financial account with the system, which can cover payments.
+ * In that way, payments must not be done only with external payment methods, but equally with the funds in the account.
  */
 
-import shortUUID from "short-uuid"
-import BlockChainLogic from "./blockchain/logic.mjs"
-import account_utils from "./utils.mjs"
-import PaymentController from "../payment/controller.mjs"
+import shortUUID from "short-uuid";
+import collections from "../collections.mjs";
+import PaymentController from "../payment/controller.mjs";
 
+const controllers = Symbol()
 
-
-
-const accounts_collection_symbol = Symbol()
-const system_keys_symbol = Symbol()
-const payment_controller_symbol = Symbol()
-
-const faculty = FacultyPlatform.get()
-
-
-
-export default class FinanceAccountController {
+export default class FinanceAccountsController {
 
 
     /**
      * 
-     * @param {object} param0 
-     * @param {object} param0.keys These keys are system keys, and will be used to encrypt and decrypto stuff
-     * @param {Buffer} param0.keys.public
-     * @param {Buffer} param0.keys.private
-     * @param {object} param0.collections
-     * @param {import("./types.js").AccountsCollection} param0.collections.account
-     * @param {object} param0.controllers
-     * @param {PaymentController} param0.controllers.payment
+     * @param {object} _controllers 
+     * @param {PaymentController} _controllers.payment
      */
-    constructor({ keys, collections, controllers }) {
-
-        this[accounts_collection_symbol] = collections.account
-        this[system_keys_symbol] = keys
-
-        this[payment_controller_symbol] = controllers.payment
-
+    constructor(_controllers) {
+        this[controllers] = _controllers
     }
-
-    /**
-     * This method is used to create a new account.
-     * 
-     * The public and private keys passed are base64 strings.
-     * @param {object} param0 
-     * @param {object} param0.keys
-     * @param {string} param0.keys.public
-     * @param {string} param0.keys.private
-     * @param {string} param0.keys.private_key_password The password used to encrypt the private key
-     * @param {string} param0.label
-     * @returns {Promise<string>}
-     */
-    async createAccount({ keys, label }) {
-        const pubKey = Buffer.from(keys.public, 'base64')
-        const privKey = Buffer.from(keys.private, 'base64')
-
-        if (!account_utils.checkKeyCongruence(pubKey, privKey)) {
-            throw new Exception(`Could not create the new account because the public key doesn't belong to the private key`)
-        }
+    async init() {
+        await collections.account_pending_transactions.createIndex({ expires: 1 }, { expireAfterSeconds: 10 });
 
 
-        const account_id = `${shortUUID.generate()}${shortUUID.generate()}`
-
-
-        const account_collection = this.getCollectionForAccount(account_id);
-
-        await BlockChainLogic.initChain(account_collection, pubKey);
-
-        const default_currency = 'XAF'; //For now, there's no way 
-
-
-        await this[accounts_collection_symbol].insertOne(
-            {
-                id: account_id,
-                label,
-                priv_key: this.encrypt_private_key(privKey, Buffer.from(keys.private_key_password)).toString('base64'),
-                pub_key: keys.public,
-                time: Date.now(),
-                currency: default_currency
-            }
-        )
-
-    }
-
-    /**
-     * This method is used to encrypt a private key.
-     * It encrypts the key with the user key, then encrypts the results with the system key
-     * @param {Buffer} privateKey 
-     * @param {Buffer} userKey
-     * @returns {Buffer}
-     */
-    encrypt_private_key(privateKey, userKey) {
-        return account_utils.aesEncrypt(
-            account_utils.aesEncrypt(
-                privateKey,
-                userKey
-            ),
-            this[system_keys_symbol].private
-        )
-    }
-
-    /**
-     * This method is used to add money to the system.
-     * 
-     * It supplies the transaction data to a provider to find out how much money the transaction is worth.
-     * 
-     * Then it converts that amouunt to the account's currency, and adds the transaction to the chain
-     * 
-     * @param {object} param0
-     * @param {string} param0.account
-     * @param {finance.payment.PaymentRecordMinimal} param0.transaction 
-     * @returns {Promise<void>}
-     * 
-     */
-    async createMoney({ account, transaction }) {
-
-
-        //TODO: Find a way to prevent using the same transaction data to create money in more than one account, without querrying all of them
-
-        const accounts_cursor = this[accounts_collection_symbol].find({})
-
-        while (await accounts_cursor.hasNext()) {
-            let an_account = accounts_cursor.next()
-            //Now check if this account already has the given transaction
-
-            if (
-                await this.getCollectionForAccount(an_account.id).findOne(
-                    {
-                        'data.transaction.provider_data': transaction.provider_data
+        /**
+         * 
+         * @param {finance.accounts.info.PendingTransaction} record 
+         */
+        const processPendingTransaction = async (record) => {
+            const paymentRecord = await this[controllers].payment.findRecord({ id: record.payment });
+            if (paymentRecord.done) {
+                try {
+                    if (paymentRecord.amount.currency != record.amount.currency) {
+                        console.warn(`There's an issue. The debit transaction was created in ${record.amount.currency}, whereas, the payment was done in ${paymentRecord.amount.currency}`);
+                    } else {
+                        await collections.account_info.updateOne({ userid: record.userid }, { $inc: { balance: paymentRecord.settled_amount.value } });
+                        await this.finalizeTransaction({ id: record.id });
                     }
-                )
-            ) {
-
-                throw new Exception(`Cannot add money to the system because the transaction data has already been used before.`)
-
+                } catch (e) {
+                    console.error(`Error when processing ${record.id}\n`, e);
+                }
             }
         }
 
-        //Now that the transaction is not duplicate
 
-        //Let's find out how much it is worth
+        // Whenever a payment is complete, let's check if it's a payment for an account topup
+        FacultyPlatform.get().connectionManager.events.addListener('finance.payment-complete', async (id) => {
+            const record = await collections.account_pending_transactions.findOne({ type: 'credit', payment: id })
+            if (record) {
+                // If so, let's process the transaction, and probably increment the user's balance
+                processPendingTransaction(record)
+            }
+        });
 
-        await this[payment_controller_symbol].refreshRecord(transaction)
 
-
-        //Now we know how much it is worth, now let's convert that to the base currency of the account
-
-
+        (async () => {
+            for await (const record of collections.account_pending_transactions.find({ type: 'credit', payment: { $exists: true } })) {
+                await processPendingTransaction(record);
+            }
+        })()
 
     }
 
+    /**
+     * This method marks a transaction as final, to prevent revoking.
+     * @param {object} param0 
+     * @param {string} param0.id
+     */
+    async finalizeTransaction({ id }) {
+        if (typeof id != 'string') {
+            throw new Exception(`Pass a string for 'id'`)
+        }
+        await collections.account_pending_transactions.deleteOne({ id })
+    }
 
 
 
     /**
-     * This method returns a reference to the collection that stores data for the given account
-     * @param {string} account_id 
-     * @returns {import("./blockchain/types.js").BlockChainCollection}
+     * This method opens a new account for a user.
+     * 
+     * This method would not open an account, if there's already one.
+     * @param {object} param0 
+     * @param {string} param0.userid
+     * @param {string} param0.currency
+     * @returns {Promise<finance.accounts.info.AccountInfo>}
      */
-    getCollectionForAccount(account_id) {
-        return faculty.database.collection(`${faculty.descriptor.name}.accounts.${account_id}`)
+    async openAccount({ userid, currency }) {
+        const details = await collections.account_info.updateOne({
+            userid
+        }, {
+            $setOnInsert: {
+                balance: 0,
+                currency,
+                created: Date.now(),
+            }
+        }, { upsert: true });
+
+        /** @type {Awaited<ReturnType<FinanceAccountsController['openAccount']>>} */
+        const data = details.upsertedCount == 0 ? {
+            userid,
+            balance: 0,
+            currency,
+            created: Date.now(),
+        } : await collections.account_info.findOne({ userid })
+
+        delete data._id
+
+        return data
+
     }
 
+    /**
+     * This method returns a user's account info
+     * @param {object} param0 
+     * @param {string} param0.userid
+     * @param {Omit<Parameters<FinanceAccountsController['openAccount']>['0'], "userid">} param0.autoCreate If the account doesn't exist, this data would be used to create another account
+     */
+    async getAccountInfo({ userid, autoCreate }) {
+        const data = (await collections.account_info.findOne({ userid })) || await (() => {
+            return autoCreate ? this.openAccount({ ...autoCreate, userid, }) : undefined
+        })()
+        if (data) delete data._id
+        return data
+    }
 
+    /**
+     * This method is used to debit a user
+     * @param {object} param0 
+     * @param {string} param0.userid
+     * @param {finance.Amount} param0.amount
+     * @param {object} param0.autoFinalize
+     * @param {number} param0.autoFinalize.timeout
+     */
+    async debitUser({ userid, amount, autoFinalize }) {
+        const accountInfo = await this.getAccountInfo({ userid })
+        if (!accountInfo) {
+            throw new Exception(`The transaction cannot continue, because user with id '${userid}', doesn't have a financial account with the system.`)
+        }
+
+        FinanceAccountsController.checkAmount(amount);
+
+        if (accountInfo.currency != amount.currency) {
+            throw new Exception(`The transaction cannot continue, because the user's account is retained in '${accountInfo.currency}', which is different from the transaction's currency (${amount.currency})`)
+        }
+        if (accountInfo.balance < amount.value) {
+            throw new Exception(`Insufficient balance. Please, topup`)
+        }
+
+        const chargebackId = `${shortUUID.generate()}${shortUUID.generate()}`
+        await collections.account_info.updateOne({ userid }, { $inc: { balance: amount.value * -1 } });
+
+
+        await collections.account_pending_transactions.insertOne({
+            id: chargebackId,
+            type: 'debit',
+            userid,
+            amount,
+            created: Date.now(),
+            // timeout is passed in milliseconds, and we need to convert it to seconds (only if it was passed in the first place)
+            expires: ((x => x ? x / 1000 : x)(autoFinalize?.timeout)) || (72 * 60 * 60) // The default finalization time, is 72 hours
+        })
+
+        return chargebackId
+    }
+
+    /**
+     * 
+     * @param {finance.Amount} amount 
+     */
+    static checkAmount(amount) {
+        soulUtils.checkArgs(amount, {
+            currency: 'string',
+            value: 'number'
+        }, 'amount', undefined, ['exclusive']);
+
+        if (amount.value < 0) {
+            throw new Exception(`${amount.value} ${amount.currency} is invalid for an amount.`);
+        }
+    }
+
+    /**
+     * This method starts the process of topping up a user's account
+     * @param {object} param0 
+     * @param {string} param0.userid
+     * @param {finance.Amount} param0.amount
+     */
+    async topupAccount({ userid, amount }) {
+        FinanceAccountsController.checkAmount(amount)
+        await this.getAccountInfo({ userid, autoCreate: { currency: amount.currency } });
+
+        const payment = await this[controllers].payment.createRecord({
+            type: 'invoice',
+            amount,
+            owners: [userid],
+            meta: {
+                note: `Account topup`,
+                product: {
+                    category: 'credit',
+                    description: `Account topup of ${amount.value} ${amount.currency}`,
+                    type: 'virtual',
+                    name: 'Account Topup'
+                },
+                reason: 'Account topup'
+            }
+        })
+
+        collections.account_pending_transactions.insertOne({
+            id: shortUUID.generate(),
+            userid,
+            type: 'credit',
+            payment,
+            amount,
+            created: Date.now(),
+            expires: 7 * 24 * 60 * 60, // At least, 7 days to wait for the transaction to complete
+        });
+
+        return payment
+    }
 
 }

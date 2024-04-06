@@ -16,7 +16,9 @@ import { CollectionProxy } from "../../system/database/collection-proxy.js";
  *     middle_payment_records: import("./payment/types.js").PaymentRecordCollection,
  *     archive_payment_records: import("./payment/types.js").PaymentRecordCollection,
  *     product_data: finance.product.data.ProductDataCollection,
- *     product_purchase: finance.product.purchase.ProductPurchaseCollection
+ *     product_purchase: finance.product.purchase.ProductPurchaseCollection,
+ *     account_info: finance.accounts.info.AccountInfoCollection,
+ *     account_pending_transactions: finance.accounts.info.PendingTransactionsCollection
  * }}
  */
 const collections = new CollectionProxy(
@@ -26,7 +28,10 @@ const collections = new CollectionProxy(
         'middle_payment_records': 'payment.records.middle',
         'archive_payment_records': 'payment.records.archive',
         'product_data': 'product.data',
-        'product_purchase': 'product.purchase'
+        'product_purchase': 'product.purchase',
+        'account_topup': 'accounts.topup.transactions',
+        'account_info': 'accounts.info',
+        'account_pending_transactions': 'accounts.transactions.pending'
     }
 )
 

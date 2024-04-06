@@ -1,7 +1,3 @@
 .
 
-Improved efficiency of the inline-payment-settle widget.
-
-Improved UI of inline-payment-settle widget.
-
-Improved typing.
+Recreated the accounts feature, making it simple and effective.
