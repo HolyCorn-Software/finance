@@ -104,7 +104,7 @@ export default class PaymentRefresher {
                     record.archived = true
                 }
 
-                await collections_ranked[rank + 1].updateOne({ id }, { $set: record }, { upsert: true })
+                await collections_ranked[rank + 1].updateOne({ id }, { $set: { ...record, _id: undefined } }, { upsert: true })
                 await collections_ranked[rank].deleteOne({ id })
                 // console.trace(`Moving record\n`, record, `\nlower`)
             }

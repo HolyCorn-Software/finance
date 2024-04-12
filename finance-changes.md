@@ -1,3 +1,3 @@
 .
 
-Recreated the accounts feature, making it simple and effective.
+Fixed minor bug related to payment refresh.
