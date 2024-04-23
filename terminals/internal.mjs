@@ -31,6 +31,7 @@ export default class FinanceInternalMethods extends FacultyFacultyRemoteMethods 
         this.product = new ProductInternalMethods(controller.product.data, controller.product.purchase)
         /** @type  {CurrencyController} */
         this.currency = new FunctionProxy.SkipArgOne(controller.currency)
+        /** @type {controller['accounts']} */
         this.accounts = new FinanceAccountsInternalMethods(controller.accounts)
 
     }
