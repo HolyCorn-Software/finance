@@ -1,3 +1,3 @@
 .
 
-Fixed minor issue with typing.
+Improved handling of finance accounts.

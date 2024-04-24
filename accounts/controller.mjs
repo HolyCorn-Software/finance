@@ -136,10 +136,8 @@ export default class FinanceAccountsController {
      * @param {number} param0.autoFinalize.timeout
      */
     async debitUser({ userid, amount, autoFinalize }) {
-        const accountInfo = await this.getAccountInfo({ userid })
-        if (!accountInfo) {
-            throw new Exception(`The transaction cannot continue, because user with id '${userid}', doesn't have a financial account with the system.`)
-        }
+        const accountInfo = await this.getAccountInfo({ userid, autoCreate: { currency: amount.currency } })
+
 
         FinanceAccountsController.checkAmount(amount);
 
