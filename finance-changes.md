@@ -1,3 +1,3 @@
 .
 
-Improved handling of finance accounts.
+Fixed minor bug with transaction refreshing.
