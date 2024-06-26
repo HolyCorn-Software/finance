@@ -86,58 +86,43 @@ export default class InlinePaymentSettle extends Widget {
         });
 
 
-        let startupcomplete = false;
-        let init_promise
-        let init_timeout
-
         const init = async () => {
             //If id is set, call the loading logic
             //The loading logic will get details of the payment and put the widget in a state corresponding to how the payment is
 
             if (this.state_data.payment_data.id) {
-                if (!startupcomplete) {
+                const id = this.state_data.payment_data.id
 
-                    if (init_promise) {
+                if (id == this.last_id) return;
 
+                try {
 
-                        try {
-                            //Wait for any previous initializations and if they were successful, just return
-                            //If not... continue
-                            await init_promise
-                            return;
-                        } catch { }
-                    }
+                    await startupLogic(this);
+                    waitingUILogic(this, waiting_ui)
+                    enterPaymentDetailsLogic(this, enter_details_widget)
+                    await paymentSelectLogic(this, payment_select)
+                    configureFailureUI(this, failure_ui)
+                    this.last_id = id
+                } catch (e) {
 
-                    try {
-                        await (init_promise = async () => {
-
-
-                            startupcomplete = true;
-                            await startupLogic(this);
-                            waitingUILogic(this, waiting_ui)
-                            enterPaymentDetailsLogic(this, enter_details_widget)
-                            await paymentSelectLogic(this, payment_select)
-                            configureFailureUI(this, failure_ui)
-                        })()
-                    } catch (e) {
-
-                        if (e.code === 'error.payment.illegal_access_to_record') {
-                            alert(`Sign In with the right account to continue`)
-                            handle({ code: 'error.modernuser.authError' })
-                        } else {
-                            handle(e);
-                        }
+                    if (e.code === 'error.payment.illegal_access_to_record') {
+                        alert(`Sign In with the right account to continue`)
+                        throw ({ code: 'error.modernuser.authError' })
+                    } else {
+                        throw e
                     }
                 }
+
             }
         }
-
-        this.state_data.$0.addEventListener('change', () => {
+        this.state_data.$0.addEventListener('payment_data.id-change', () => {
             //It's important to delay invocation of the init method so that we don't get too many calls to the method
             //Too many calls are seen typically when multiple fields are set at the same time. E.g during Object.assign()
-            clearTimeout(init_timeout)
-            setTimeout(() => init(), 500)
+            this.blockWithAction(init)
         })
+
+        init()
+
     }
 
     static get classList() {

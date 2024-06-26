@@ -64,6 +64,16 @@ export default class PaymentInternalMethods {
         return await this[controller_symbol].userDismiss({ id: arguments[1]?.id })
     }
 
+    /**
+     * This method deletes a payment record permanently
+     * @param {object} param0 
+     * @param {string} param0.id
+     */
+    async deleteRecord({ id }) {
+        id = arguments[1]?.id
+        await this[controller_symbol].deleteRecord({ id })
+    }
+
 
     /**
      * This returns the list of all payment methods

@@ -1,3 +1,3 @@
 .
 
-Fixed minor bug with transaction refreshing.
+Improved stability of payment widget.

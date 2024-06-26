@@ -6,9 +6,6 @@
 
 import InlinePaymentSettle from "../debit.mjs";
 import hcRpc from "/$/system/static/comm/rpc/aggregate-rpc.mjs";
-import { handle } from "/$/system/static/errors/error.mjs";
-
-const lastStartupId = Symbol()
 
 /**
  * 
@@ -16,35 +13,16 @@ const lastStartupId = Symbol()
  */
 export async function startupLogic(widget) {
 
+
     const stop = () => {
-        widget.loadUnblock()
+        // Nothing here
     }
 
 
-    //Now, should in case the transaction changes, let's do things all over
-
-    let haltIdListen
-    widget.state_data.$0.addEventListener('payment_data.id-change', () => {
-        if (haltIdListen) {
-            return;
-        }
-        if (widget.state_data.payment_data.id !== widget[lastStartupId]) {
-            const { id } = widget.state_data.payment_data
-            haltIdListen = true;
-            widget.state_data.payment_data = { id }
-            setTimeout(() => haltIdListen = false, 200)
-            main().catch(e => handle(e))
-        }
-    })
-
     async function main() {
-
-        widget[lastStartupId] = widget.state_data.payment_data.id
 
 
         try {
-            widget.loadBlock();
-
 
             const load_payment_providers_ui = async () => {
                 widget.state_data.data.paymentMethods = await hcRpc.finance.payment.getPaymentMethods()
